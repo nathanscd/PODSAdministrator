@@ -41,7 +41,7 @@ export default function Dashboard() {
 
   return (
     <div style={{ width: "90%", margin: "50px auto" }}>
-      <h1>Dashboard Nível Inicial</h1>
+      <h1>Dashboard</h1>
 
       <div style={{ marginBottom: "20px" }}>
         <select value={selectedDataset || ""} onChange={(e) => setSelectedDataset(e.target.value)}>
