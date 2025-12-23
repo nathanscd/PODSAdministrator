@@ -4,3 +4,10 @@ export type Fiscalizacao = {
   mesReferencia: number;
   anoReferencia: number;
 };
+
+export interface Page {
+  id: string;
+  title: string;
+  content: string;
+  createdAt: any;
+}
