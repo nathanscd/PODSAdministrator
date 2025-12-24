@@ -44,6 +44,8 @@ button {
   font-family: inherit;
   background-color: #1a1a1a;
   cursor: pointer;
+  margin-left: 10px;
+  margin-bottom: 10px;
   transition: border-color 0.25s;
 }
 button:hover {
@@ -65,4 +67,48 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+.HomePage{
+  background: linear-gradient(to right, rgb(220, 255, 237), white, rgb(211, 231, 221));
+  margin: 10px;
+  padding: 2vw;
+  border-radius: 10px;
+  color: black;
+  border: solid rgba(255, 255, 255, 0.287) 0.1px;
+}
+
+.main{
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  background-color: rgb(221, 227, 224);
+  width: 100vw;
+  height: 100dvh;
+}
+
+.sidebar{
+  position:relative;
+  background-color: white;
+  width: 200px;
+  margin-bottom: auto;
+  color: black;
+  border-radius: 20px;
+  padding: 1vw;
+  margin: 1vw;
+  box-shadow: rgba(0, 0, 0, 0.100) 0px 0px 20px 10px;
+}
+
+.btns{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn{
+  color: white;
+  background-color: #1a1a1a;
+  padding: 10px;
+  border-radius: 10px;
 }

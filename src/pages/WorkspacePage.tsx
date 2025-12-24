@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase";
@@ -10,6 +10,10 @@ export default function WorkspacePage() {
   const { pageId } = useParams<{ pageId: string }>();
   const { updatePage } = usePages();
   const [page, setPage] = useState<Page | null>(null);
+  const navigate = useNavigate();
+  const handleHome = () => {
+    navigate("/");
+  };
 
   useEffect(() => {
     if (!pageId) return;
@@ -25,6 +29,7 @@ export default function WorkspacePage() {
 
   return (
     <div className="max-w-4xl mx-auto mt-20 px-10 pb-20">
+      <button onClick={handleHome}>Home</button>
       <input
         className="text-5xl font-bold w-full outline-none mb-10 border-none focus:ring-0 placeholder-gray-200 bg-transparent"
         value={page.title}

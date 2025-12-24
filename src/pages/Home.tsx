@@ -1,11 +1,15 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom"; 
 
+
 export default function Home() {
   const navigate = useNavigate(); 
 
   const handleDashboardClick = () => {
     navigate("/dashboard"); 
+  };
+  const handleWorkspace = () => {
+    navigate("/home");
   };
 
   return (
@@ -15,7 +19,8 @@ export default function Home() {
       className="main"
     >
       <h1 className="name-main">PODSAdministrator</h1>
-      <button onClick={handleDashboardClick}>Dashboard</button> 
+      <button onClick={handleDashboardClick}>Dashboard</button>
+      <button onClick={handleWorkspace}>Pages</button>
     </motion.section>
   );
 }

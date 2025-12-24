@@ -1,18 +1,17 @@
-import Home from './pages/Home';
-import Dashboard from './pages/Dashboards';
-import { Routes, Route } from 'react-router-dom';
-import WorkspacePage from './pages/WorkspacePage'
-import HomePage from './pages/HomePage'
+import { Routes, Route } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import PagesDashboard from "./pages/PagesDashboard";
+import WorkspacePage from "./pages/WorkspacePage";
 
 export default function App() {
   return (
-    <div>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/home" element={<HomePage />} />
-        <Route path="/dashboard" element={<Dashboard />} /> 
+    <Routes>
+      <Route path="/" element={<HomePage />}>
+        <Route index element={<div>Dashboard Principal</div>} />
+        <Route path="perfil" element={<div>Perfil do Usuário</div>} />
+        <Route path="paginas" element={<PagesDashboard />} />
         <Route path="page/:pageId" element={<WorkspacePage />} />
-      </Routes>
-    </div>
+      </Route>
+    </Routes>
   );
 }
