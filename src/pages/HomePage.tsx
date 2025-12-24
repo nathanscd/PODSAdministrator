@@ -7,6 +7,7 @@ export default function HomePage() {
     <PageTransition>
         <div className="app-container">
         <Sidebar />
+        <h1>PODS</h1>
         <div className="main">
           <Outlet />
         </div>

@@ -7,26 +7,29 @@ export default function Sidebar() {
   return (
     <div className="sidebar">
       <div className="btns">
-        <NavLink to="/perfil" className={checkActive}>
+        <NavLink to="/profile" className={checkActive}>
           <svg className="nav-icon" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
           </svg>
+          <span className="nav-label">Perfil</span>
         </NavLink>       
         <NavLink to="/dashboard" className={checkActive}>
           <svg className="nav-icon" viewBox="0 0 24 24" fill="currentColor">
             <path d="M13 3v6h8V3h-8zM3 21h8v-6H3v6zM3 3v10h8V3H3zm10 18h8v-10h-8v10z" />
           </svg>
+          <span className="nav-label">Dashboards</span>
         </NavLink>
         <NavLink to="/paginas" className={checkActive}>
           <svg className="nav-icon" viewBox="0 0 24 24" fill="currentColor">
             <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
           </svg>
+          <span className="nav-label">Páginas</span>
         </NavLink>
-
-        <NavLink to="/todo" className={checkActive} title="To-Do List">
+        <NavLink to="/todo/main-board" className={checkActive}>
           <svg className="nav-icon" viewBox="0 0 24 24" fill="currentColor">
             <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z" />
           </svg>
+          <span className="nav-label">Tarefas</span>
         </NavLink>
       </div>
     </div>

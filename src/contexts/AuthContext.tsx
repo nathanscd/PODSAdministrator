@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { auth, db } from "../firebase"; // Certifique-se que seu firebase.ts exporta 'auth' e 'db'
+import { auth, db } from "../firebase";
 import { onAuthStateChanged, User as FirebaseUser, updateProfile } from "firebase/auth";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 
@@ -28,7 +28,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Aplica o tema ao HTML
   useEffect(() => {
     if (user?.theme) {
       document.documentElement.setAttribute("data-theme", user.theme);
@@ -38,7 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [user?.theme]);
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, async (firebaseUser) => {
+    const unsub = onAuthStateChanged(auth, async (firebaseUser: FirebaseUser | null) => {
       if (firebaseUser) {
         const docRef = doc(db, "users", firebaseUser.uid);
         const docSnap = await getDoc(docRef);
@@ -46,7 +45,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (docSnap.exists()) {
           setUser({ uid: firebaseUser.uid, ...docSnap.data() } as UserProfile);
         } else {
-          // Cria perfil inicial se não existir
           const newUser: UserProfile = {
             uid: firebaseUser.uid,
             displayName: firebaseUser.displayName || "Usuário",
@@ -70,15 +68,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const updateUserProfile = async (data: Partial<UserProfile>) => {
     if (!user) return;
     
-    // Atualiza Auth do Firebase (apenas nome e foto)
-    if (data.displayName || data.photoURL) {
-      await updateProfile(auth.currentUser!, {
+    if (auth.currentUser && (data.displayName || data.photoURL)) {
+      await updateProfile(auth.currentUser, {
         displayName: data.displayName || user.displayName,
         photoURL: data.photoURL || user.photoURL
       });
     }
 
-    // Atualiza Firestore
     const docRef = doc(db, "users", user.uid);
     await updateDoc(docRef, data);
     setUser({ ...user, ...data });
@@ -88,7 +84,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (user) {
       updateUserProfile({ theme });
     } else {
-      // Se não estiver logado, muda apenas visualmente
       document.documentElement.setAttribute("data-theme", theme);
     }
   };
