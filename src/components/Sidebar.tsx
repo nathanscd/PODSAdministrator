@@ -1,29 +1,34 @@
-import { Link } from "react-router-dom";
-import { usePages } from "../hooks/usePages";
+import { NavLink } from "react-router-dom";
 
 export default function Sidebar() {
-  const { createPage } = usePages();
+  const checkActive = ({ isActive }: { isActive: boolean }) => 
+    isActive ? "btn active" : "btn";
 
   return (
-    <aside className="sidebar">
-      <div className="p-4 border-b">
-        <h1 className="font-bold text-lg">PODS</h1>
-      </div>
-      
-      <nav className="btns">
-        <Link to="/dashboard" className="btn">📊 Dashboard</Link>
-        <Link to="/perfil" className="btn">👤 Perfil</Link>
-        <Link to="/paginas" className="btn">📁 Minhas Páginas</Link>
+    <div className="sidebar">
+      <div className="btns">
+        <NavLink to="/perfil" className={checkActive}>
+          <svg className="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+          </svg>
+        </NavLink>       
+        <NavLink to="/dashboard" className={checkActive}>
+          <svg className="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M13 3v6h8V3h-8zM3 21h8v-6H3v6zM3 3v10h8V3H3zm10 18h8v-10h-8v10z" />
+          </svg>
+        </NavLink>
+        <NavLink to="/paginas" className={checkActive}>
+          <svg className="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
+          </svg>
+        </NavLink>
 
-        <hr className="my-4" />
-        
-        <button
-          onClick={() => createPage()}
-          className="w-full flex items-center justify-center p-2 bg-blue-600 text-white hover:bg-blue-700 rounded text-sm transition-all"
-        >
-          + Nova Página
-        </button>
-      </nav>
-    </aside>
+        <NavLink to="/todo" className={checkActive} title="To-Do List">
+          <svg className="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z" />
+          </svg>
+        </NavLink>
+      </div>
+    </div>
   );
 }

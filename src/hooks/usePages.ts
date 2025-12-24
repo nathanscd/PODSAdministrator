@@ -1,48 +1,86 @@
 import { useState, useEffect } from "react";
-import { collection, onSnapshot, addDoc, updateDoc, doc, deleteDoc, query, orderBy } from "firebase/firestore";
+import { 
+  collection, 
+  onSnapshot, 
+  addDoc, 
+  deleteDoc, 
+  updateDoc, 
+  doc, 
+  query, 
+  orderBy, 
+  serverTimestamp 
+} from "firebase/firestore";
 import { db } from "../firebase";
-import { Page } from "../types";
+import { Page, PageType } from "../types";
 
-export const usePages = () => {
+export function usePages() {
   const [pages, setPages] = useState<Page[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const q = query(collection(db, "pages"), orderBy("createdAt", "desc"));
+    
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const data = snapshot.docs.map(doc => ({
+      const pagesData = snapshot.docs.map((doc) => ({
         id: doc.id,
-        ...doc.data()
+        ...doc.data(),
       })) as Page[];
-      setPages(data);
+      
+      setPages(pagesData);
+      setLoading(false);
     });
+
     return unsubscribe;
   }, []);
 
-  const createPage = async () => {
-    try {
-      const docRef = await addDoc(collection(db, "pages"), {
-        title: "",
+  const createPage = async (type: PageType = "document") => {
+    const baseData = {
+      title: "",
+      type,
+      createdAt: serverTimestamp(),
+    };
+
+    let initialData = {};
+
+    if (type === "board") {
+      initialData = {
+        tasks: {},
+        columns: {
+          "col-1": { id: "col-1", title: "A Fazer", taskIds: [] },
+          "col-2": { id: "col-2", title: "Em Andamento", taskIds: [] },
+          "col-3": { id: "col-3", title: "Concluído", taskIds: [] },
+        },
+        columnOrder: ["col-1", "col-2", "col-3"],
+      };
+    } else {
+      initialData = {
         content: "",
-        createdAt: new Date()
-      });
-      return docRef.id;
-    } catch (e) {
-      console.error(e);
-      return null;
+      };
     }
+
+    const docRef = await addDoc(collection(db, "pages"), {
+      ...baseData,
+      ...initialData,
+    });
+
+    return docRef.id;
   };
 
   const updatePage = async (id: string, data: Partial<Page>) => {
-    await updateDoc(doc(db, "pages", id), data);
+    const docRef = doc(db, "pages", id);
+    await updateDoc(docRef, data);
   };
 
   const deletePage = async (id: string) => {
-    try {
-      await deleteDoc(doc(db, "pages", id));
-    } catch (e) {
-      console.error(e);
-    }
+    const docRef = doc(db, "pages", id);
+    await deleteDoc(docRef);
   };
 
-  return { pages, createPage, updatePage, deletePage };
-};
+  return {
+    pages,
+    loading,
+    createPage,
+    updatePage,
+    deletePage,
+  };
+}
