@@ -23,10 +23,10 @@ const Editor = ({ initialContent, onUpdate }: EditorProps) => {
   }, [initialContent, editor]);
 
   return (
-    <div className="w-full h-full p-4">
+    <div className="typearea">
       <EditorContent 
         editor={editor} 
-        className="prose max-w-none focus:outline-none min-h-[500px]" 
+        className="typearea" 
       />
     </div>
   );

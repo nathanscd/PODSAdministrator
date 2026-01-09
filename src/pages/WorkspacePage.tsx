@@ -43,7 +43,6 @@ export default function WorkspacePage() {
 
   return (
     <div className="min-h-screen bg-white text-[#37352F]">
-      {/* Barra de Navegação */}
       <nav className="h-12 px-4 flex items-center gap-2 sticky top-0 bg-white z-20 border-b border-transparent hover:border-gray-100 transition-colors">
         <button 
           onClick={() => navigate("/paginas")} 
@@ -58,7 +57,6 @@ export default function WorkspacePage() {
         </div>
       </nav>
 
-      {/* Cabeçalho Comum */}
       <div className={`mx-auto ${page.type === 'board' ? 'px-4' : 'max-w-[900px] px-12 md:px-24'} pt-12`}>
         <div className="group relative mb-8">
           <input
@@ -72,14 +70,11 @@ export default function WorkspacePage() {
         </div>
       </div>
 
-      {/* Renderização Condicional do Conteúdo */}
       <div className="w-full">
         {page.type === 'board' ? (
-          // Renderiza o Kanban se for Board
           <BoardView page={page} />
         ) : (
-          // Renderiza o Editor se for Documento
-          <div className="max-w-[900px] mx-auto px-12 md:px-24 pb-32">
+          <div className="w-full placeholder-gray-300 border-none outline-none bg-transparent focus:ring-0 text-[#37352F] p-0">
             <Editor
               key={page.id}
               initialContent={page.content || ""}
