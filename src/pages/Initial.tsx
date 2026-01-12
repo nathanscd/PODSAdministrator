@@ -13,7 +13,6 @@ export default function Initial() {
   const { pages, isAdmin, userDisplayName, createPage } = usePages();
   const [searchQuery, setSearchQuery] = useState("");
   
-  // Estado das Metas Diárias
   const [goals, setGoals] = useState<any[]>([]);
   const today = new Date().toISOString().split('T')[0];
 
@@ -21,7 +20,6 @@ export default function Initial() {
     <PageTransition>
       <div className="main ml-10 -mr-10 -mt-10 !p-0 bg-[var(--bg-app)] min-h-screen relative overflow-x-hidden custom-scrollbar">
         
-        {/* TOP BAR / BUSCA GLOBAL */}
         <nav className="sticky top-0 z-50 bg-[var(--bg-app)]/80 backdrop-blur-md border-b border-[var(--border-color)] px-8 lg:px-20 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4 bg-[var(--card-bg)] px-4 py-2 rounded-2xl border border-[var(--border-color)] w-full max-w-xl">
             <Search size={16} className="text-[var(--text-secondary)] opacity-40" />
@@ -35,10 +33,6 @@ export default function Initial() {
           </div>
           
           <div className="flex items-center gap-6">
-            <div className="flex items-center gap-3">
-              <div className={`w-2 h-2 rounded-full bg-green-500 animate-pulse`} />
-              <span className="text-[9px] font-black uppercase tracking-widest opacity-40">Sistemas Online</span>
-            </div>
             <button className="relative p-2 text-[var(--text-primary)] border-none bg-transparent shadow-none">
               <Bell size={20} />
               <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-[var(--bg-app)]" />
@@ -46,11 +40,10 @@ export default function Initial() {
           </div>
         </nav>
 
-        {/* HERO E INDICADORES (ACIMA DA DOBRA) */}
         <section className="pt-12 pb-12 px-8 lg:px-20">
           <div className="mb-12">
              <h1 className="text-6xl font-black italic uppercase tracking-tighter text-[var(--text-primary)] leading-none">
-               PODS <span className="text-[var(--accent-color)]">CORE</span>
+               PODS <span className="text-[var(--accent-color)]">Administrator</span>
              </h1>
              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[var(--text-secondary)] mt-2">Operação em Tempo Real</p>
           </div>
@@ -73,21 +66,30 @@ export default function Initial() {
             ))}
           </div>
 
-          {/* ATALHOS OPERACIONAIS */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-20">
             {[
               { label: "Upload Excel", path: "/planilhas", icon: <Upload size={18} />, color: "bg-green-500" },
-              { label: "Comparar PDF", path: "/comparador-pdf", icon: <FileSearch size={18} />, color: "bg-red-500" },
-              { label: "SharePoint", path: "#", icon: <Database size={18} />, color: "bg-blue-600" },
+              { label: "SharePoint", path: "https://hexing.sharepoint.com", icon: <Database size={18} />, color: "bg-blue-600" },
               { label: "Criar Board", path: "/todo", icon: <Plus size={18} />, color: "bg-[var(--accent-color)]" },
+              { label: "Comparar PDF", path: "/comparador-pdf", icon: <FileSearch size={18} />, color: "bg-red-500" },
             ].map((btn, i) => (
               <button 
                 key={i} 
-                onClick={() => btn.path !== "#" && navigate(btn.path)}
+                onClick={() => {
+                  if (btn.path.startsWith("http")) {
+                    window.open(btn.path, "_blank", "noopener,noreferrer");
+                  } else {
+                    navigate(btn.path);
+                  }
+                }}
                 className="flex items-center gap-4 p-5 bg-[var(--card-bg)] border border-[var(--border-color)] rounded-3xl hover:scale-[1.02] transition-all group border-none shadow-none"
               >
-                <div className={`${btn.color} p-3 rounded-2xl text-white group-hover:rotate-12 transition-transform`}>{btn.icon}</div>
-                <span className="text-[10px] font-black uppercase tracking-widest text-[var(--text-primary)]">{btn.label}</span>
+                <div className={`${btn.color} p-3 rounded-2xl text-white group-hover:rotate-12 transition-transform`}>
+                  {btn.icon}
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-widest text-[var(--text-primary)]">
+                  {btn.label}
+                </span>
               </button>
             ))}
           </div>
