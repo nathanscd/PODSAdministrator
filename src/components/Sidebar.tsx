@@ -46,9 +46,9 @@ export default function Sidebar() {
           <span className="nav-label ml-4">Oportunidades</span>
         </NavLink>
 
-        <NavLink to="/planilhas" className={checkActive}>
+        <NavLink to="/comparacao" className={checkActive}>
           <FileSpreadsheet className="nav-icon !min-w-[24px] !w-6 !h-6" />
-          <span className="nav-label ml-4">Planilhas</span>
+          <span className="nav-label ml-4">Comparar Planilhas</span>
         </NavLink>
 
         <div className="my-4 border-t border-[var(--border-color)] opacity-20 mx-2"></div>

@@ -4,6 +4,7 @@ import WorkspacePage from "./pages/WorkspacePage";
 import Initial from "./pages/Initial";
 import TodoPages from "./pages/ToDoPage";
 import TodoDashboard from "./pages/TodoDashboard";
+import SpreadsheetPage from "./pages/SpreadsheetPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import ProfilePage from "./pages/ProfilePage";
@@ -27,6 +28,7 @@ function App() {
             <Route path="todo" element={<TodoDashboard />} />
             <Route path="todo/:pageId" element={<TodoPages />} />
             <Route path="profile" element={<ProfilePage />} />
+            <Route path="comparacao" element={<SpreadsheetPage />} />
           </Route>
         </Route>
 
