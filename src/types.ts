@@ -5,13 +5,13 @@ export type Fiscalizacao = {
   anoReferencia: number;
 };
 
-export type PageType = "document" | "board";
+export type PageType = 'document' | 'board';
 
 export interface Task {
   id: string;
-  content: string;      // Título da tarefa
-  description?: string; // Descrição longa (dentro do modal)
-  assignee?: string;    // Nome do responsável
+  content: string;
+  description?: string;
+  assignee?: string;
 }
 
 export interface Column {
@@ -24,13 +24,13 @@ export interface Page {
   id: string;
   type: PageType;
   title: string;
+  ownerId: string;
+  ownerName?: string; 
+  isPublic?: boolean; 
   createdAt: any;
-  
-  // Campos para Documentos de Texto
+  theme?: string;
   content?: string;
-
-  // Campos para Quadros (To-Do)
-  tasks?: Record<string, Task>;
-  columns?: Record<string, Column>;
+  tasks?: any;
+  columns?: any;
   columnOrder?: string[];
 }

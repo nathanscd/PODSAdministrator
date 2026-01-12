@@ -1,76 +1,86 @@
 import { useNavigate } from "react-router-dom";
 import { usePages } from "../hooks/usePages";
 import PageTransition from "../components/PageTransition";
+import { User, FileText, Trash2, Clock, Globe, Lock } from "lucide-react";
 
 export default function PagesDashboard() {
-  const { pages, createPage, deletePage } = usePages();
+  const { pages, createPage, deletePage, loading } = usePages();
   const navigate = useNavigate();
 
-  // Criação simplificada: Apenas "document"
   const handleCreate = async () => {
-    const newId = await createPage("document"); 
-    navigate(`/page/${newId}`);
+    const newId = await createPage("", "document");
+    if (newId) navigate(`/page/${newId}`);
   };
 
   const handleDelete = async (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
-    if (confirm("Mover para a lixeira?")) {
-      await deletePage(id);
-    }
+    if (confirm("Mover para a lixeira?")) await deletePage(id);
   };
+
+  if (loading) return (
+    <div className="flex h-screen w-full items-center justify-center bg-[var(--bg-app)] text-[var(--accent-color)] font-black uppercase tracking-[0.4em] animate-pulse">
+      Sincronizando...
+    </div>
+  );
+
+  const docPages = pages.filter(p => p.type === 'document');
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-[#F7F7F5] flex flex-col items-center py-20 px-4">
-        <div className="w-full max-w-3xl">
-          <div className="flex items-center justify-between mb-8 px-2">
-            <h2 className="text-xl font-semibold text-[#37352F] flex items-center gap-2">
-              <span className="text-2xl">📝</span> Minhas Páginas
-            </h2>
-            <button 
-              onClick={handleCreate}
-              className="bg-[#2383E2] hover:bg-[#1C6BB1] text-white px-3 py-1.5 rounded text-sm font-medium transition-colors shadow-sm"
-            >
-              + Nova página
-            </button>
+      <div className="flex flex-col items-center py-12 px-6 w-full max-w-7xl mx-auto">
+        <div className="w-full flex items-center justify-between mb-12">
+          <div>
+            <h2 className="text-4xl font-black italic uppercase tracking-tighter text-[var(--text-primary)]">Documentos</h2>
+            <p className="text-[var(--text-secondary)] text-xs font-bold uppercase tracking-widest opacity-40">Gestão de arquivos da equipe</p>
           </div>
+          <button onClick={handleCreate} className="bg-[var(--accent-color)] text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-2 hover:scale-105 transition-all border-none">
+            Nova Página
+          </button>
+        </div>
 
-          <div className="space-y-1">
-            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wide px-2 mb-2">
-              Documentos Recentes
-            </h3>
-            
-            {pages.filter(p => p.type === 'document').length === 0 && (
-               <p className="text-gray-400 text-sm px-2">Nenhum documento criado.</p>
-            )}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+          {docPages.map((page) => (
+            <div 
+              key={page.id} 
+              onClick={() => navigate(`/page/${page.id}`)} 
+              className="group relative p-8 rounded-[2.5rem] bg-[var(--card-bg)] border border-[var(--border-color)] hover:border-[var(--accent-color)] cursor-pointer transition-all duration-500 backdrop-blur-md flex flex-col justify-between h-64"
+            >
+              <div>
+                <div className="flex justify-between items-start mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="p-3 bg-[var(--bg-app)] rounded-2xl border border-[var(--border-color)] text-[var(--accent-color)] group-hover:bg-[var(--accent-color)] group-hover:text-white transition-all">
+                      <FileText size={24} />
+                    </div>
+                    <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border ${
+                      page.isPublic ? "border-green-500/20 text-green-500 bg-green-500/5" : "border-orange-500/20 text-orange-500 bg-orange-500/5"
+                    }`}>
+                      {page.isPublic ? <Globe size={10} /> : <Lock size={10} />}
+                      {page.isPublic ? "Público" : "Privado"}
+                    </div>
+                  </div>
+                  <button onClick={(e) => handleDelete(e, page.id)} className="opacity-0 group-hover:opacity-100 p-2 text-red-500 transition-all hover:scale-110">
+                    <Trash2 size={18} />
+                  </button>
+                </div>
+                <h4 className="text-xl font-bold text-[var(--text-primary)] truncate mb-2">{page.title || "Sem título"}</h4>
+              </div>
 
-            {pages
-              .filter((page) => page.type === "document") // Filtra apenas páginas de texto
-              .map((page) => (
-              <div
-                key={page.id}
-                onClick={() => navigate(`/page/${page.id}`)}
-                className="group flex items-center justify-between p-2 rounded hover:bg-[#EFEFED] cursor-pointer transition-colors"
-              >
-                <div className="flex items-center gap-3 overflow-hidden">
-                  <span className="text-lg opacity-70">📄</span>
-                  <span className="text-[#37352F] font-medium truncate text-sm">
-                    {page.title || "Sem título"}
+              <div className="flex items-center justify-between pt-6 border-t border-[var(--border-color)]">
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 bg-[var(--bg-app)] rounded-full border border-[var(--border-color)]">
+                    <User size={10} className="text-[var(--accent-color)]" />
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)]">
+                    {(page as any).ownerName || "Membro"}
                   </span>
                 </div>
-                
-                <button
-                  onClick={(e) => handleDelete(e, page.id)}
-                  className="opacity-0 group-hover:opacity-100 p-1 hover:bg-gray-300 rounded text-gray-500 transition-all"
-                  title="Deletar"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                  </svg>
-                </button>
+                <div className="flex items-center gap-1.5 text-[var(--text-secondary)] opacity-40">
+                  <Clock size={10} />
+                  <span className="text-[9px] font-bold uppercase">{page.createdAt?.toDate?.().toLocaleDateString('pt-BR') || "Recent"}</span>
+                </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </div>
     </PageTransition>

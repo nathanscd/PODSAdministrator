@@ -2,7 +2,8 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import PagesDashboard from "./pages/PagesDashboard";
 import WorkspacePage from "./pages/WorkspacePage";
 import Initial from "./pages/Initial";
-import ToDoPage from "./pages/ToDoPage"; // Verifique se é ToDoPage ou TodoPage no arquivo
+import TodoPages from "./pages/ToDoPage";
+import TodoDashboard from "./pages/TodoDashboard";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import ProfilePage from "./pages/ProfilePage";
@@ -23,12 +24,12 @@ function App() {
             <Route path="dashboard" element={<Dashboards />} />
             <Route path="paginas" element={<PagesDashboard />} />
             <Route path="page/:pageId" element={<WorkspacePage />} />
-            <Route path="todo/:pageId" element={<ToDoPage />} />
+            <Route path="todo" element={<TodoDashboard />} />
+            <Route path="todo/:pageId" element={<TodoPages />} />
             <Route path="profile" element={<ProfilePage />} />
           </Route>
         </Route>
 
-        {/* Redireciona qualquer rota desconhecida para a home */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
