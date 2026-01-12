@@ -7,11 +7,49 @@ export type Fiscalizacao = {
 
 export type PageType = 'document' | 'board';
 
+export interface Opportunity {
+  id: string;
+  description: string;
+  technicalSalesGroup: string;
+  utility: string;
+  files: string; // Link SharePoint
+  yearStart: number;
+  yearEnd: number;
+  hqInterface: string;
+  kam: string;
+  status: string;
+  product: string;
+  priority: 'Baixa' | 'Média' | 'Alta' | 'Crítica';
+  businessStages: string;
+  reasonWinLoss: string;
+  quantity: number;
+  scp: number;
+  remember?: string;
+  homologated: boolean;
+  reasonHomologated: string;
+  country: string;
+  ecosystem: string;
+  progress: number;
+  lastCustomerDiscussion: string;
+  observation: string;
+  competitors: string;
+  productTeam: string;
+  salesManagement: string;
+  ownerId: string;
+}
+
+export interface UserGoal {
+  id: string;
+  text: string;
+  completed: boolean;
+  date: string;
+}
+
 export interface Task {
   id: string;
   content: string;
   description?: string;
-  assignee?: string;
+  assignedTo?: string;
 }
 
 export interface Column {

@@ -41,7 +41,7 @@ export default function Sidebar() {
           <span className="nav-label ml-4">Tarefas</span>
         </NavLink>
 
-        <NavLink to="/oportunidades" className={checkActive}>
+        <NavLink to="/opportunities" className={checkActive}>
           <BarChart2 className="nav-icon !min-w-[24px] !w-6 !h-6" />
           <span className="nav-label ml-4">Oportunidades</span>
         </NavLink>
