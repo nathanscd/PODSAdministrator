@@ -112,7 +112,7 @@ button:active {
   height: 100vh;
   width: 95px; 
   background: linear-gradient(145deg, var(--bg-sidebar), var(--bg-gradient-to));
-  z-index: 100;
+  z-index: 4000;
   padding: 20px 12px;
   transition: width 0.2s ease;
   overflow: hidden;

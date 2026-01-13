@@ -211,11 +211,10 @@ export default function OpportunityPage() {
       <div className="main ml-10 -mr-10 -mt-10 !p-0 bg-[var(--bg-app)] min-h-screen flex flex-col">
         
         <div className="fixed bottom-6 right-6 z-[9999] flex gap-4 opacity-0 hover:opacity-100 transition-opacity">
-           <DatabaseCleaner />
            <CsvImporter />
         </div>
 
-        <header className="pt-20 pb-10 px-8 lg:px-20 bg-[var(--card-bg)]/80 backdrop-blur-xl shrink-0 z-20 sticky top-0 border-b border-[var(--border-color)]">
+        <header className="z-1000 pt-20 pb-10 px-8 lg:px-20 bg-[var(--card-bg)]/80 backdrop-blur-xl shrink-0 z-20 sticky top-0 border-b border-[var(--border-color)]">
           <div className="flex justify-between items-end index z-1000">
             <div>
               <h1 className="text-6xl font-black italic uppercase tracking-tighter text-[var(--text-primary)]">AMI Opportunities</h1>
@@ -247,7 +246,6 @@ export default function OpportunityPage() {
                 <tr className="text-[9px] font-black uppercase tracking-[0.3em] text-[var(--text-secondary)]">
                   <th className="px-4 py-4 sticky left-0 bg-[var(--bg-app)] z-30 border-b border-[var(--border-color)] w-[50px]">Action</th>
                   <th className="px-8 py-4 sticky left-[50px] bg-[var(--bg-app)] z-30 border-b border-[var(--border-color)]">Description</th>
-                  {/* Demais cabeçalhos (mantidos iguais) */}
                   <th className="px-6 border-b border-[var(--border-color)]">Group</th>
                   <th className="px-6 border-b border-[var(--border-color)]">Utility</th>
                   <th className="px-6 border-b border-[var(--border-color)]">KAM</th>
