@@ -154,7 +154,7 @@ export default function Initial() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-5 mb-24">
             {[
-              { label: "Upload Excel", path: "/planilhas", icon: <Upload size={20} />, color: "bg-emerald-500", shadow: "shadow-emerald-500/20" },
+              { label: "Comparar Planilhas", path: "/comparacao", icon: <Upload size={20} />, color: "bg-emerald-500", shadow: "shadow-emerald-500/20" },
               { label: "SharePoint", path: "https://hexingbrasil.sharepoint.com/sites/MSSD/TechSales", icon: <Database size={20} />, color: "bg-blue-600", shadow: "shadow-blue-600/20" },
               { label: "Criar Board", path: "/todo", icon: <Plus size={20} />, color: "bg-[var(--accent-color)]", shadow: "shadow-[var(--accent-rgb)]/20" },
               { label: "Comparar PDF", path: "/comparador-pdf", icon: <FileSearch size={20} />, color: "bg-rose-500", shadow: "shadow-rose-500/20" },

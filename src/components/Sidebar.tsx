@@ -55,12 +55,12 @@ export default function Sidebar() {
 
         <NavLink to="/dashboard" className={checkActive}>
           <Layout className="nav-icon !min-w-[24px] !w-6 !h-6" />
-          <span className="nav-label ml-4">Dashboards</span>
+          <span className="nav-label ml-4">Report</span>
         </NavLink>
 
         <NavLink to="/pesquisa" className={checkActive}>
           <Search className="nav-icon !min-w-[24px] !w-6 !h-6" />
-          <span className="nav-label ml-4">Reports</span>
+          <span className="nav-label ml-4">Pesquisas ETL</span>
         </NavLink>
       </nav>
     </aside>
