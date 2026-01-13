@@ -13,11 +13,15 @@ interface UserProfile {
   role: string;
   bio: string;
   theme: Theme;
+  technicalSalesGroup?: string;
+  isAdmin?: boolean; // ADICIONADO: Campo importante que estava faltando na tipagem
 }
 
 interface AuthContextType {
   user: UserProfile | null;
   loading: boolean;
+  isAdmin: boolean;
+  userGroup: string | undefined;
   updateUserProfile: (data: Partial<UserProfile>) => Promise<void>;
   changeTheme: (theme: Theme) => void;
 }
@@ -39,23 +43,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (firebaseUser: FirebaseUser | null) => {
       if (firebaseUser) {
-        const docRef = doc(db, "users", firebaseUser.uid);
-        const docSnap = await getDoc(docRef);
+        try {
+          const docRef = doc(db, "users", firebaseUser.uid);
+          const docSnap = await getDoc(docRef);
 
-        if (docSnap.exists()) {
-          setUser({ uid: firebaseUser.uid, ...docSnap.data() } as UserProfile);
-        } else {
-          const newUser: UserProfile = {
-            uid: firebaseUser.uid,
-            displayName: firebaseUser.displayName || "Usuário",
-            email: firebaseUser.email || "",
-            photoURL: firebaseUser.photoURL || "",
-            role: "Membro",
-            bio: "Sem descrição.",
-            theme: "light-orange"
-          };
-          await setDoc(docRef, newUser);
-          setUser(newUser);
+          if (docSnap.exists()) {
+            setUser({ uid: firebaseUser.uid, ...docSnap.data() } as UserProfile);
+          } else {
+            const newUser: UserProfile = {
+              uid: firebaseUser.uid,
+              displayName: firebaseUser.displayName || "Usuário",
+              email: firebaseUser.email || "",
+              photoURL: firebaseUser.photoURL || "",
+              role: "Membro",
+              bio: "Sem descrição.",
+              theme: "light-orange",
+              technicalSalesGroup: "Unassigned",
+              isAdmin: false 
+            };
+            await setDoc(docRef, newUser);
+            setUser(newUser);
+          }
+        } catch (error) {
+          console.error("Erro ao carregar usuário:", error);
         }
       } else {
         setUser(null);
@@ -77,7 +87,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const docRef = doc(db, "users", user.uid);
     await updateDoc(docRef, data);
-    setUser({ ...user, ...data });
+    setUser((prev) => prev ? { ...prev, ...data } : null);
   };
 
   const changeTheme = async (theme: Theme) => {
@@ -88,8 +98,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const isAdmin = user?.isAdmin === true 
+  
+  const userGroup = user?.technicalSalesGroup;
+
   return (
-    <AuthContext.Provider value={{ user, loading, updateUserProfile, changeTheme }}>
+    <AuthContext.Provider value={{ user, loading, isAdmin, userGroup, updateUserProfile, changeTheme }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,86 +1,167 @@
+import { useState, useEffect } from "react";
+import { collection, query, where, onSnapshot, addDoc, serverTimestamp, deleteDoc, doc } from "firebase/firestore";
+import { db, auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
-import { usePages } from "../hooks/usePages";
+import { useAuth } from "../contexts/AuthContext";
+import { Plus, FileText, Briefcase, StickyNote, Trash2, Globe, User } from "lucide-react";
 import PageTransition from "../components/PageTransition";
-import { User, FileText, Trash2, Clock, Globe, Lock } from "lucide-react";
+import { Page } from "../types";
 
 export default function PagesDashboard() {
-  const { pages, createPage, deletePage, loading } = usePages();
+  const [pages, setPages] = useState<Page[]>([]);
+  const [activeTab, setActiveTab] = useState<'personal' | 'opportunities'>('personal');
+  const { isAdmin } = useAuth(); 
   const navigate = useNavigate();
 
-  const handleCreate = async () => {
-    const newId = await createPage("", "document");
-    if (newId) navigate(`/page/${newId}`);
+  useEffect(() => {
+    if (!auth.currentUser) return;
+    
+    const q = isAdmin 
+      ? query(collection(db, "pages")) 
+      : query(collection(db, "pages"), where("ownerId", "==", auth.currentUser.uid));
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const docs = snapshot.docs
+        .map(doc => ({ id: doc.id, ...doc.data() } as Page))
+        .filter(page => page.type !== 'board');
+
+      const sortedDocs = docs.sort((a, b) => {
+        const dateA = a.updatedAt?.seconds || a.createdAt?.seconds || 0;
+        const dateB = b.updatedAt?.seconds || b.createdAt?.seconds || 0;
+        return dateB - dateA; 
+      });
+
+      setPages(sortedDocs);
+    });
+
+    return unsubscribe;
+  }, [isAdmin]);
+
+  const createNewPage = async () => {
+    if (!auth.currentUser) return;
+    const docRef = await addDoc(collection(db, "pages"), {
+      title: "Nova Anotação",
+      content: "",
+      type: "document", // Define como documento na criação
+      ownerId: auth.currentUser.uid,
+      ownerName: auth.currentUser.displayName || "Usuário",
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+      isPublic: false,
+      linkedOpportunityId: null
+    });
+    navigate(`/page/${docRef.id}`);
   };
 
-  const handleDelete = async (e: React.MouseEvent, id: string) => {
+  const deletePage = async (e: React.MouseEvent, pageId: string) => {
     e.stopPropagation();
-    if (confirm("Mover para a lixeira?")) await deletePage(id);
+    if (confirm("Deseja excluir permanentemente esta anotação?")) {
+      await deleteDoc(doc(db, "pages", pageId));
+    }
   };
 
-  if (loading) return (
-    <div className="flex h-screen w-full items-center justify-center bg-[var(--bg-app)] text-[var(--accent-color)] font-black uppercase tracking-[0.4em] animate-pulse">
-      Sincronizando...
-    </div>
-  );
+  const formatDate = (page: Page) => {
+    const timestamp = page.updatedAt || page.createdAt;
+    if (!timestamp) return "A guardar..."; 
+    if (timestamp?.toDate) return timestamp.toDate().toLocaleDateString('pt-BR'); 
+    if (timestamp.seconds) return new Date(timestamp.seconds * 1000).toLocaleDateString('pt-BR');
+    return "Sem data";
+  };
 
-  const docPages = pages.filter(p => p.type === 'document');
+  const filteredPages = pages.filter(page => 
+    activeTab === 'personal' ? !page.linkedOpportunityId : !!page.linkedOpportunityId
+  );
 
   return (
     <PageTransition>
-      <div className="flex flex-col items-center py-12 px-6 w-full max-w-7xl mx-auto">
-        <div className="w-full flex items-center justify-between mb-12">
+      <div className="min-h-screen ml-10 -mr-10 -mt-10bg-[var(--bg-app)] p-8 lg:p-20">
+        
+        <header className="mb-12 flex justify-between items-end">
           <div>
-            <h2 className="text-4xl font-black italic uppercase tracking-tighter text-[var(--text-primary)]">Documentos</h2>
-            <p className="text-[var(--text-secondary)] text-xs font-bold uppercase tracking-widest opacity-40">Gestão de arquivos da equipe</p>
+            <h1 className="text-6xl font-black italic uppercase tracking-tighter text-[var(--text-primary)]">Notas</h1>
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[var(--accent-color)] mt-2">
+              Gestão de Conteúdo {isAdmin && "(Administrador)"}
+            </p>
           </div>
-          <button onClick={handleCreate} className="bg-[var(--accent-color)] text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-2 hover:scale-105 transition-all border-none">
-            Nova Página
+          <button 
+            onClick={createNewPage} 
+            className="bg-[var(--accent-color)] text-white p-4 rounded-2xl hover:scale-105 transition-all shadow-lg border-none cursor-pointer"
+          >
+            <Plus size={24} />
+          </button>
+        </header>
+
+        <div className="flex gap-6 mb-10 border-b border-[var(--border-color)] pb-1">
+          <button 
+            onClick={() => setActiveTab('personal')}
+            className={`flex items-center gap-2 pb-3 text-sm font-black uppercase tracking-widest transition-all bg-transparent border-none cursor-pointer ${activeTab === 'personal' ? 'text-[var(--accent-color)] border-b-2 border-[var(--accent-color)]' : 'text-[var(--text-secondary)] opacity-50 hover:opacity-100'}`}
+          >
+            <StickyNote size={16} /> Pessoais
+          </button>
+          <button 
+            onClick={() => setActiveTab('opportunities')}
+            className={`flex items-center gap-2 pb-3 text-sm font-black uppercase tracking-widest transition-all bg-transparent border-none cursor-pointer ${activeTab === 'opportunities' ? 'text-[var(--accent-color)] border-b-2 border-[var(--accent-color)]' : 'text-[var(--text-secondary)] opacity-50 hover:opacity-100'}`}
+          >
+            <Briefcase size={16} /> Oportunidades
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-          {docPages.map((page) => (
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {filteredPages.map(page => (
             <div 
               key={page.id} 
-              onClick={() => navigate(`/page/${page.id}`)} 
-              className="group relative p-8 rounded-[2.5rem] bg-[var(--card-bg)] border border-[var(--border-color)] hover:border-[var(--accent-color)] cursor-pointer transition-all duration-500 backdrop-blur-md flex flex-col justify-between h-64"
+              onClick={() => navigate(`/page/${page.id}`)}
+              className="group bg-[var(--card-bg)] border border-[var(--border-color)] p-8 rounded-3xl cursor-pointer hover:border-[var(--accent-color)] transition-all hover:-translate-y-1 relative overflow-hidden h-52 flex flex-col justify-between shadow-sm"
             >
-              <div>
-                <div className="flex justify-between items-start mb-6">
-                  <div className="flex items-center gap-3">
-                    <div className="p-3 bg-[var(--bg-app)] rounded-2xl border border-[var(--border-color)] text-[var(--accent-color)] group-hover:bg-[var(--accent-color)] group-hover:text-white transition-all">
-                      <FileText size={24} />
-                    </div>
-                    <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border ${
-                      page.isPublic ? "border-green-500/20 text-green-500 bg-green-500/5" : "border-orange-500/20 text-orange-500 bg-orange-500/5"
-                    }`}>
-                      {page.isPublic ? <Globe size={10} /> : <Lock size={10} />}
-                      {page.isPublic ? "Público" : "Privado"}
-                    </div>
-                  </div>
-                  <button onClick={(e) => handleDelete(e, page.id)} className="opacity-0 group-hover:opacity-100 p-2 text-red-500 transition-all hover:scale-110">
-                    <Trash2 size={18} />
-                  </button>
-                </div>
-                <h4 className="text-xl font-bold text-[var(--text-primary)] truncate mb-2">{page.title || "Sem título"}</h4>
+              <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-100 transition-opacity text-[var(--accent-color)] pointer-events-none">
+                <FileText size={40} />
               </div>
 
-              <div className="flex items-center justify-between pt-6 border-t border-[var(--border-color)]">
-                <div className="flex items-center gap-2">
-                  <div className="p-1.5 bg-[var(--bg-app)] rounded-full border border-[var(--border-color)]">
-                    <User size={10} className="text-[var(--accent-color)]" />
+              <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                {page.isPublic && (
+                   <div className="p-2 bg-blue-500/10 text-blue-500 rounded-lg" title="Pública">
+                     <Globe size={16} />
+                   </div>
+                )}
+                <button 
+                  onClick={(e) => deletePage(e, page.id)}
+                  className="p-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500 hover:text-white transition-colors border-none cursor-pointer"
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
+              
+              <div className="space-y-2 pr-8">
+                <h3 className="text-xl font-bold text-[var(--text-primary)] line-clamp-2 leading-tight">
+                  {page.title || "Sem Título"}
+                </h3>
+                <div className="flex items-center gap-1.5 text-[var(--accent-color)] opacity-60">
+                  <User size={10} />
+                  <span className="text-[9px] font-black uppercase tracking-widest">{page.ownerName || "Desconhecido"}</span>
+                </div>
+              </div>
+              
+              <div className="flex justify-between items-end mt-4">
+                <p className="text-[10px] text-[var(--text-secondary)] font-black uppercase tracking-widest">
+                  {formatDate(page)}
+                </p>
+                {page.linkedOpportunityId && (
+                  <div className="flex items-center gap-1.5 bg-[var(--accent-color)]/10 px-2 py-1 rounded-md text-[var(--accent-color)]">
+                    <Briefcase size={10} />
+                    <span className="text-[8px] font-black uppercase">Vinculada</span>
                   </div>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)]">
-                    {(page as any).ownerName || "Membro"}
-                  </span>
-                </div>
-                <div className="flex items-center gap-1.5 text-[var(--text-secondary)] opacity-40">
-                  <Clock size={10} />
-                  <span className="text-[9px] font-bold uppercase">{page.createdAt?.toDate?.().toLocaleDateString('pt-BR') || "Recent"}</span>
-                </div>
+                )}
               </div>
             </div>
           ))}
+
+          {filteredPages.length === 0 && (
+            <div className="col-span-full py-20 text-center opacity-30">
+              <p className="text-sm font-black uppercase tracking-widest text-[var(--text-primary)]">
+                Nenhuma nota encontrada nesta secção.
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </PageTransition>

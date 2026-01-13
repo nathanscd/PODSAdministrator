@@ -68,7 +68,7 @@ export default function SpreadsheetPage() {
       results.push(row);
       if (i % 10 === 0) {
         setProgress(Math.round((i / baseSheet.length) * 100));
-        await new Promise(r => setTimeout(r, 0)); // Libera o event loop
+        await new Promise(r => setTimeout(r, 0)); 
       }
     }
 
@@ -104,7 +104,6 @@ export default function SpreadsheetPage() {
             <h1 className="text-6xl font-black italic uppercase text-[var(--text-primary)] tracking-tighter">
               Data <span className="text-[var(--accent-color)]">Compare</span>
             </h1>
-            <p className="text-[var(--text-secondary)] text-[10px] font-black uppercase tracking-[0.4em] mt-2 opacity-40">Motor RapidFuzz JS Ativo</p>
           </div>
           
           <div className="flex gap-4">

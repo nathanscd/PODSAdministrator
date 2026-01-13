@@ -48,6 +48,7 @@
 
 body {
   margin: 0;
+  padding: 0;
   min-width: 320px;
   min-height: 100vh;
   background-color: var(--bg-app);
@@ -115,7 +116,7 @@ button:active {
   padding: 20px 12px;
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
-  transition: width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: width 0.2s ease;
   overflow: hidden;
   display: flex;
   flex-direction: column;

@@ -1,18 +1,105 @@
-import { useState, useEffect, useMemo } from "react";
-import { collection, onSnapshot, query, addDoc, updateDoc, doc, deleteDoc } from "firebase/firestore";
+import { useState, useEffect, useMemo, memo, useRef } from "react";
+import { collection, onSnapshot, query, addDoc, updateDoc, doc, deleteDoc, where, getDocs, serverTimestamp } from "firebase/firestore";
 import { db, auth } from "../firebase";
-import { usePages } from "../hooks/usePages";
+import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 import { Opportunity } from "../types";
-import { Plus, Search, ExternalLink, X, Trash2, ChevronRight, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Plus, Search, ExternalLink, CheckCircle2, X, Filter, ChevronDown, ChevronRight, Edit3, BookOpen, MoreHorizontal, Trash2 } from "lucide-react";
 import PageTransition from "../components/PageTransition";
+import OpportunityForm from "../components/OpportunityForm";
+import CsvImporter from "../components/CsvImporter";
+import DatabaseCleaner from "../components/DatabaseCleaner";
+
+// --- TIPO PARA O MENU FLUTUANTE ---
+interface DropdownConfig {
+  x: number;
+  y: number;
+  opp: Opportunity;
+}
+
+// --- LINHA OTIMIZADA ---
+const OpportunityRow = memo(({ opp, onOpenMenu }: { opp: Opportunity, onOpenMenu: (e: React.MouseEvent, opp: Opportunity) => void }) => {
+  
+  const getStatusColor = (status: string) => {
+    const s = status?.toLowerCase() || "";
+    if (s.includes("bad") || s.includes("ruim") || s.includes("lost") || s.includes("cancel")) 
+      return "bg-red-500/5 border-red-500/20 hover:bg-red-500/10 text-red-400";
+    if (s.includes("attention") || s.includes("atenção") || s.includes("hold")) 
+      return "bg-yellow-500/5 border-yellow-500/20 hover:bg-yellow-500/10 text-yellow-400";
+    if (s.includes("good") || s.includes("bom") || s.includes("won")) 
+      return "bg-green-500/5 border-green-500/20 hover:bg-green-500/10 text-green-400";
+    return "bg-[var(--card-bg)] hover:bg-[var(--bg-app)] border-[var(--border-color)] text-[var(--text-primary)]"; 
+  };
+
+  const styleClass = getStatusColor(opp.status);
+
+  return (
+    <tr className={`transition-all group border-y ${styleClass}`}>
+      <td className={`px-4 py-4 sticky left-0 z-20 w-[50px] text-center ${styleClass.replace('hover:', '')} group-hover:bg-[#1a1a1a]`}>
+        <button 
+          onClick={(e) => onOpenMenu(e, opp)}
+          className="p-2 rounded-lg hover:bg-white/10 text-[var(--text-primary)] transition-colors"
+        >
+          <MoreHorizontal size={16} />
+        </button>
+      </td>
+
+      <td className={`px-8 py-4 sticky left-[50px] z-10 font-bold text-sm w-[350px] truncate shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)] ${styleClass.replace('hover:', '')} group-hover:bg-[#1a1a1a]`}>
+        {opp.description}
+      </td>
+      <td className="px-6 text-[10px] font-black uppercase opacity-70 truncate max-w-[150px]" title={opp.technicalSalesGroup}>{opp.technicalSalesGroup}</td>
+      <td className="px-6 text-xs font-bold">{opp.utility}</td>
+      <td className="px-6 text-xs font-bold">{opp.kam}</td>
+      <td className="px-6 text-xs font-bold">{opp.product}</td>
+      <td className="px-6 text-[9px] font-black uppercase">
+         <span className={`px-2 py-1 rounded-md border border-white/10 ${styleClass.replace('bg-', 'bg-opacity-20 ')}`}>{opp.status}</span>
+      </td>
+      <td className="px-6 text-[9px] font-black uppercase">{opp.businessStages}</td>
+      <td className="px-6 text-[9px] font-black uppercase">
+        <span className={opp.priority === 'Alta' || opp.priority === 'Crítica' ? 'text-red-500 animate-pulse' : ''}>{opp.priority}</span>
+      </td>
+      <td className="px-6 text-[11px] font-bold">{opp.progress}%</td>
+      <td className="px-6 font-mono text-xs">{opp.quantity}</td>
+      <td className="px-6 font-mono text-xs">{opp.scp?.toLocaleString('pt-BR')}</td>
+      <td className="px-6">{opp.homologated ? <CheckCircle2 size={16} className="text-green-500"/> : <X size={16} className="opacity-10"/>}</td>
+      <td className="px-6 text-xs font-bold">{opp.country}</td>
+      <td className="px-6 text-[9px] font-black uppercase">{opp.ecosystem}</td>
+      <td className="px-6 text-xs font-bold opacity-60">{opp.yearStart}</td>
+      <td className="px-6 text-xs font-bold opacity-60">{opp.yearEnd}</td>
+      <td className="px-6 text-xs font-bold">{opp.hqInterface}</td>
+      <td className="px-6 text-xs font-bold truncate max-w-[150px]">{opp.reasonWinLoss}</td>
+      <td className="px-6 text-xs font-bold truncate max-w-[150px]">{opp.competitors}</td>
+      <td className="px-6 text-xs font-bold">{opp.productTeam}</td>
+      <td className="px-6 text-xs font-bold">{opp.salesManagement}</td>
+      <td className="px-6 text-[10px] font-mono opacity-50">{opp.lastCustomerDiscussion}</td>
+      <td className="px-6">
+        {opp.files && <ExternalLink size={14} className="text-[var(--accent-color)]" />}
+      </td>
+    </tr>
+  );
+});
+
+// --- PÁGINA PRINCIPAL ---
 
 export default function OpportunityPage() {
-  const { isAdmin } = usePages();
+  const { isAdmin, userGroup, user } = useAuth();
+  const navigate = useNavigate();
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [search, setSearch] = useState("");
   const [filterUtility, setFilterUtility] = useState("all");
   const [filterGroup, setFilterGroup] = useState("all");
-  const [selectedOpp, setSelectedOpp] = useState<Opportunity | null>(null);
+  
+  // States de Seleção
+  const [dropdownConfig, setDropdownConfig] = useState<DropdownConfig | null>(null); // Menu Dropdown
+  const [editingOpp, setEditingOpp] = useState<Opportunity | null>(null); // Form de Edição
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
+
+  // Fecha o menu ao clicar fora
+  useEffect(() => {
+    const handleClickOutside = () => setDropdownConfig(null);
+    window.addEventListener("click", handleClickOutside);
+    return () => window.removeEventListener("click", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const q = query(collection(db, "opportunities"));
@@ -23,238 +110,241 @@ export default function OpportunityPage() {
     return unsubscribe;
   }, []);
 
+  const uniqueUtilities = useMemo(() => Array.from(new Set(opportunities.map(o => o.utility))).sort().filter(Boolean), [opportunities]);
+
+  // Abre o menu na posição do clique
+  const handleOpenMenu = (e: React.MouseEvent, opp: Opportunity) => {
+    e.stopPropagation(); // Impede que feche imediatamente
+    const rect = (e.target as Element).getBoundingClientRect();
+    setDropdownConfig({
+      x: rect.left,
+      y: rect.bottom + 5, // Um pouco abaixo do botão
+      opp
+    });
+  };
+
+  const handleOpenNotes = async (opp: Opportunity) => {
+    if (!auth.currentUser) return;
+    const q = query(
+      collection(db, "pages"), 
+      where("linkedOpportunityId", "==", opp.id),
+      where("ownerId", "==", auth.currentUser.uid)
+    );
+    const querySnapshot = await getDocs(q);
+    if (!querySnapshot.empty) {
+      navigate(`/page/${querySnapshot.docs[0].id}`);
+    } else {
+      const newPage = {
+        title: `Notes: ${opp.description}`,
+        content: `<h1>${opp.description}</h1><p>Notes regarding this opportunity...</p>`,
+        ownerId: auth.currentUser.uid,
+        updatedAt: serverTimestamp(),
+        linkedOpportunityId: opp.id
+      };
+      const docRef = await addDoc(collection(db, "pages"), newPage);
+      navigate(`/page/${docRef.id}`);
+    }
+  };
+
   const createOpportunity = async () => {
-    const newOpp: any = {
-      description: "Nova Oportunidade",
-      technicalSalesGroup: "", utility: "", files: "", yearStart: 2025, yearEnd: 2026,
+    if (!auth.currentUser) return alert("Login necessário");
+    const assignedGroup = isAdmin ? "" : (userGroup || "Unassigned");
+    const newOppData: Omit<Opportunity, 'id'> = {
+      description: "Nova Oportunidade", technicalSalesGroup: assignedGroup, utility: "", files: "", yearStart: new Date().getFullYear(), yearEnd: new Date().getFullYear() + 1,
       hqInterface: "", kam: "", status: "Draft", product: "", priority: "Média",
       businessStages: "Prospecção", reasonWinLoss: "", quantity: 0, scp: 0,
       remember: "", homologated: false, reasonHomologated: "", country: "Brasil",
       ecosystem: "", progress: 0, lastCustomerDiscussion: new Date().toISOString().split('T')[0],
       observation: "", competitors: "", productTeam: "", salesManagement: "",
-      ownerId: auth.currentUser?.uid
+      ownerId: auth.currentUser.uid
     };
-    const docRef = await addDoc(collection(db, "opportunities"), newOpp);
-    setSelectedOpp({ id: docRef.id, ...newOpp });
+    try {
+      const docRef = await addDoc(collection(db, "opportunities"), newOppData);
+      setEditingOpp({ id: docRef.id, ...newOppData });
+    } catch (error) { console.error(error); }
   };
 
   const updateOpp = async (id: string, updates: Partial<Opportunity>) => {
+    setOpportunities(prev => prev.map(o => o.id === id ? { ...o, ...updates } : o));
     await updateDoc(doc(db, "opportunities", id), updates);
   };
 
-  const filteredData = useMemo(() => {
-    return opportunities.filter(opp => {
-      const matchesSearch = opp.description?.toLowerCase().includes(search.toLowerCase());
+  const deleteOpp = async (id: string) => {
+    if(confirm("Remover permanentemente?")) {
+      await deleteDoc(doc(db, "opportunities", id));
+      setEditingOpp(null);
+    }
+  };
+
+  const groupedData = useMemo(() => {
+    const filtered = opportunities.filter(opp => {
+      const matchesSearch = opp.description?.toLowerCase().includes(search.toLowerCase()) || opp.utility?.toLowerCase().includes(search.toLowerCase());
       const matchesUtility = filterUtility === "all" || opp.utility === filterUtility;
-      // Regra: Lígia só vê o dela, etc. Admin vê tudo.
-      const matchesGroup = isAdmin ? (filterGroup === "all" || opp.technicalSalesGroup === filterGroup) : (opp.technicalSalesGroup === "2nd Group - Ligia Taniguchi"); 
+      const userGroupLower = (userGroup || "").toLowerCase();
+      const oppGroupLower = (opp.technicalSalesGroup || "").toLowerCase();
+      const matchesGroup = isAdmin 
+        ? (filterGroup === "all" || oppGroupLower.includes(filterGroup.toLowerCase()))
+        : (oppGroupLower.includes(userGroupLower) || opp.ownerId === user?.uid);
       return matchesSearch && matchesUtility && matchesGroup;
     });
-  }, [opportunities, search, filterUtility, filterGroup, isAdmin]);
+
+    const groups: Record<string, Opportunity[]> = {};
+    filtered.forEach(opp => {
+      const groupName = opp.technicalSalesGroup || "Unassigned Group";
+      if (!groups[groupName]) groups[groupName] = [];
+      groups[groupName].push(opp);
+    });
+
+    Object.keys(groups).forEach(key => {
+      groups[key].sort((a, b) => (a.utility || "").localeCompare(b.utility || ""));
+    });
+
+    return Object.entries(groups).sort((a, b) => a[0].localeCompare(b[0]));
+  }, [opportunities, search, filterUtility, filterGroup, isAdmin, userGroup, user]);
+
+  const toggleGroup = (groupName: string) => {
+    setExpandedGroups(prev => ({ ...prev, [groupName]: prev[groupName] === false ? true : false }));
+  };
 
   return (
     <PageTransition>
       <div className="main ml-10 -mr-10 -mt-10 !p-0 bg-[var(--bg-app)] min-h-screen flex flex-col">
         
-        <header className="pt-20 pb-10 px-8 lg:px-20 bg-[var(--card-bg)]/50 backdrop-blur-xl shrink-0">
+        <div className="fixed bottom-6 right-6 z-[9999] flex gap-4 opacity-0 hover:opacity-100 transition-opacity">
+           <DatabaseCleaner />
+           <CsvImporter />
+        </div>
+
+        <header className="pt-20 pb-10 px-8 lg:px-20 bg-[var(--card-bg)]/80 backdrop-blur-xl shrink-0 z-20 sticky top-0 border-b border-[var(--border-color)]">
           <div className="flex justify-between items-end">
             <div>
-              <h1 className="text-6xl font-black italic uppercase tracking-tighter">Opportunities</h1>
-              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[var(--accent-color)] mt-2">AMI Operational Pipeline</p>
+              <h1 className="text-6xl font-black italic uppercase tracking-tighter text-[var(--text-primary)]">AMI Opportunities</h1>
+              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[var(--accent-color)] mt-2">Opportunities overview</p>
             </div>
-            
             <div className="flex gap-4">
               <div className="flex items-center gap-3 bg-[var(--bg-app)] px-4 py-2 rounded-2xl border border-[var(--border-color)]">
-                <Search size={16} className="opacity-20" />
-                <input placeholder="BUSCAR..." className="bg-transparent border-none outline-none text-[10px] font-black uppercase w-48" value={search} onChange={(e) => setSearch(e.target.value)} />
+                <Search size={16} className="opacity-20 text-[var(--text-primary)]" />
+                <input placeholder="SEARCH..." className="bg-transparent border-none outline-none text-[10px] font-black uppercase w-48 text-[var(--text-primary)]" value={search} onChange={(e) => setSearch(e.target.value)} />
               </div>
-              <button onClick={createOpportunity} className="bg-[var(--accent-color)] text-white p-4 rounded-2xl hover:scale-105 transition-all border-none shadow-none"><Plus size={24} /></button>
+              <button onClick={createOpportunity} className="bg-[var(--accent-color)] text-white p-4 rounded-2xl hover:scale-105 transition-all border-none shadow-none cursor-pointer"><Plus size={24} /></button>
             </div>
           </div>
-
-          <div className="flex gap-6 mt-8">
-            <select className="bg-transparent border-none text-[10px] font-black uppercase tracking-widest outline-none opacity-40 hover:opacity-100 transition-opacity cursor-pointer" onChange={(e) => setFilterUtility(e.target.value)}>
-              <option value="all">Filtro: Todas Utilities</option>
-              {Array.from(new Set(opportunities.map(o => o.utility))).filter(Boolean).map(u => <option key={u} value={u}>{u}</option>)}
-            </select>
-            {isAdmin && (
-              <select className="bg-transparent border-none text-[10px] font-black uppercase tracking-widest outline-none opacity-40 hover:opacity-100 transition-opacity cursor-pointer" onChange={(e) => setFilterGroup(e.target.value)}>
-                <option value="all">Filtro: Todos os Grupos</option>
-                <option value="1st Group">1st Group</option>
-                <option value="2nd Group">2nd Group</option>
-                <option value="3rd Group">3rd Group</option>
+          <div className="flex gap-8 mt-6">
+            <div className="flex items-center gap-2 opacity-60 hover:opacity-100 transition-opacity">
+              <Filter size={14} className="text-[var(--text-primary)]" />
+              <select className="bg-transparent border-none text-[10px] font-black uppercase tracking-widest outline-none cursor-pointer text-[var(--text-primary)]" onChange={(e) => setFilterUtility(e.target.value)}>
+                <option value="all" className="bg-[var(--bg-app)]">Filter: All Customers</option>
+                {uniqueUtilities.map(u => <option key={u} value={u} className="bg-[var(--bg-app)]">{u}</option>)}
               </select>
-            )}
+            </div>
           </div>
         </header>
 
-        {/* TABELA COM OVERFLOW HORIZONTAL */}
-        <div className="flex-1 overflow-auto custom-scrollbar p-8 lg:p-20">
-          <div className="min-w-[3000px]"> {/* Força o scroll horizontal para as 25 colunas */}
-            <table className="w-full text-left border-separate border-spacing-y-2">
-              <thead>
-                <tr className="text-[9px] font-black uppercase tracking-[0.2em] text-[var(--text-secondary)] opacity-30">
-                  <th className="px-6 sticky left-0 bg-[var(--bg-app)] z-10">Description</th>
-                  <th className="px-6">Group</th>
-                  <th className="px-6">Utility</th>
-                  <th className="px-6">Priority</th>
-                  <th className="px-6">Stage</th>
-                  <th className="px-6">Status</th>
-                  <th className="px-6">Progress</th>
-                  <th className="px-6">QTY</th>
-                  <th className="px-6">SCP</th>
-                  <th className="px-6">Homologated</th>
-                  <th className="px-6">Country</th>
-                  <th className="px-6">Ecosystem</th>
-                  <th className="px-6">Years</th>
-                  <th className="px-6">KAM</th>
-                  <th className="px-6">Product</th>
-                  <th className="px-6">Last Discussion</th>
-                  <th className="px-6">Files</th>
+        <div className="flex-1 overflow-auto custom-scrollbar p-0">
+          <div className="min-w-[4000px]">
+            <table className="w-full text-left border-separate border-spacing-y-0">
+              <thead className="sticky top-0 z-20 bg-[var(--bg-app)] shadow-sm">
+                <tr className="text-[9px] font-black uppercase tracking-[0.3em] text-[var(--text-secondary)]">
+                  <th className="px-4 py-4 sticky left-0 bg-[var(--bg-app)] z-30 border-b border-[var(--border-color)] w-[50px]">Action</th>
+                  <th className="px-8 py-4 sticky left-[50px] bg-[var(--bg-app)] z-30 border-b border-[var(--border-color)]">Description</th>
+                  {/* Demais cabeçalhos (mantidos iguais) */}
+                  <th className="px-6 border-b border-[var(--border-color)]">Group</th>
+                  <th className="px-6 border-b border-[var(--border-color)]">Utility</th>
+                  <th className="px-6 border-b border-[var(--border-color)]">KAM</th>
+                  <th className="px-6 border-b border-[var(--border-color)]">Product</th>
+                  <th className="px-6 border-b border-[var(--border-color)]">Status</th>
+                  <th className="px-6 border-b border-[var(--border-color)]">Stage</th>
+                  <th className="px-6 border-b border-[var(--border-color)]">Priority</th>
+                  <th className="px-6 border-b border-[var(--border-color)]">Progress</th>
+                  <th className="px-6 border-b border-[var(--border-color)]">Qty</th>
+                  <th className="px-6 border-b border-[var(--border-color)]">SCP (R$)</th>
+                  <th className="px-6 border-b border-[var(--border-color)]">Homologated</th>
+                  <th className="px-6 border-b border-[var(--border-color)]">Country</th>
+                  <th className="px-6 border-b border-[var(--border-color)]">Ecosystem</th>
+                  <th className="px-6 border-b border-[var(--border-color)]">Start</th>
+                  <th className="px-6 border-b border-[var(--border-color)]">End</th>
+                  <th className="px-6 border-b border-[var(--border-color)]">HQ Support</th>
+                  <th className="px-6 border-b border-[var(--border-color)]">Reason</th>
+                  <th className="px-6 border-b border-[var(--border-color)]">Competitors</th>
+                  <th className="px-6 border-b border-[var(--border-color)]">Product Team</th>
+                  <th className="px-6 border-b border-[var(--border-color)]">Sales Mgmt</th>
+                  <th className="px-6 border-b border-[var(--border-color)]">Last Discussion</th>
+                  <th className="px-6 border-b border-[var(--border-color)]">Link</th>
                 </tr>
               </thead>
               <tbody>
-                {filteredData.map((opp) => (
-                  <tr key={opp.id} onClick={() => setSelectedOpp(opp)} className="bg-[var(--card-bg)] hover:bg-[var(--bg-app)] transition-all cursor-pointer group">
-                    <td className="px-6 py-6 rounded-l-3xl border-y border-l border-[var(--border-color)] sticky left-0 bg-[var(--card-bg)] group-hover:bg-[var(--bg-app)] z-10 font-bold text-sm w-[300px] truncate">{opp.description}</td>
-                    <td className="px-6 py-6 border-y border-[var(--border-color)] text-[10px] font-black">{opp.technicalSalesGroup}</td>
-                    <td className="px-6 py-6 border-y border-[var(--border-color)] text-xs font-bold">{opp.utility}</td>
-                    <td className="px-6 py-6 border-y border-[var(--border-color)] text-[9px] font-black uppercase">
-                       <span className={opp.priority === 'Alta' || opp.priority === 'Crítica' ? 'text-red-500' : ''}>{opp.priority}</span>
-                    </td>
-                    <td className="px-6 py-6 border-y border-[var(--border-color)] text-[9px] font-black uppercase">{opp.businessStages}</td>
-                    <td className="px-6 py-6 border-y border-[var(--border-color)] text-[9px] font-black uppercase">{opp.status}</td>
-                    <td className="px-6 py-6 border-y border-[var(--border-color)]">
-                      <div className="w-20 h-1 bg-white/5 rounded-full overflow-hidden"><div className="h-full bg-[var(--accent-color)]" style={{ width: `${opp.progress}%` }} /></div>
-                    </td>
-                    <td className="px-6 py-6 border-y border-[var(--border-color)] font-mono text-xs">{opp.quantity}</td>
-                    <td className="px-6 py-6 border-y border-[var(--border-color)] font-mono text-xs">{opp.scp}</td>
-                    <td className="px-6 py-6 border-y border-[var(--border-color)] text-center">{opp.homologated ? <CheckCircle2 size={16} className="text-green-500"/> : <X size={16} className="opacity-10"/>}</td>
-                    <td className="px-6 py-6 border-y border-[var(--border-color)] text-xs font-bold">{opp.country}</td>
-                    <td className="px-6 py-6 border-y border-[var(--border-color)] text-[9px] font-black uppercase">{opp.ecosystem}</td>
-                    <td className="px-6 py-6 border-y border-[var(--border-color)] text-[10px] font-bold">{opp.yearStart} - {opp.yearEnd}</td>
-                    <td className="px-6 py-6 border-y border-[var(--border-color)] text-xs font-bold">{opp.kam}</td>
-                    <td className="px-6 py-6 border-y border-[var(--border-color)] text-xs font-bold">{opp.product}</td>
-                    <td className="px-6 py-6 border-y border-[var(--border-color)] text-[10px] font-mono opacity-50">{opp.lastCustomerDiscussion}</td>
-                    <td className="px-6 py-6 rounded-r-3xl border-y border-r border-[var(--border-color)]">
-                      {opp.files ? <ExternalLink size={14} className="text-[var(--accent-color)]" /> : null}
-                    </td>
-                  </tr>
+                {groupedData.map(([groupName, groupOpps]) => (
+                  <>
+                    <tr key={`header-${groupName}`} className="bg-[var(--bg-app)] sticky left-0">
+                      <td colSpan={25} className="px-8 py-6 sticky left-0 bg-[var(--bg-app)] z-10 border-b border-[var(--border-color)]">
+                        <button onClick={() => toggleGroup(groupName)} className="flex items-center gap-3 hover:opacity-70 transition-opacity">
+                           <div className="p-1 rounded bg-[var(--accent-color)]/10 text-[var(--accent-color)]">
+                             {expandedGroups[groupName] === false ? <ChevronRight size={14} /> : <ChevronDown size={14} />}
+                           </div>
+                           <span className="text-xl font-black italic uppercase tracking-tighter text-[var(--text-primary)]">
+                             {groupName || "Sem Grupo"} <span className="ml-3 text-xs opacity-40 not-italic font-normal">({groupOpps.length})</span>
+                           </span>
+                        </button>
+                      </td>
+                    </tr>
+                    {expandedGroups[groupName] !== false && groupOpps.map(opp => (
+                       <OpportunityRow key={opp.id} opp={opp} onOpenMenu={handleOpenMenu} />
+                    ))}
+                  </>
                 ))}
               </tbody>
             </table>
           </div>
         </div>
 
-        {/* SIDEBAR DE EDIÇÃO COM AS 25 PROPRIEDADES */}
-        {selectedOpp && (
-          <div className="fixed inset-0 z-[100] flex justify-end">
-            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setSelectedOpp(null)} />
-            <div className="relative w-full max-w-3xl bg-[var(--card-bg)] h-full border-l border-[var(--border-color)] p-12 overflow-y-auto custom-scrollbar animate-in slide-in-from-right duration-500">
-              <div className="flex justify-between items-start mb-12">
-                <div className="w-full">
-                  <h2 className="text-4xl font-black italic uppercase tracking-tighter">Edit Opportunity</h2>
-                  <input className="w-full bg-transparent border-none outline-none text-xl font-bold text-[var(--accent-color)] mt-4" value={selectedOpp.description} onChange={(e) => updateOpp(selectedOpp.id, { description: e.target.value })} />
-                </div>
-                <button onClick={() => setSelectedOpp(null)} className="p-2 border-none bg-transparent shadow-none"><X size={24}/></button>
-              </div>
-
-              <div className="grid grid-cols-2 gap-6">
-                {/* CAMPOS REQUERIDOS (TOTAL 25) */}
-                {[
-                  { label: "Technical Sales Group", key: "technicalSalesGroup" },
-                  { label: "Utility (Customer)", key: "utility" },
-                  { label: "KAM", key: "kam" },
-                  { label: "Product", key: "product" },
-                  { label: "Ecosystem", key: "ecosystem" },
-                  { label: "Status", key: "status" },
-                  { label: "Business Stage", key: "businessStages" },
-                  { label: "HQ Support & Interface", key: "hqInterface" },
-                  { label: "Competitors", key: "competitors" },
-                  { label: "Product Team", key: "productTeam" },
-                  { label: "Sales Management", key: "salesManagement" },
-                  { label: "Country", key: "country" },
-                ].map(field => (
-                  <div key={field.key} className="space-y-1">
-                    <label className="text-[8px] font-black uppercase opacity-40 ml-1">{field.label}</label>
-                    <input list={field.key} className="w-full bg-[var(--bg-app)] border border-[var(--border-color)] rounded-xl p-3 text-xs font-bold" value={(selectedOpp as any)[field.key]} onChange={(e) => updateOpp(selectedOpp.id, { [field.key]: e.target.value })} />
-                    <datalist id={field.key}>
-                      {Array.from(new Set(opportunities.map(o => (o as any)[field.key]))).map(v => <option key={v} value={v}/>)}
-                    </datalist>
-                  </div>
-                ))}
-
-                <div className="space-y-1">
-                  <label className="text-[8px] font-black uppercase opacity-40 ml-1">Priority</label>
-                  <select className="w-full bg-[var(--bg-app)] border border-[var(--border-color)] rounded-xl p-3 text-xs font-bold outline-none" value={selectedOpp.priority} onChange={(e) => updateOpp(selectedOpp.id, { priority: e.target.value as any })}>
-                    <option value="Baixa">Baixa</option><option value="Média">Média</option><option value="Alta">Alta</option><option value="Crítica">Crítica</option>
-                  </select>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[8px] font-black uppercase opacity-40 ml-1">Progress %</label>
-                  <input type="number" className="w-full bg-[var(--bg-app)] border border-[var(--border-color)] rounded-xl p-3 text-xs font-bold" value={selectedOpp.progress} onChange={(e) => updateOpp(selectedOpp.id, { progress: Number(e.target.value) })} />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[8px] font-black uppercase opacity-40 ml-1">Year Start</label>
-                  <input type="number" className="w-full bg-[var(--bg-app)] border border-[var(--border-color)] rounded-xl p-3 text-xs font-bold" value={selectedOpp.yearStart} onChange={(e) => updateOpp(selectedOpp.id, { yearStart: Number(e.target.value) })} />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[8px] font-black uppercase opacity-40 ml-1">Year End</label>
-                  <input type="number" className="w-full bg-[var(--bg-app)] border border-[var(--border-color)] rounded-xl p-3 text-xs font-bold" value={selectedOpp.yearEnd} onChange={(e) => updateOpp(selectedOpp.id, { yearEnd: Number(e.target.value) })} />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[8px] font-black uppercase opacity-40 ml-1">Quantity</label>
-                  <input type="number" className="w-full bg-[var(--bg-app)] border border-[var(--border-color)] rounded-xl p-3 text-xs font-bold" value={selectedOpp.quantity} onChange={(e) => updateOpp(selectedOpp.id, { quantity: Number(e.target.value) })} />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[8px] font-black uppercase opacity-40 ml-1">SCP</label>
-                  <input type="number" className="w-full bg-[var(--bg-app)] border border-[var(--border-color)] rounded-xl p-3 text-xs font-bold" value={selectedOpp.scp} onChange={(e) => updateOpp(selectedOpp.id, { scp: Number(e.target.value) })} />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[8px] font-black uppercase opacity-40 ml-1">Last Customer Discussion</label>
-                  <input type="date" className="w-full bg-[var(--bg-app)] border border-[var(--border-color)] rounded-xl p-3 text-xs font-bold" value={selectedOpp.lastCustomerDiscussion} onChange={(e) => updateOpp(selectedOpp.id, { lastCustomerDiscussion: e.target.value })} />
-                </div>
-
-                <div className="col-span-2 space-y-1">
-                  <label className="text-[8px] font-black uppercase opacity-40 ml-1">SharePoint Files (Link)</label>
-                  <input className="w-full bg-[var(--bg-app)] border border-[var(--border-color)] rounded-xl p-3 text-xs font-bold" value={selectedOpp.files} onChange={(e) => updateOpp(selectedOpp.id, { files: e.target.value })} />
-                </div>
-
-                {/* BLOCO DE HOMOLOGAÇÃO */}
-                <div className="col-span-2 p-6 bg-[var(--bg-app)] rounded-3xl border border-[var(--border-color)] flex items-center gap-4">
-                  <input type="checkbox" checked={selectedOpp.homologated} onChange={(e) => updateOpp(selectedOpp.id, { homologated: e.target.checked })} className="w-5 h-5 accent-[var(--accent-color)]" />
-                  <div className="flex-1">
-                    <label className="text-[9px] font-black uppercase">Homologated</label>
-                    <input placeholder="Reason..." className="w-full bg-transparent border-none outline-none text-xs mt-1" value={selectedOpp.reasonHomologated} onChange={(e) => updateOpp(selectedOpp.id, { reasonHomologated: e.target.value })} />
-                  </div>
-                </div>
-
-                <div className="col-span-2 space-y-1">
-                  <label className="text-[8px] font-black uppercase opacity-40 ml-1">Observation</label>
-                  <textarea className="w-full bg-[var(--bg-app)] border border-[var(--border-color)] rounded-2xl p-4 text-xs h-24 resize-none" value={selectedOpp.observation} onChange={(e) => updateOpp(selectedOpp.id, { observation: e.target.value })} />
-                </div>
-
-                {/* RFI / RFP REMEMBER */}
-                {(selectedOpp.businessStages === "RFI" || selectedOpp.businessStages === "RFP") && (
-                  <div className="col-span-2 p-6 bg-orange-500/10 border border-orange-500/20 rounded-3xl flex items-center gap-4">
-                    <AlertCircle className="text-orange-500" />
-                    <div className="flex-1">
-                      <p className="text-[9px] font-black uppercase text-orange-500">Atenção Processo RFI/RFP</p>
-                      <input className="w-full bg-transparent border-none outline-none text-xs font-bold mt-1" placeholder="Lembrete importante..." value={selectedOpp.remember} onChange={(e) => updateOpp(selectedOpp.id, { remember: e.target.value })} />
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <button onClick={() => { if(confirm("Remover?")) { deleteDoc(doc(db, "opportunities", selectedOpp.id)); setSelectedOpp(null); } }} className="mt-12 w-full py-4 rounded-xl border border-red-500/20 text-red-500 text-[10px] font-black uppercase hover:bg-red-500 hover:text-white transition-all bg-transparent shadow-none">Remover Registro</button>
+        {/* --- MENU DROPDOWN FLUTUANTE (NOVO) --- */}
+        {dropdownConfig && (
+          <div 
+            className="fixed z-[9999] bg-[#1a1a1a] border border-[var(--border-color)] rounded-xl shadow-2xl py-2 w-48 animate-in fade-in zoom-in-95 duration-100"
+            style={{ 
+              top: Math.min(dropdownConfig.y, window.innerHeight - 150), // Evita sair da tela embaixo
+              left: Math.min(dropdownConfig.x, window.innerWidth - 200) // Evita sair da tela na direita
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="px-4 py-2 border-b border-white/5 mb-1">
+              <p className="text-[9px] uppercase font-black opacity-50 truncate">{dropdownConfig.opp.utility}</p>
             </div>
+
+            <button 
+              onClick={() => { setEditingOpp(dropdownConfig.opp); setDropdownConfig(null); }}
+              className="w-full text-left px-4 py-3 flex items-center gap-3 hover:bg-white/5 transition-colors text-sm font-bold text-[var(--text-primary)]"
+            >
+              <Edit3 size={14} className="text-blue-400" /> Edit Opportunity
+            </button>
+
+            <button 
+              onClick={() => { handleOpenNotes(dropdownConfig.opp); setDropdownConfig(null); }}
+              className="w-full text-left px-4 py-3 flex items-center gap-3 hover:bg-white/5 transition-colors text-sm font-bold text-[var(--text-primary)]"
+            >
+              <BookOpen size={14} className="text-purple-400" /> Open Notes
+            </button>
+            
+            <div className="h-px bg-white/5 my-1" />
+            
+            <button 
+               onClick={() => { deleteOpp(dropdownConfig.opp.id); setDropdownConfig(null); }}
+               className="w-full text-left px-4 py-3 flex items-center gap-3 hover:bg-red-500/10 text-red-500 transition-colors text-sm font-bold"
+            >
+              <Trash2 size={14} /> Delete
+            </button>
           </div>
+        )}
+
+        {/* FORMULÁRIO DE EDIÇÃO */}
+        {editingOpp && (
+          <OpportunityForm 
+            opp={editingOpp} 
+            allOpportunities={opportunities}
+            onClose={() => setEditingOpp(null)} 
+            onUpdate={updateOpp}
+            onDelete={deleteOpp}
+          />
         )}
       </div>
     </PageTransition>

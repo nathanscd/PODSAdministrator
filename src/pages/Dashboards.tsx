@@ -1,513 +1,307 @@
 import { useEffect, useState, useRef } from "react";
+import { collection, onSnapshot, query } from "firebase/firestore";
+import { db } from "../firebase";
+import { Opportunity } from "../types";
 import PageTransition from "../components/PageTransition";
+import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
-import {
-  AreaChart,
-  Area,
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Cell,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
 import { 
-  ArrowUpRight, 
-  Activity, 
-  Zap, 
-  Box, 
-  FileDown, 
-  Clock, 
-  TrendingUp, 
-  Users,
-  AlertCircle,
-  CheckCircle,
-  XCircle
-} from "lucide-react";
+  PieChart, Pie, Cell, ResponsiveContainer, 
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend 
+} from "recharts";
+import { FileDown, Loader2, Users, Briefcase, BarChart3, List, ShieldCheck, Clock } from "lucide-react";
 
-interface Opportunity {
-  id: string;
-  utility: string;
-  description: string;
-  technicalSalesGroup: string;
-  yearStart: number;
-  yearEnd: number;
-  country: string;
-  ecosystem: string;
-  status: "Good" | "Attention" | "Bad" | "Archived" | "Lost" | "Post Sales";
-  businessStages: string;
-  qty: number;
-  lastCustomerDiscussion: string;
-  notes: string;
-}
-
-interface DashboardData {
-  totalOpportunities: number;
-  goodOpportunities: number;
-  attentionOpportunities: number;
-  badOpportunities: number;
-  opportunities: Opportunity[];
-}
-
-const StockifyCard = ({ icon: Icon, title, value, badge, variant = "default" }: any) => {
-  const isFilled = variant === "filled";
-  return (
-    <div className={`relative ml-10 -mr-10 h-[180px] w-full group rounded-[2.5rem] p-7 transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-1
-      ${isFilled ? 'bg-[var(--accent-color)] text-white' : 'bg-[var(--card-bg)] border border-[var(--border-color)] text-[var(--text-primary)]'}`}>
-      
-      <div className="flex justify-between items-start">
-        <div className={`p-3 rounded-2xl border ${isFilled ? 'bg-white/20 border-white/10' : 'bg-[var(--bg-app)] border-[var(--border-color)]'}`}>
-          <Icon size={24} strokeWidth={1.5} />
-        </div>
-        <div className="flex items-center gap-2">
-          {badge && (
-            <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${isFilled ? 'bg-white/20 border-white/10' : 'bg-[var(--bg-app)] border-[var(--border-color)] text-[var(--text-secondary)]'}`}>
-              {badge}
-            </span>
-          )}
-          <div className={`p-2 rounded-full border ${isFilled ? 'border-white/20 bg-white/10' : 'border-[var(--border-color)] bg-[var(--bg-app)]'} transition-transform group-hover:rotate-45`}>
-            <ArrowUpRight size={16} />
-          </div>
-        </div>
-      </div>
-
-      <div className="mt-auto pt-4">
-        <h3 className="text-4xl font-bold tracking-tight leading-none mb-1">{value}</h3>
-        <span className="text-xs font-medium uppercase tracking-widest opacity-70">{title}</span>
-      </div>
-    </div>
-  );
-};
-
-export default function Dashboard() {
-  const [data, setData] = useState<DashboardData | null>(null);
+export default function Report() {
+  const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [loading, setLoading] = useState(true);
-  const [chartData, setChartData] = useState<any[]>([]);
-  const [statusData, setStatusData] = useState<any[]>([]);
-  const [groupData, setGroupData] = useState<any[]>([]);
-  const [countryData, setCountryData] = useState<any[]>([]);
-  const [ecosystemData, setEcosystemData] = useState<any[]>([]);
-  const printRef = useRef<HTMLDivElement>(null);
+  const reportRef = useRef<HTMLDivElement>(null);
 
-  const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899"];
-  const STATUS_COLORS = {
-    "Good": "#10b981",
-    "Attention": "#f59e0b",
-    "Bad": "#ef4444",
-    "Archived": "#6b7280",
-    "Lost": "#8b5cf6",
-    "Post Sales": "#3b82f6"
-  };
+  const COLORS = ["#10b981", "#3b82f6", "#f59e0b", "#ef4444", "#8b5cf6", "#6b7280"];
 
   useEffect(() => {
-    const fetchData = async () => {
-      await new Promise((resolve) => setTimeout(resolve, 800));
-      
-      const mockOpportunities: Opportunity[] = [
-        {
-          id: "1",
-          utility: "ENEL",
-          description: "ELECTRODEPEND IENTES 4500",
-          technicalSalesGroup: "1st Group",
-          yearStart: 2025,
-          yearEnd: 2025,
-          country: "ARGENTINA",
-          ecosystem: "Smart Metering",
-          status: "Good",
-          businessStages: "RFI - Budgetary Quotation",
-          qty: 4.5,
-          lastCustomerDiscussion: "26/11/2025",
-          notes: "Clarification deadline changed"
-        },
-        {
-          id: "2",
-          utility: "COPEL",
-          description: "SIGFI 2000",
-          technicalSalesGroup: "1st Group",
-          yearStart: 2025,
-          yearEnd: 2026,
-          country: "BRAZIL",
-          ecosystem: "Solar",
-          status: "Good",
-          businessStages: "RFP - Bidding Process",
-          qty: 2.0,
-          lastCustomerDiscussion: "17/11/2025",
-          notes: "New RFP to be opened in 2026"
-        },
-        {
-          id: "3",
-          utility: "ENERGISA",
-          description: "Start AMI",
-          technicalSalesGroup: "1st Group",
-          yearStart: 2024,
-          yearEnd: 2025,
-          country: "BRAZIL",
-          ecosystem: "Smart Metering",
-          status: "Attention",
-          businessStages: "Archived",
-          qty: 23.0,
-          lastCustomerDiscussion: "17/11/2025",
-          notes: "Analysis will be concluded until feb 2026"
-        },
-        {
-          id: "4",
-          utility: "ENEL",
-          description: "AMI - Wi-SUN and/or PLC Meters and More - RJ",
-          technicalSalesGroup: "1st Group",
-          yearStart: 2025,
-          yearEnd: 2025,
-          country: "BRAZIL",
-          ecosystem: "Smart Metering",
-          status: "Good",
-          businessStages: "Product Codes for Solution",
-          qty: 7.81,
-          lastCustomerDiscussion: "12/11/2025",
-          notes: "Technical and economic evaluations"
-        },
-        {
-          id: "5",
-          utility: "ENERGISA",
-          description: "MDM Opportunity",
-          technicalSalesGroup: "1st Group",
-          yearStart: 2025,
-          yearEnd: 2026,
-          country: "BRAZIL",
-          ecosystem: "Software",
-          status: "Good",
-          businessStages: "Market Prospection",
-          qty: 1.0,
-          lastCustomerDiscussion: "17/11/2025",
-          notes: "Architecture revision in progress"
-        },
-        {
-          id: "6",
-          utility: "ENEL",
-          description: "SMC - 2026",
-          technicalSalesGroup: "1st Group",
-          yearStart: 2025,
-          yearEnd: 2026,
-          country: "BRAZIL",
-          ecosystem: "Smart Metering",
-          status: "Good",
-          businessStages: "Market Prospection",
-          qty: 1.0,
-          lastCustomerDiscussion: "24/11/2025",
-          notes: "New investment for next year"
-        },
-        {
-          id: "7",
-          utility: "COPEL",
-          description: "Isolated meters on Phase 1 Area",
-          technicalSalesGroup: "1st Group",
-          yearStart: 2025,
-          yearEnd: 2025,
-          country: "BRAZIL",
-          ecosystem: "Smart Metering",
-          status: "Good",
-          businessStages: "RFI - Budgetary Quotation",
-          qty: 9.0,
-          lastCustomerDiscussion: "27/11/2025",
-          notes: "Phase 1 area coverage"
-        },
-        {
-          id: "8",
-          utility: "COPEL",
-          description: "Smart Meter replacing conventional meter purchases",
-          technicalSalesGroup: "1st Group",
-          yearStart: 2025,
-          yearEnd: 2025,
-          country: "BRAZIL",
-          ecosystem: "Smart Metering",
-          status: "Good",
-          businessStages: "Market Prospection",
-          qty: 30.0,
-          lastCustomerDiscussion: "10/11/2025",
-          notes: "New RFP for smart meter replacement"
-        },
-        {
-          id: "9",
-          utility: "CEMIG",
-          description: "OMB Door Opening Module",
-          technicalSalesGroup: "2nd Group",
-          yearStart: 2025,
-          yearEnd: 2025,
-          country: "BRAZIL",
-          ecosystem: "Smart Metering",
-          status: "Post Sales",
-          businessStages: "Post Sales",
-          qty: 3.2,
-          lastCustomerDiscussion: "19/11/2025",
-          notes: "Orca functionalities under validation"
-        },
-        {
-          id: "10",
-          utility: "ANDE",
-          description: "Alumbrado Publico Telegestión",
-          technicalSalesGroup: "2nd Group",
-          yearStart: 2025,
-          yearEnd: 2025,
-          country: "PARAGUAY",
-          ecosystem: "Street Lighting",
-          status: "Good",
-          businessStages: "Market Prospection",
-          qty: 20.0,
-          lastCustomerDiscussion: "12/11/2025",
-          notes: "Technical Specification Analysis"
-        },
-      ];
-
-      const processedData = processOpportunitiesData(mockOpportunities);
-      
-      setData({
-        totalOpportunities: mockOpportunities.length,
-        goodOpportunities: mockOpportunities.filter(o => o.status === "Good").length,
-        attentionOpportunities: mockOpportunities.filter(o => o.status === "Attention").length,
-        badOpportunities: mockOpportunities.filter(o => o.status === "Bad").length,
-        opportunities: mockOpportunities
-      });
-
-      setChartData(processedData.timelineData);
-      setStatusData(processedData.statusData);
-      setGroupData(processedData.groupData);
-      setCountryData(processedData.countryData);
-      setEcosystemData(processedData.ecosystemData);
-      
+    const q = query(collection(db, "opportunities"));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Opportunity));
+      setOpportunities(data);
       setLoading(false);
-    };
-    
-    fetchData();
+    });
+    return unsubscribe;
   }, []);
 
-  const processOpportunitiesData = (opportunities: Opportunity[]) => {
-    const timelineData = opportunities.reduce((acc: any, opp) => {
-      const year = opp.yearStart;
-      const existing = acc.find((item: any) => item.name === `${year}`);
-      if (existing) {
-        existing.Oportunidades += 1;
-      } else {
-        acc.push({ name: `${year}`, Oportunidades: 1 });
-      }
+  const handleExportPDF = async () => {
+    if (!reportRef.current) return;
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pages = reportRef.current.querySelectorAll(".pdf-page");
+    
+    for (let i = 0; i < pages.length; i++) {
+      const canvas = await html2canvas(pages[i] as HTMLElement, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: "#ffffff"
+      });
+      const imgData = canvas.toDataURL("image/png");
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      
+      if (i > 0) pdf.addPage();
+      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+    }
+    pdf.save(`AMI_Technical_Report_${new Date().getFullYear()}.pdf`);
+  };
+
+  // --- LÓGICA DE DADOS ---
+
+  const getStatus = (o: Opportunity) => o.status?.toLowerCase() || "";
+
+  const ecosystemData = Object.entries(
+    opportunities.reduce((acc: any, opp) => {
+      acc[opp.ecosystem || "Other"] = (acc[opp.ecosystem || "Other"] || 0) + 1;
       return acc;
-    }, []).sort((a: any, b: any) => parseInt(a.name) - parseInt(b.name));
+    }, {})
+  ).map(([name, value]) => ({ name, value }));
 
-    const statusData = Object.entries(
-      opportunities.reduce((acc: any, opp) => {
-        acc[opp.status] = (acc[opp.status] || 0) + 1;
-        return acc;
-      }, {})
-    ).map(([name, value]) => ({ name, value }));
-
-    const groupData = Object.entries(
-      opportunities.reduce((acc: any, opp) => {
-        acc[opp.technicalSalesGroup] = (acc[opp.technicalSalesGroup] || 0) + 1;
-        return acc;
-      }, {})
-    ).map(([name, value]) => ({ name, value }));
-
-    const countryData = Object.entries(
-      opportunities.reduce((acc: any, opp) => {
-        acc[opp.country] = (acc[opp.country] || 0) + 1;
-        return acc;
-      }, {})
-    ).map(([name, value]) => ({ name, value }));
-
-    const ecosystemData = Object.entries(
-      opportunities.reduce((acc: any, opp) => {
-        acc[opp.ecosystem] = (acc[opp.ecosystem] || 0) + 1;
-        return acc;
-      }, {})
-    ).map(([name, value]) => ({ name, value }));
-
+  const getGroupStats = (groupKeyword: string) => {
+    const groupOpps = opportunities.filter(o => o.technicalSalesGroup?.includes(groupKeyword));
     return {
-      timelineData,
-      statusData,
-      groupData,
-      countryData,
-      ecosystemData
+      name: groupKeyword,
+      Good: groupOpps.filter(o => getStatus(o).includes("good")).length,
+      Attention: groupOpps.filter(o => getStatus(o).includes("attention")).length,
+      Bad: groupOpps.filter(o => getStatus(o).includes("bad")).length,
     };
   };
 
-  const handleExport = async () => {
-    if (!printRef.current) return;
-    const canvas = await html2canvas(printRef.current, {
-      backgroundColor: null,
-      useCORS: true,
-      scale: 2,
-      logging: false,
-    });
-    const link = document.createElement("a");
-    link.download = `report-opportunities-${new Date().getTime()}.png`;
-    link.href = canvas.toDataURL("image/png");
-    link.click();
-  };
+  const winLossData = [
+    getGroupStats("1st Group"),
+    getGroupStats("2nd Group"),
+    getGroupStats("3rd Group"),
+  ];
 
-  if (loading) return <div className="h-screen flex items-center justify-center bg-[var(--bg-app)]"><Zap className="animate-pulse text-[var(--accent-color)]" /></div>;
+  const podsMembers = [
+    { name: "Samuel Mendes", email: "samuel.mendes@hexing.com.br" },
+    { name: "Guilherme Nogueira", email: "guilherme.nogueira@hexing.com.br" },
+    { name: "Lígia Taniguchi", email: "ligia.taniguchi@hexing.com.br" },
+    { name: "Nathali Sperança", email: "nathali.speranca@hexing.com.br" },
+    { name: "Wang Hao", email: "hao.wang@hexing.com.br" },
+  ];
+
+  if (loading) return (
+    <div className="h-screen flex items-center justify-center bg-white text-black">
+      <Loader2 className="animate-spin text-black" />
+    </div>
+  );
 
   return (
     <PageTransition>
-      <div ref={printRef} className="p-6 md:p-10 max-w-[1600px] mx-auto text-[var(--text-primary)]">
+      <div className="bg-gray-200 ml-10 -mr-10 -mt-10 min-h-screen py-10 print:p-0 font-sans">
         
-        <header className="flex justify-between items-center mb-10">
-          <div>
-            <h1 className="text-4xl font-black tracking-tighter uppercase italic">Overview</h1>
-            <p className="text-[var(--text-secondary)] text-sm font-medium tracking-widest uppercase opacity-60">AMI Opportunities Dashboard</p>
-          </div>
+        <div className="max-w-[800px] mx-auto mb-6 flex justify-end px-4">
           <button 
-            onClick={handleExport}
-            className="group flex items-center gap-3 bg-[var(--text-primary)] text-[var(--bg-app)] px-6 py-3 rounded-full font-bold shadow-xl transition-all hover:scale-105 active:scale-95"
+            onClick={handleExportPDF}
+            className="flex items-center gap-2 bg-black text-white px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all shadow-2xl"
           >
-            <FileDown size={20} />
-            Export Report
+            <FileDown size={20} /> Exportar PDF Completo
           </button>
-        </header>
+        </div>
 
-        <div className="grid grid-cols-1 xl:grid-cols-4 gap-8 mb-8">
+        <div ref={reportRef} className="flex flex-col gap-10 items-center">
           
-          <div className="xl:col-span-3 flex flex-col gap-8">
-            <div className="relative h-[450px] rounded-[3rem] overflow-hidden border border-[var(--border-color)] shadow-2xl group bg-black">
-              <div className="absolute inset-0 bg-cover bg-center opacity-40 scale-110 blur-[4px] group-hover:scale-115 rotation-x-5 transition-transform duration-[2s]" style={{ backgroundImage: `url('https://images.unsplash.com/photo-1721020390853-28f20fdc9f06?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')` }} />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
-              <div className="relative z-10 p-10 h-full flex flex-col justify-between text-white">
-                <div className="flex justify-between items-start">
-                  <h2 className="text-3xl font-bold italic uppercase tracking-tighter">overview opportunities</h2>
-                  <div className="bg-white/10 backdrop-blur-xl border border-white/20 p-4 rounded-3xl"><TrendingUp /></div>
-                </div>
-                <div className="h-[250px] w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={chartData}>
-                      <defs>
-                        <linearGradient id="colorAcc" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="var(--accent-color)" stopOpacity={0.5}/>
-                          <stop offset="95%" stopColor="var(--accent-color)" stopOpacity={0}/>
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-                      <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: 'rgba(255,255,255,0.5)', fontSize: 12}} />
-                      <Tooltip contentStyle={{ backgroundColor: '#000', border: 'none', borderRadius: '15px' }} />
-                      <Area type="monotone" dataKey="Oportunidades" stroke="var(--accent-color)" strokeWidth={4} fill="url(#colorAcc)" isAnimationActive={false} />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
+          {/* PÁGINA 1: CAPA */}
+          <div className="pdf-page w-[210mm] min-h-[297mm] bg-white p-24 shadow-2xl flex flex-col justify-between text-black">
+            <div className="border-l-[16px] border-black pl-10 mt-20">
+              <h1 className="text-7xl font-black uppercase tracking-tighter leading-[0.8]">AMI<br/>solutions</h1>
+              <h2 className="text-2xl font-light uppercase tracking-[0.4em] mt-8 opacity-60">Technical Pre-Sales and<br/>Post-Sales Report</h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-[2.5rem] p-8 backdrop-blur-md">
-                <div className="flex items-center gap-3 mb-6">
-                  <Clock className="text-[var(--accent-color)]" size={20} />
-                  <h3 className="font-bold uppercase tracking-widest text-sm">Status Distribution</h3>
-                </div>
-                <div className="h-[300px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={statusData}
-                        cx="50%"
-                        cy="50%"
-                        labelLine={false}
-                        label={({ name, value }) => `${name}: ${value}`}
-                        outerRadius={80}
-                        fill="#8884d8"
-                        dataKey="value"
-                      >
-                        {statusData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={STATUS_COLORS[entry.name as keyof typeof STATUS_COLORS] || COLORS[index % COLORS.length]} />
-                        ))}
-                      </Pie>
-                      <Tooltip />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-              
-              <div className="bg-[var(--accent-color)] rounded-[2.5rem] p-8 text-white flex flex-col justify-between shadow-2xl overflow-hidden relative group">
-                <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -mr-20 -mt-20 blur-3xl group-hover:scale-150 transition-transform duration-700" />
-                <h3 className="text-xl font-bold italic uppercase leading-none">opportunities overview</h3>
-                <div className="mt-8 space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">Total Opportunities</span>
-                    <p className="text-3xl font-black">{data?.totalOpportunities}</p>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">Good Status</span>
-                    <p className="text-2xl font-black">{data?.goodOpportunities}</p>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">Attention</span>
-                    <p className="text-2xl font-black">{data?.attentionOpportunities}</p>
-                  </div>
-                </div>
-              </div>
+            <div className="max-w-md">
+              <h3 className="text-xs font-black uppercase tracking-widest border-b-2 border-black pb-3 mb-6">Sumário Executivo</h3>
+              <ul className="text-[11px] space-y-3 font-bold uppercase tracking-wider opacity-70">
+                <li className="flex justify-between"><span>01. Technical Groups & PODS</span><span>pg 02</span></li>
+                <li className="flex justify-between"><span>02. Opportunities Dashboard</span><span>pg 03</span></li>
+                <li className="flex justify-between"><span>03. Win & Loss Analysis</span><span>pg 04</span></li>
+                <li className="flex justify-between"><span>04. 1st Group Opportunities</span><span>pg 05</span></li>
+                <li className="flex justify-between"><span>05. 2nd Group Opportunities</span><span>pg 06</span></li>
+                <li className="flex justify-between"><span>06. 3rd Group Opportunities</span><span>pg 07</span></li>
+                <li className="flex justify-between"><span>07. Historical Pipeline</span><span>pg 08</span></li>
+              </ul>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-[2.5rem] p-8 backdrop-blur-md">
-                <div className="flex items-center gap-3 mb-6">
-                  <Users className="text-[var(--accent-color)]" size={20} />
-                  <h3 className="font-bold uppercase tracking-widest text-sm">By Sales Group</h3>
-                </div>
-                <div className="h-[300px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={groupData}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.1)" />
-                      <XAxis dataKey="name" tick={{fill: 'var(--text-primary)', fontSize: 12}} />
-                      <YAxis tick={{fill: 'var(--text-primary)', fontSize: 12}} />
-                      <Tooltip contentStyle={{ backgroundColor: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '15px' }} />
-                      <Bar dataKey="value" fill="var(--accent-color)" radius={[8, 8, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
+            <div className="flex justify-between items-end border-t-4 border-black pt-10">
+              <div className="text-[10px] uppercase font-black tracking-[0.2em]">
+                Hexing Brasil <br /> {new Date().toLocaleDateString('pt-BR')}
               </div>
+              <div className="text-6xl font-black italic tracking-tighter">25/26</div>
+            </div>
+          </div>
 
-              <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-[2.5rem] p-8 backdrop-blur-md">
-                <div className="flex items-center gap-3 mb-6">
-                  <Activity className="text-[var(--accent-color)]" size={20} />
-                  <h3 className="font-bold uppercase tracking-widest text-sm">By Country</h3>
+          {/* PÁGINA 2: MEMBROS E ESTRUTURA */}
+          <div className="pdf-page w-[210mm] min-h-[297mm] bg-white p-20 shadow-2xl text-black">
+            <h2 className="text-3xl font-black uppercase italic mb-10 border-b-4 border-black pb-4">01. Technical PODS Members</h2>
+            
+            <div className="grid grid-cols-1 gap-4 mb-20">
+              {podsMembers.map(m => (
+                <div key={m.email} className="flex items-center justify-between p-6 bg-gray-50 rounded-2xl border border-gray-100">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-black text-white rounded-full flex items-center justify-center font-black">{m.name[0]}</div>
+                    <div>
+                      <p className="font-black uppercase text-sm">{m.name}</p>
+                      <p className="text-[10px] opacity-50 font-mono">{m.email}</p>
+                    </div>
+                  </div>
+                  <ShieldCheck className="text-green-500" size={20} />
                 </div>
-                <div className="h-[300px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={countryData} layout="vertical">
-                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.1)" />
-                      <XAxis type="number" tick={{fill: 'var(--text-primary)', fontSize: 12}} />
-                      <YAxis dataKey="name" type="category" tick={{fill: 'var(--text-primary)', fontSize: 12}} width={80} />
-                      <Tooltip contentStyle={{ backgroundColor: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '15px' }} />
-                      <Bar dataKey="value" fill="var(--accent-color)" radius={[0, 8, 8, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
+              ))}
             </div>
 
-            <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-[2.5rem] p-8 backdrop-blur-md">
-              <div className="flex items-center gap-3 mb-6">
-                <Box className="text-[var(--accent-color)]" size={20} />
-                <h3 className="font-bold uppercase tracking-widest text-sm">By Ecosystem</h3>
-              </div>
-              <div className="h-[300px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={ecosystemData} layout="vertical">
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.1)" />
-                    <XAxis type="number" tick={{fill: 'var(--text-primary)', fontSize: 12}} />
-                    <YAxis dataKey="name" type="category" tick={{fill: 'var(--text-primary)', fontSize: 12}} width={120} />
-                    <Tooltip contentStyle={{ backgroundColor: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '15px' }} />
-                    <Bar dataKey="value" fill="var(--accent-color)" radius={[0, 8, 8, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
+            <h2 className="text-3xl font-black uppercase italic mb-10 border-b-4 border-black pb-4">Technical Groups</h2>
+            <div className="p-10 border-2 border-dashed border-gray-200 rounded-[3rem] text-center">
+              <div className="grid grid-cols-3 gap-4">
+                <div className="p-6 bg-black text-white rounded-2xl font-black uppercase text-[10px]">1st Group<br/><span className="font-light opacity-50">Guilherme Nogueira</span></div>
+                <div className="p-6 bg-black text-white rounded-2xl font-black uppercase text-[10px]">2nd Group<br/><span className="font-light opacity-50">Lígia Taniguchi</span></div>
+                <div className="p-6 bg-black text-white rounded-2xl font-black uppercase text-[10px]">3rd Group<br/><span className="font-light opacity-50">Nathali Sperança</span></div>
               </div>
             </div>
           </div>
 
-          <div className="flex flex-col gap-6">
-            <StockifyCard icon={Activity} title="total opportunities" value={data?.totalOpportunities} badge={`+${Math.round((data?.goodOpportunities || 0) / (data?.totalOpportunities || 1) * 100)}%`} />
-            <StockifyCard icon={CheckCircle} title="Good Status" value={data?.goodOpportunities} variant="filled" />
-            <StockifyCard icon={AlertCircle} title="Attention" value={data?.attentionOpportunities} />
-            <StockifyCard icon={XCircle} title="Bad Status" value={data?.badOpportunities} variant="filled" />
+          {/* PÁGINA 3: DASHBOARD GERAL */}
+          <div className="pdf-page w-[210mm] min-h-[297mm] bg-white p-20 shadow-2xl text-black">
+            <h2 className="text-3xl font-black uppercase italic mb-10 border-b-4 border-black pb-4">02. Opportunities Dashboard</h2>
+            
+            <div className="grid grid-cols-3 gap-6 mb-16">
+              <div className="p-6 bg-green-50 border-l-8 border-green-500 rounded-r-2xl">
+                <p className="text-[10px] font-black uppercase text-green-700">Good Status</p>
+                <p className="text-[9px] mt-2 font-medium opacity-70">Interesse real na compra e processo de homologação em andamento.</p>
+              </div>
+              <div className="p-6 bg-yellow-50 border-l-8 border-yellow-500 rounded-r-2xl">
+                <p className="text-[10px] font-black uppercase text-yellow-700">Attention</p>
+                <p className="text-[9px] mt-2 font-medium opacity-70">Requisitos técnicos pendentes ou falta de acordo comercial.</p>
+              </div>
+              <div className="p-6 bg-red-50 border-l-8 border-red-500 rounded-r-2xl">
+                <p className="text-[10px] font-black uppercase text-red-700">Bad Status</p>
+                <p className="text-[9px] mt-2 font-medium opacity-70">Bloqueio técnico ou preço não atrativo. Sem intenção de avanço.</p>
+              </div>
+            </div>
+
+            <div className="h-[400px] w-full mb-10">
+              <h4 className="text-xs font-black uppercase mb-8 tracking-widest text-center">Opportunities by Ecosystem</h4>
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie 
+                    isAnimationActive={false}
+                    data={ecosystemData} 
+                    dataKey="value" 
+                    nameKey="name" 
+                    cx="50%" cy="50%" 
+                    outerRadius={120} 
+                    label={({ name, percent }) => {
+                      const val = percent ? (percent * 100).toFixed(0) : "0";
+                      return `${name} ${val}%`;
+                    }}
+                  >
+                    {ecosystemData.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
+                  </Pie>
+                  <Tooltip />
+                  <Legend verticalAlign="bottom" height={36}/>
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
           </div>
+
+          {/* PÁGINA 4: WIN & LOSS ANALYSIS */}
+          <div className="pdf-page w-[210mm] min-h-[297mm] bg-white p-20 shadow-2xl text-black">
+            <h2 className="text-3xl font-black uppercase italic mb-10 border-b-4 border-black pb-4">03. Win & Loss Analysis</h2>
+            
+            <div className="h-[500px] w-full">
+              <h4 className="text-xs font-black uppercase mb-10 tracking-widest text-center">Performance per Sales Group</h4>
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={winLossData} margin={{ top: 20, right: 30, left: 20, bottom: 50 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                  <XAxis dataKey="name" fontSize={10} fontWeight="bold" />
+                  <YAxis fontSize={10} />
+                  <Tooltip cursor={{fill: 'transparent'}} />
+                  <Legend verticalAlign="top" align="right" wrapperStyle={{ paddingBottom: '20px' }} />
+                  <Bar dataKey="Good" stackId="a" fill="#10b981" radius={[0, 0, 0, 0]} />
+                  <Bar dataKey="Attention" stackId="a" fill="#f59e0b" />
+                  <Bar dataKey="Bad" stackId="a" fill="#ef4444" radius={[10, 10, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* PÁGINAS DE LISTAS (REPETIR PARA CADA GRUPO) */}
+          {["1st Group", "2nd Group", "3rd Group"].map((groupName, idx) => (
+            <div key={groupName} className="pdf-page w-[210mm] min-h-[297mm] bg-white p-16 shadow-2xl text-black">
+              <div className="flex justify-between items-center mb-10 border-b-2 border-black pb-4">
+                <h2 className="text-2xl font-black uppercase italic">0{idx + 4}. {groupName} Opportunities</h2>
+                <div className="text-[10px] font-black bg-black text-white px-3 py-1 rounded">LIST VIEW</div>
+              </div>
+
+              <table className="w-full text-[8px] border-collapse">
+                <thead>
+                  <tr className="bg-gray-100 text-left">
+                    <th className="p-3 border border-gray-200 uppercase font-black">Utility</th>
+                    <th className="p-3 border border-gray-200 uppercase font-black">Description</th>
+                    <th className="p-3 border border-gray-200 uppercase font-black">Status</th>
+                    <th className="p-3 border border-gray-200 uppercase font-black text-right">QTY</th>
+                    <th className="p-3 border border-gray-200 uppercase font-black">Last Discussion</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {opportunities
+                    .filter(o => o.technicalSalesGroup?.includes(groupName))
+                    .sort((a,b) => (a.utility || "").localeCompare(b.utility || ""))
+                    .map((opp) => (
+                    <tr key={opp.id} className="hover:bg-gray-50">
+                      <td className="p-3 border border-gray-200 font-black">{opp.utility}</td>
+                      <td className="p-3 border border-gray-200 font-medium truncate max-w-[180px]">{opp.description}</td>
+                      <td className="p-3 border border-gray-200">
+                        <span className={`px-2 py-0.5 rounded text-[7px] font-black uppercase ${
+                          getStatus(opp).includes("good") ? 'bg-green-100 text-green-700' : 
+                          getStatus(opp).includes("attention") ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'
+                        }`}>
+                          {opp.status}
+                        </span>
+                      </td>
+                      <td className="p-3 border border-gray-200 text-right font-mono font-bold">{(opp.quantity || 0).toLocaleString()}</td>
+                      <td className="p-3 border border-gray-200 opacity-50">{opp.lastCustomerDiscussion}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ))}
+
+          {/* PÁGINA FINAL: HISTÓRICO (START < 2025) */}
+          <div className="pdf-page w-[210mm] min-h-[297mm] bg-white p-20 shadow-2xl text-black">
+            <div className="flex items-center gap-4 mb-10 border-b-4 border-black pb-4">
+              <Clock size={30} />
+              <h2 className="text-2xl font-black uppercase italic">07. Historical Pipeline (Before 2025)</h2>
+            </div>
+            
+            <table className="w-full text-[8px] border-collapse">
+                <thead>
+                  <tr className="bg-black text-white text-left">
+                    <th className="p-3 border border-black uppercase">Utility</th>
+                    <th className="p-3 border border-black uppercase">Description</th>
+                    <th className="p-3 border border-black uppercase text-center">Year Start</th>
+                    <th className="p-3 border border-black uppercase">Technical Group</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {opportunities
+                    .filter(o => (o.yearStart || 0) < 2025)
+                    .map((opp) => (
+                    <tr key={opp.id} className="border-b border-gray-100">
+                      <td className="p-3 font-black">{opp.utility}</td>
+                      <td className="p-3 font-medium">{opp.description}</td>
+                      <td className="p-3 text-center font-bold text-red-500">{opp.yearStart}</td>
+                      <td className="p-3 opacity-60 uppercase tracking-tighter">{opp.technicalSalesGroup}</td>
+                    </tr>
+                  ))}
+                </tbody>
+            </table>
+          </div>
+
         </div>
       </div>
     </PageTransition>

@@ -31,7 +31,7 @@ export default function Sidebar() {
 
         <div className="my-4 border-t border-[var(--border-color)] opacity-20 mx-2"></div>
 
-        <NavLink to={firstDoc ? `/page/${firstDoc.id}` : "/paginas"} className={checkActive}>
+        <NavLink to="/paginas" className={checkActive}>
           <FileText className="nav-icon !min-w-[24px] !w-6 !h-6" />
           <span className="nav-label ml-4">Páginas</span>
         </NavLink>

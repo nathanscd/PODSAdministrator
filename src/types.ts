@@ -12,7 +12,7 @@ export interface Opportunity {
   description: string;
   technicalSalesGroup: string;
   utility: string;
-  files: string; // Link SharePoint
+  files: string;
   yearStart: number;
   yearEnd: number;
   hqInterface: string;
@@ -65,10 +65,12 @@ export interface Page {
   ownerId: string;
   ownerName?: string; 
   isPublic?: boolean; 
-  createdAt: any;
+  createdAt: any; 
+  updatedAt: any;
   theme?: string;
   content?: string;
   tasks?: any;
   columns?: any;
   columnOrder?: string[];
+  linkedOpportunityId?: string | null;
 }

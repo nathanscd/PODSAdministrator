@@ -50,10 +50,10 @@ export default function Initial() {
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
             {[
-              { label: "Arquivos Processados", val: "842", trend: "+12%", icon: <Database />, color: "text-blue-500" },
-              { label: "Comparações Realizadas", val: "156", trend: "+5%", icon: <FileSearch />, color: "text-[var(--accent-color)]" },
-              { label: "Usuários Ativos", val: "12", trend: "Estável", icon: <Users />, color: "text-green-500" },
-              { label: "Divergências Críticas", val: "03", trend: "-2%", icon: <AlertCircle />, color: "text-red-500" },
+              { label: "Oportunidades criadas", val: "20", trend: "+12%", icon: <Database />, color: "text-blue-500" },
+              { label: "Comparações Realizadas", val: "0", trend: "", icon: <FileSearch />, color: "text-[var(--accent-color)]" },
+              { label: "Usuários Ativos", val: "5", trend: "Estável", icon: <Users />, color: "text-green-500" },
+              { label: "Divergências Críticas", val: "0", trend: "", icon: <AlertCircle />, color: "text-red-500" },
             ].map((stat, i) => (
               <div key={i} className="bg-[var(--card-bg)] p-6 rounded-[2.5rem] border border-[var(--border-color)] group hover:border-[var(--accent-color)] transition-all">
                 <div className="flex justify-between items-start mb-4">
@@ -69,7 +69,7 @@ export default function Initial() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-20">
             {[
               { label: "Upload Excel", path: "/planilhas", icon: <Upload size={18} />, color: "bg-green-500" },
-              { label: "SharePoint", path: "https://hexing.sharepoint.com", icon: <Database size={18} />, color: "bg-blue-600" },
+              { label: "SharePoint", path: "https://hexingbrasil.sharepoint.com/sites/MSSD/TechSales", icon: <Database size={18} />, color: "bg-blue-600" },
               { label: "Criar Board", path: "/todo", icon: <Plus size={18} />, color: "bg-[var(--accent-color)]" },
               { label: "Comparar PDF", path: "/comparador-pdf", icon: <FileSearch size={18} />, color: "bg-red-500" },
             ].map((btn, i) => (
