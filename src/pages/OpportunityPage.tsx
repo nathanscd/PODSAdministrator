@@ -216,7 +216,7 @@ export default function OpportunityPage() {
         </div>
 
         <header className="pt-20 pb-10 px-8 lg:px-20 bg-[var(--card-bg)]/80 backdrop-blur-xl shrink-0 z-20 sticky top-0 border-b border-[var(--border-color)]">
-          <div className="flex justify-between items-end">
+          <div className="flex justify-between items-end index z-1000">
             <div>
               <h1 className="text-6xl font-black italic uppercase tracking-tighter text-[var(--text-primary)]">AMI Opportunities</h1>
               <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[var(--accent-color)] mt-2">Opportunities overview</p>
