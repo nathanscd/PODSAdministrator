@@ -187,7 +187,7 @@ export default function WorkspacePage() {
   if (authLoading || !page) return null;
 
   return (
-    <div className="main ml-10 -mr-10 -mt-10 !p-0 overflow-hidden flex flex-col h-screen bg-[var(--bg-app)]">
+    <div className="main !p-0 overflow-hidden flex flex-col h-screen bg-[var(--bg-app)]">
       <nav className="h-14 px-8 flex items-center justify-between border-b border-[var(--border-color)] backdrop-blur-md bg-transparent shrink-0">
         <div className="flex items-center gap-6">
           <button onClick={() => navigate("/paginas")} className="p-2 hover:bg-[var(--card-bg)] rounded-xl transition-all text-[var(--text-primary)] border-none bg-transparent">

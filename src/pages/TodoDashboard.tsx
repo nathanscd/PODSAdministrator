@@ -18,7 +18,7 @@ export default function TodoDashboard() {
 
   return (
     <PageTransition>
-      <div className="main ml-10 -mr-10 -mt-10">
+      <div className="main mt-10 mr-10 -ml-10">
         <header className="flex justify-between items-center mb-12">
           <div>
             <h1 className="text-4xl font-black italic uppercase tracking-tighter text-[var(--text-primary)]">

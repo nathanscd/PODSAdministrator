@@ -186,11 +186,9 @@ button:active {
   flex-direction: column;
   align-items: stretch;
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--bg-gradient-from) 0%, var(--bg-gradient-to) 100%);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  padding: 40px;
-  padding-left: calc(95px + 40px); /* Espaço para sidebar desktop */
+  min-width: 100%;
+  background: linear-gradient(135deg, var(--bg-gradient-from) 0%, var(--bg-gradient-to) 100%); 
+  padding-left: 95px;
   transition: all 0.5s ease;
 }
 

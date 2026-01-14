@@ -70,7 +70,7 @@ export default function TaskTrackerDetail() {
 
   return (
     <PageTransition>
-      <div className="min-h-screen ml-10 -mt-10 -mr-10 bg-[var(--bg-app)] p-8 lg:p-10 flex flex-col">
+      <div className="min-h-screen bg-[var(--bg-app)] p-8 lg:p-10 flex flex-col">
         
         {/* HEADER CUSTOMIZADO */}
         <header className="flex items-center gap-6 mb-8 pb-8 border-b border-[var(--border-color)]">

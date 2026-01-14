@@ -7,7 +7,7 @@ export default function UnderConstruction() {
 
   return (
     <PageTransition>
-      <div className="min-h-screen ml-10 -mr-10 -mt-10 bg-[var(--bg-app)] flex flex-col items-center justify-center p-8 text-center">
+      <div className="min-h-screen bg-[var(--bg-app)] flex flex-col items-center justify-center p-8 text-center">
         
         {/* Ícone Animado */}
         <div className="mb-8 p-8 bg-[var(--accent-color)]/10 rounded-full border border-[var(--accent-color)]/20 animate-pulse">

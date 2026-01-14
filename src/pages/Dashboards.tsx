@@ -93,7 +93,7 @@ export default function Report() {
 
   return (
     <PageTransition>
-      <div className="bg-gray-200 ml-10 -mr-10 -mt-10 min-h-screen py-10 print:p-0 font-sans">
+      <div className="bg-gray-200 min-h-screen py-10 print:p-0 font-sans">
         
         <div className="max-w-[800px] mx-auto mb-6 flex justify-end px-4">
           <button 

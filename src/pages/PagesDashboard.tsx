@@ -74,7 +74,7 @@ export default function PagesDashboard() {
 
   return (
     <PageTransition>
-      <div className="min-h-screen ml-10 -mr-10 -mt-10bg-[var(--bg-app)] p-8 lg:p-20">
+      <div className="min-h-screen bg-[var(--bg-app)] p-8 lg:p-20">
         
         <header className="mb-12 flex justify-between items-end">
           <div>

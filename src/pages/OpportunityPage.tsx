@@ -210,13 +210,13 @@ export default function OpportunityPage() {
 
   return (
     <PageTransition>
-      <div className="main ml-10 -mr-10 -mt-10 !p-0 bg-[var(--bg-app)] min-h-screen flex flex-col">
+      <div className="main !p-0 bg-[var(--bg-app)] min-h-screen flex flex-col">
         
         <div className="fixed bottom-6 right-6 z-[9999] flex gap-4 opacity-0 hover:opacity-100 transition-opacity">
            <CsvImporter />
         </div>
 
-        <header className="z-1000 pt-20 pb-10 px-8 lg:px-20 bg-[var(--card-bg)]/80 backdrop-blur-xl shrink-0 z-20 sticky top-0 border-b border-[var(--border-color)]">
+        <header className="z-100 pt-20 pb-10 px-8 lg:px-20 bg-[var(--card-bg)]/80 backdrop-blur-xl shrink-0 z-20 sticky top-0 border-b border-[var(--border-color)]">
           <div className="flex justify-between items-end index z-1000">
             <div>
               <h1 className="text-6xl font-black italic uppercase tracking-tighter text-[var(--text-primary)]">AMI Opportunities</h1>
@@ -238,8 +238,6 @@ export default function OpportunityPage() {
                 {uniqueUtilities.map(u => <option key={u} value={u} className="bg-[var(--bg-app)]">{u}</option>)}
               </select>
             </div>
-            {/* Opcional: Você pode querer adicionar o filtro de grupo aqui se ele não existir em outro lugar da UI, 
-                já que removemos a filtragem automática por usuário */}
             <div className="flex items-center gap-2 opacity-60 hover:opacity-100 transition-opacity">
                <Filter size={14} className="text-[var(--text-primary)]" />
                <select className="bg-transparent border-none text-[10px] font-black uppercase tracking-widest outline-none cursor-pointer text-[var(--text-primary)]" onChange={(e) => setFilterGroup(e.target.value)}>

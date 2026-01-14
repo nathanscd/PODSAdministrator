@@ -98,7 +98,7 @@ export default function SpreadsheetPage() {
 
   return (
     <PageTransition>
-      <div className="main ml-10 -mr-10 -mt-10 bg-[var(--bg-app)] min-h-screen p-8 lg:p-24 custom-scrollbar">
+      <div className="main bg-[var(--bg-app)] min-h-screen p-8 lg:p-24 custom-scrollbar">
         <header className="mb-12 flex justify-between items-start">
           <div>
             <h1 className="text-6xl font-black italic uppercase text-[var(--text-primary)] tracking-tighter">

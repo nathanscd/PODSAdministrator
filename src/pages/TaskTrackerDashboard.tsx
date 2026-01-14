@@ -169,7 +169,7 @@ export default function TaskTrackerDashboard() {
 
   return (
     <PageTransition>
-      <div className="min-h-screen ml-10 -mr-10 -mt-10 bg-[var(--bg-app)] p-8 lg:p-16">
+      <div className="min-h-screen bg-[var(--bg-app)] p-8 lg:p-16">
         <header className="flex justify-between items-end mb-12">
           <div>
             <h1 className="text-5xl font-black italic uppercase tracking-tighter text-[var(--text-primary)]">Trackers</h1>

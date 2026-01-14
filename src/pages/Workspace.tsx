@@ -209,7 +209,7 @@ export default function Workspace() {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-[var(--bg-app)] p-8 lg:p-16 ml-10 -mr-10 -mt-10">
+      <div className="min-h-screen bg-[var(--bg-app)] p-8 lg:p-16">
         
         <header className="mb-12 flex justify-between items-end">
           <div>

@@ -136,7 +136,7 @@ export default function TodoPage() {
 
   return (
     <PageTransition>
-      <div className="main ml-10 -mr-10 flex flex-col ml-10 -mt-10 h-screen overflow-hidden">
+      <div className="main flex flex-col h-screen overflow-hidden">
         <header className="flex items-center justify-between mb-8 shrink-0 px-2">
           <div className="flex items-center gap-6 flex-1">
             <button onClick={() => navigate("/todo")} className="p-2 hover:bg-[var(--card-bg)] rounded-xl transition-all border-none bg-transparent">

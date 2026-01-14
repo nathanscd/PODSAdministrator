@@ -82,7 +82,7 @@ export default function Initial() {
 
   return (
     <PageTransition>
-      <div className="main ml-10 -mr-10 -mt-10 !p-0 bg-[var(--bg-app)] min-h-screen relative overflow-x-hidden custom-scrollbar selection:bg-[var(--accent-color)] selection:text-white">
+      <div className="main !p-0 bg-[var(--bg-app)] min-h-screen relative overflow-x-hidden custom-scrollbar selection:bg-[var(--accent-color)] selection:text-white">
         
         <nav className="sticky top-0 z-50 bg-[var(--bg-app)]/60 backdrop-blur-xl border-b border-[var(--border-color)] px-8 lg:px-20 py-4 flex items-center justify-between transition-all duration-300">
           <div className="flex items-center gap-4 bg-[var(--card-bg)] px-5 py-2.5 rounded-2xl border border-[var(--border-color)] w-full max-w-xl focus-within:border-[var(--accent-color)] focus-within:ring-1 focus-within:ring-[var(--accent-color)]/20 transition-all shadow-sm">
