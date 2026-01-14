@@ -60,7 +60,7 @@ export default function Sidebar() {
           <span className="nav-label ml-4">Oportunidades</span>
         </NavLink>
 
-        <NavLink to="/comparacao" className={checkActive}>
+        <NavLink to="/construction" className={checkActive}>
           <FileSpreadsheet className="nav-icon !min-w-[24px] !w-6 !h-6" />
           <span className="nav-label ml-4">Comparar Planilhas</span>
         </NavLink>
@@ -72,7 +72,7 @@ export default function Sidebar() {
           <span className="nav-label ml-4">Report</span>
         </NavLink>
 
-        <NavLink to="/pesquisa" className={checkActive}>
+        <NavLink to="/construction2" className={checkActive}>
           <Search className="nav-icon !min-w-[24px] !w-6 !h-6" />
           <span className="nav-label ml-4">Pesquisas ETL</span>
         </NavLink>

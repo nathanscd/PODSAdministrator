@@ -16,6 +16,8 @@ import Workspace from "./pages/Workspace";
 import TaskTrackerPages from "./pages/TaskTrackerPages";
 import TaskTrackerDashboard from "./pages/TaskTrackerDashboard";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import AdminUsersPage from "./pages/AdminUsersPage";
+import UnderConstruction from "./pages/Construction";
 
 function App() {
   return (
@@ -23,6 +25,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
         <Route element={<PrivateRoute />}>
           <Route element={<Layout />}>
@@ -38,7 +41,9 @@ function App() {
             <Route path="/task-tracker" element={<TaskTrackerDashboard />} />
             <Route path="/task-tracker/:id" element={<TaskTrackerPages />} />            
             <Route path="workspace" element={<Workspace />} />
-            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/admin/users" element={<AdminUsersPage />} />
+            <Route path="/construction" element={<UnderConstruction />} />
+            <Route path="/construction2" element={<UnderConstruction />} />
           </Route>
         </Route>
 

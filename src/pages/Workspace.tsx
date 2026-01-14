@@ -2,20 +2,19 @@ import { useState, useEffect, useMemo } from "react";
 import { collection, query, where, onSnapshot, addDoc, deleteDoc, doc, serverTimestamp, orderBy } from "firebase/firestore";
 import { db, auth } from "../firebase";
 import { useAuth } from "../contexts/AuthContext";
-import { Opportunity, TaskTracker, TaskItem } from "../types";
+import { Opportunity, TaskTracker } from "../types";
 import { useNavigate } from "react-router-dom";
 import { 
   Briefcase, Layout, ListTodo, Calendar as CalendarIcon, 
-  ArrowRight, Link as LinkIcon, Plus, Trash2, CheckCircle2, Clock, MapPin, MoreHorizontal
+  ArrowRight, Link as LinkIcon, Plus, Trash2, Clock, MapPin
 } from "lucide-react";
 import PageTransition from "../components/PageTransition";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, BarChart, Bar, XAxis, YAxis } from "recharts";
 
-// --- INTERFACES LOCAIS ---
 interface CalendarEvent {
   id: string;
   title: string;
-  date: string; // YYYY-MM-DD
+  date: string;
   type: 'personal' | 'tracker';
   ownerId: string;
 }
@@ -28,16 +27,14 @@ interface QuickTask {
 }
 
 export default function Workspace() {
-  const { user, userGroup } = useAuth();
+  const { user, userGroup, isAdmin } = useAuth();
   const navigate = useNavigate();
   
-  // DATA STATES
-  const [myOpps, setMyOpps] = useState<Opportunity[]>([]);
+  const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [myTrackers, setMyTrackers] = useState<TaskTracker[]>([]);
   const [personalEvents, setPersonalEvents] = useState<CalendarEvent[]>([]);
   const [quickTasks, setQuickTasks] = useState<QuickTask[]>([]);
   
-  // UI STATES
   const [selectedUtility, setSelectedUtility] = useState("All");
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDayEvents, setSelectedDayEvents] = useState<CalendarEvent[]>([]);
@@ -49,65 +46,103 @@ export default function Workspace() {
 
   useEffect(() => {
     if (!auth.currentUser) return;
+    const myUid = auth.currentUser.uid;
+    const myGroup = userGroup || "Unassigned";
 
-    // 1. Oportunidades
-    const unsubOpps = onSnapshot(collection(db, "opportunities"), (s) => {
-      const data = s.docs.map(d => ({ id: d.id, ...d.data() } as Opportunity));
-      setMyOpps(data.filter(o => o.ownerId === auth.currentUser?.uid || (userGroup && o.technicalSalesGroup?.toLowerCase() === userGroup.toLowerCase())));
+    // 1. OPORTUNIDADES
+    let unsubOppsList: (() => void)[] = [];
+
+    if (isAdmin) {
+       // ADMIN: Vê TUDO
+       const qAll = query(collection(db, "opportunities"));
+       const unsub = onSnapshot(qAll, (s) => {
+         setOpportunities(s.docs.map(d => ({ id: d.id, ...d.data() } as Opportunity)));
+       });
+       unsubOppsList.push(unsub);
+    } else {
+       // USER: Híbrido (Dono + Grupo)
+       let localOwner: Opportunity[] = [];
+       let localGroup: Opportunity[] = [];
+
+       const updateMerged = () => {
+         const map = new Map();
+         [...localOwner, ...localGroup].forEach(o => map.set(o.id, o));
+         setOpportunities(Array.from(map.values()));
+       };
+
+       const qOwner = query(collection(db, "opportunities"), where("ownerId", "==", myUid));
+       unsubOppsList.push(onSnapshot(qOwner, (s) => {
+         localOwner = s.docs.map(d => ({ id: d.id, ...d.data() } as Opportunity));
+         updateMerged();
+       }));
+
+       const qGroup = query(collection(db, "opportunities"), where("technicalSalesGroup", "==", myGroup));
+       unsubOppsList.push(onSnapshot(qGroup, (s) => {
+         localGroup = s.docs.map(d => ({ id: d.id, ...d.data() } as Opportunity));
+         updateMerged();
+       }));
+    }
+
+    // 2. TRACKERS (Para o Calendário)
+    let qTrackers;
+    if (isAdmin) {
+      qTrackers = query(collection(db, "taskTrackers"));
+    } else {
+      qTrackers = query(collection(db, "taskTrackers"), where("ownerId", "==", myUid));
+    }
+    const unsubTrackers = onSnapshot(qTrackers, (s) => {
+      setMyTrackers(s.docs.map(d => ({ id: d.id, ...d.data() } as TaskTracker)));
     });
 
-    // 2. Trackers
-    const unsubTrackers = onSnapshot(collection(db, "taskTrackers"), (s) => {
-      const data = s.docs.map(d => ({ id: d.id, ...d.data() } as TaskTracker));
-      setMyTrackers(data.filter(t => t.ownerId === auth.currentUser?.uid));
-    });
-
-    // 3. Eventos Pessoais
-    const qEvents = query(collection(db, "personalEvents"), where("ownerId", "==", auth.currentUser.uid));
+    // 3. EVENTOS PESSOAIS & QUICK TASKS (Sempre Privados)
+    const qEvents = query(collection(db, "personalEvents"), where("ownerId", "==", myUid));
     const unsubEvents = onSnapshot(qEvents, (s) => {
       setPersonalEvents(s.docs.map(d => ({ id: d.id, ...d.data() } as CalendarEvent)));
     });
 
-    // 4. Quick Tasks
-    const qTasks = query(collection(db, "quickTasks"), where("ownerId", "==", auth.currentUser.uid), orderBy("createdAt", "desc"));
+    const qTasks = query(collection(db, "quickTasks"), where("ownerId", "==", myUid), orderBy("createdAt", "desc"));
     const unsubQuickTasks = onSnapshot(qTasks, (s) => {
       setQuickTasks(s.docs.map(d => ({ id: d.id, ...d.data() } as QuickTask)));
     });
 
-    return () => { unsubOpps(); unsubTrackers(); unsubEvents(); unsubQuickTasks(); };
-  }, [user, userGroup]);
+    return () => { 
+      unsubOppsList.forEach(u => u());
+      unsubTrackers(); 
+      unsubEvents(); 
+      unsubQuickTasks(); 
+    };
+  }, [user, userGroup, isAdmin]);
 
-  // --- COMPUTED DATA ---
-
-  const utilities = useMemo(() => ["All", ...Array.from(new Set(myOpps.map(o => o.utility))).filter(Boolean).sort()], [myOpps]);
+  const utilities = useMemo(() => ["All", ...Array.from(new Set(opportunities.map(o => o.utility))).filter(Boolean).sort()], [opportunities]);
 
   const filteredOpps = useMemo(() => {
-    return selectedUtility === "All" ? myOpps : myOpps.filter(o => o.utility === selectedUtility);
-  }, [myOpps, selectedUtility]);
+    return selectedUtility === "All" ? opportunities : opportunities.filter(o => o.utility === selectedUtility);
+  }, [opportunities, selectedUtility]);
 
-  const statusChartData = useMemo(() => [
-    { name: "Good", value: myOpps.filter(o => o.status?.toLowerCase().includes("good")).length },
-    { name: "Attention", value: myOpps.filter(o => o.status?.toLowerCase().includes("attention")).length },
-    { name: "Bad", value: myOpps.filter(o => o.status?.toLowerCase().includes("bad")).length },
-  ], [myOpps]);
+  const statusChartData = useMemo(() => {
+    const data = [
+      { name: "Good", value: opportunities.filter(o => o.status?.toLowerCase().includes("good")).length },
+      { name: "Attention", value: opportunities.filter(o => o.status?.toLowerCase().includes("attention")).length },
+      { name: "Bad", value: opportunities.filter(o => o.status?.toLowerCase().includes("bad")).length },
+    ];
+    return data.filter(d => d.value > 0);
+  }, [opportunities]);
 
   const utilityChartData = useMemo(() => {
     const counts: Record<string, number> = {};
-    myOpps.forEach(o => {
+    opportunities.forEach(o => {
       const u = o.utility || "Outros";
       counts[u] = (counts[u] || 0) + 1;
     });
     return Object.entries(counts)
       .map(([name, value]) => ({ name, value }))
       .sort((a, b) => b.value - a.value)
-      .slice(0, 5); // Top 5
-  }, [myOpps]);
-
-  // --- ACTIONS ---
+      .slice(0, 5);
+  }, [opportunities]);
 
   const addEvent = async () => {
     if (!newEventTitle.trim() || !auth.currentUser) return;
-    const dateStr = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()).toISOString().split('T')[0]; // Usa dia selecionado ou hoje
+    const dateStr = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()).toISOString().split('T')[0];
     await addDoc(collection(db, "personalEvents"), {
       title: newEventTitle,
       date: dateStr,
@@ -135,10 +170,8 @@ export default function Workspace() {
   };
 
   const toggleQuickTask = async (task: QuickTask) => {
-    await deleteDoc(doc(db, "quickTasks", task.id)); // Simplificado: deleta ao completar (ou poderia atualizar)
+    await deleteDoc(doc(db, "quickTasks", task.id));
   };
-
-  // --- CALENDAR LOGIC ---
 
   const getDaysInMonth = (date: Date) => {
     const year = date.getFullYear();
@@ -149,11 +182,8 @@ export default function Workspace() {
 
   const getEventsForDay = (day: number) => {
     const dateStr = new Date(currentDate.getFullYear(), currentDate.getMonth(), day).toISOString().split('T')[0];
-    
-    // Merge Personal Events + Tracker Deadlines
     const pEvents = personalEvents.filter(e => e.date === dateStr);
     const tEvents: CalendarEvent[] = [];
-    
     myTrackers.forEach(t => {
       t.tasks.forEach(task => {
         if (task.plannedEndDate === dateStr) {
@@ -167,15 +197,12 @@ export default function Workspace() {
         }
       });
     });
-
     return [...pEvents, ...tEvents];
   };
 
   const handleDayClick = (day: number) => {
-    // Atualiza a data atual para o dia clicado para que o modal use essa data
     const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
     setCurrentDate(newDate);
-    
     const events = getEventsForDay(day);
     setSelectedDayEvents(events);
   };
@@ -184,17 +211,15 @@ export default function Workspace() {
     <PageTransition>
       <div className="min-h-screen bg-[var(--bg-app)] p-8 lg:p-16 ml-10 -mr-10 -mt-10">
         
-        {/* HEADER */}
         <header className="mb-12 flex justify-between items-end">
           <div>
             <h1 className="text-5xl font-black italic uppercase tracking-tighter text-[var(--text-primary)]">
               My Workspace
             </h1>
             <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[var(--accent-color)] mt-2">
-              {user?.displayName || "User"} • {userGroup || "General"}
+              {user?.displayName || "User"} • {isAdmin ? "Administrator Mode" : (userGroup || "General")}
             </p>
           </div>
-          
           <div className="flex gap-4">
              <button onClick={() => setIsEventModalOpen(true)} className="flex items-center gap-2 bg-[var(--accent-color)] text-white px-5 py-3 rounded-xl font-bold text-xs uppercase shadow-lg hover:scale-105 transition-transform">
                <Plus size={16}/> Add Event
@@ -204,37 +229,48 @@ export default function Workspace() {
 
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
           
-          {/* COLUNA ESQUERDA (DASHBOARD & LISTAS) */}
           <div className="xl:col-span-2 space-y-8">
-            
-            {/* GRÁFICOS */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-[2.5rem] p-6 h-[300px]">
-                <h3 className="text-[10px] font-black uppercase tracking-widest mb-4 text-[var(--text-secondary)]">Pipeline Status</h3>
-                <ResponsiveContainer width="100%" height="85%">
-                  <PieChart>
-                    <Pie data={statusChartData} dataKey="value" cx="50%" cy="50%" innerRadius={50} outerRadius={70} paddingAngle={5}>
-                      {statusChartData.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
-                    </Pie>
-                    <Tooltip contentStyle={{ backgroundColor: '#1a1a1a', borderRadius: '12px', border: 'none', color: '#fff' }} />
-                  </PieChart>
-                </ResponsiveContainer>
+              
+              <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-[2.5rem] p-6 flex flex-col justify-center relative" style={{ height: 300, minHeight: 300 }}>
+                <h3 className="absolute top-6 left-6 text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)]">Pipeline Status</h3>
+                
+                {statusChartData.length > 0 ? (
+                  <div style={{ width: '100%', height: '100%' }}>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie data={statusChartData} dataKey="value" cx="50%" cy="50%" innerRadius={50} outerRadius={70} paddingAngle={5}>
+                          {statusChartData.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
+                        </Pie>
+                        <Tooltip contentStyle={{ backgroundColor: '#1a1a1a', borderRadius: '12px', border: 'none', color: '#fff' }} />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center h-full opacity-20 text-xs font-bold uppercase">Sem dados suficientes</div>
+                )}
               </div>
 
-              <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-[2.5rem] p-6 h-[300px]">
-                <h3 className="text-[10px] font-black uppercase tracking-widest mb-4 text-[var(--text-secondary)]">Top Utilities (Volume)</h3>
-                <ResponsiveContainer width="100%" height="85%">
-                  <BarChart data={utilityChartData} layout="vertical" margin={{ left: 0 }}>
-                    <XAxis type="number" hide />
-                    <YAxis dataKey="name" type="category" width={70} tick={{fontSize: 10, fill: '#888'}} axisLine={false} tickLine={false} />
-                    <Bar dataKey="value" fill="var(--accent-color)" radius={[0, 4, 4, 0]} barSize={20} />
-                    <Tooltip cursor={{fill: 'transparent'}} contentStyle={{ backgroundColor: '#1a1a1a', borderRadius: '12px', border: 'none' }} />
-                  </BarChart>
-                </ResponsiveContainer>
+              <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-[2.5rem] p-6 flex flex-col justify-center relative" style={{ height: 300, minHeight: 300 }}>
+                <h3 className="absolute top-6 left-6 text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)]">Top Utilities</h3>
+                
+                {utilityChartData.length > 0 ? (
+                  <div style={{ width: '100%', height: '100%' }}>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={utilityChartData} layout="vertical" margin={{ left: 0, right: 20, top: 20, bottom: 0 }}>
+                        <XAxis type="number" hide />
+                        <YAxis dataKey="name" type="category" width={70} tick={{fontSize: 10, fill: '#888'}} axisLine={false} tickLine={false} />
+                        <Bar dataKey="value" fill="var(--accent-color)" radius={[0, 4, 4, 0]} barSize={20} />
+                        <Tooltip cursor={{fill: 'transparent'}} contentStyle={{ backgroundColor: '#1a1a1a', borderRadius: '12px', border: 'none' }} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center h-full opacity-20 text-xs font-bold uppercase">Sem dados suficientes</div>
+                )}
               </div>
             </div>
 
-            {/* LISTA DE OPORTUNIDADES REFINADA */}
             <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-[2.5rem] p-8 min-h-[400px]">
               <div className="flex justify-between items-center mb-6">
                 <h3 className="text-xl font-black italic uppercase text-[var(--text-primary)]">My Opportunities</h3>
@@ -305,7 +341,6 @@ export default function Workspace() {
               </div>
             </div>
 
-            {/* QUICK TASKS (LISTA FACILITADA) */}
             <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-[2.5rem] p-8">
                <h3 className="text-xl font-black italic uppercase text-[var(--text-primary)] mb-6">Quick Tasks</h3>
                
@@ -337,7 +372,6 @@ export default function Workspace() {
 
           </div>
 
-          {/* COLUNA DIREITA (CALENDÁRIO INTERATIVO) */}
           <div className="space-y-6">
             <div className="bg-black text-white rounded-[2.5rem] p-8 min-h-[600px] border border-white/5 relative overflow-hidden flex flex-col shadow-2xl">
                <div className="absolute top-0 right-0 p-10 opacity-10 pointer-events-none"><CalendarIcon size={120}/></div>
@@ -352,7 +386,6 @@ export default function Workspace() {
                   </div>
                </div>
 
-               {/* GRID CALENDÁRIO */}
                <div className="grid grid-cols-7 gap-2 text-center text-[10px] font-black opacity-40 mb-2">
                  <span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span>
                </div>
@@ -382,7 +415,6 @@ export default function Workspace() {
                  })}
                </div>
 
-               {/* LISTA DE EVENTOS DO DIA */}
                <div className="flex-1 bg-white/5 rounded-2xl p-4 overflow-y-auto custom-scrollbar border border-white/5">
                  <div className="flex justify-between items-center mb-4 sticky top-0 bg-transparent">
                    <h4 className="text-[9px] font-black uppercase tracking-widest opacity-50">
@@ -395,7 +427,6 @@ export default function Workspace() {
 
                  {selectedDayEvents.length > 0 || getEventsForDay(currentDate.getDate()).length > 0 ? (
                    <div className="space-y-3">
-                     {/* Se nada selecionado, mostra do dia atual do calendário */}
                      {(selectedDayEvents.length > 0 ? selectedDayEvents : getEventsForDay(currentDate.getDate())).map((e) => (
                        <div key={e.id} className="flex gap-3 items-start border-b border-white/5 pb-2 last:border-0 group">
                          {e.type === 'tracker' ? <Clock size={14} className="text-[var(--accent-color)] shrink-0 mt-0.5"/> : <MapPin size={14} className="text-blue-400 shrink-0 mt-0.5"/>}
@@ -422,7 +453,6 @@ export default function Workspace() {
 
         </div>
 
-        {/* MODAL ADICIONAR EVENTO */}
         {isEventModalOpen && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 animate-in fade-in">
              <div className="bg-[var(--card-bg)] border border-[var(--border-color)] p-8 rounded-3xl w-full max-w-sm shadow-2xl">

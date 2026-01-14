@@ -31,33 +31,34 @@ export default function ForgotPasswordPage() {
 
   return (
     <PageTransition>
-      <div className="flex h-screen w-full bg-black overflow-hidden font-sans items-center justify-center relative">
+      <div className="flex h-screen w-full bg-[#050505] overflow-hidden font-sans">
         
-        {/* Background Sutil */}
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop')] bg-cover bg-center opacity-20 mix-blend-overlay"></div>
-
-        <div className="w-full max-w-md p-8 relative z-10">
-          <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-[3rem] p-10 shadow-2xl backdrop-blur-xl">
+        {/* LADO ESQUERDO - FORMULÁRIO */}
+        <div className="w-full lg:w-[40%] flex flex-col justify-center px-8 md:px-16 lg:px-24 bg-[#0a0a0a] border-r border-white/5 z-10 relative">
+          
+          <div className="max-w-md w-full mx-auto">
             
-            <Link to="/login" className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)] hover:text-white mb-8 transition-colors">
+            <Link to="/login" className="inline-flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-zinc-500 hover:text-white mb-8 transition-colors">
               <ArrowLeft size={14} /> Voltar para Login
             </Link>
 
-            <div className="mb-8">
-              <h1 className="text-4xl font-black italic uppercase tracking-tighter text-white mb-2">
-                Recovery
+            <div className="mb-10">
+              <h1 className="text-5xl font-black italic uppercase tracking-tighter text-white mb-4 leading-[0.8]">
+                Password<br/><span className="text-[var(--accent-color)]">Recovery</span>
               </h1>
-              <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-                Digite seu e-mail corporativo. Enviaremos um link seguro para você redefinir sua senha.
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500 leading-relaxed">
+                Digite seu e-mail corporativo para receber as instruções de redefinição.
               </p>
             </div>
 
             {status === 'success' ? (
-              <div className="bg-green-500/10 border border-green-500/20 rounded-2xl p-6 text-center animate-in zoom-in-95">
-                <CheckCircle2 className="mx-auto text-green-500 mb-3" size={40} />
-                <h3 className="text-white font-bold text-sm mb-1">E-mail Enviado!</h3>
-                <p className="text-xs text-green-200 opacity-80">{message}</p>
-                <Link to="/login" className="mt-6 block w-full bg-white/10 hover:bg-white/20 text-white py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">
+              <div className="bg-green-500/10 border border-green-500/20 rounded-2xl p-8 text-center animate-in zoom-in-95">
+                <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle2 className="text-green-500" size={32} />
+                </div>
+                <h3 className="text-white font-black uppercase italic text-xl mb-2">E-mail Enviado!</h3>
+                <p className="text-sm text-zinc-400 mb-6">{message}</p>
+                <Link to="/login" className="block w-full bg-white text-black py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-zinc-200 transition-all">
                   Voltar ao Login
                 </Link>
               </div>
@@ -65,19 +66,31 @@ export default function ForgotPasswordPage() {
               <form onSubmit={handleReset} className="flex flex-col gap-6">
                 
                 {status === 'error' && (
-                  <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-3 rounded-xl text-xs font-bold flex items-center gap-2">
-                    <AlertCircle size={14} /> {message}
+                  <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-xl text-xs font-bold flex items-center gap-3">
+                    <AlertCircle size={16} /> {message}
                   </div>
                 )}
 
                 <div className="group">
-                  <label className="text-[9px] font-black uppercase tracking-widest text-[var(--text-secondary)] mb-2 block">Email</label>
+                  <label className="text-[9px] font-black uppercase tracking-widest text-zinc-500 mb-2 block group-focus-within:text-[var(--accent-color)] transition-colors">
+                    Email Corporativo
+                  </label>
                   <div className="relative">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] group-focus-within:text-white transition-colors" size={18} />
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-white transition-colors">
+                      <Mail size={18} />
+                    </div>
                     <input
                       type="email"
-                      placeholder="seu@email.com"
-                      className="w-full pl-12 pr-4 py-4 rounded-2xl bg-black/20 border border-white/10 text-white placeholder:text-white/20 outline-none focus:border-[var(--accent-color)] transition-all text-sm"
+                      placeholder="seu@email.com.br"
+                      className="
+                        w-full pl-12 pr-4 py-4 rounded-2xl 
+                        bg-[#111] border border-zinc-800 text-white 
+                        placeholder:text-zinc-700 outline-none 
+                        focus:border-[var(--accent-color)] focus:bg-[#151515] focus:ring-1 focus:ring-[var(--accent-color)]/20
+                        transition-all text-sm font-medium
+                        [&:-webkit-autofill]:shadow-[0_0_0_1000px_#111_inset] 
+                        [&:-webkit-autofill]:-webkit-text-fill-color-white
+                      "
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
@@ -88,14 +101,31 @@ export default function ForgotPasswordPage() {
                 <button 
                   type="submit" 
                   disabled={status === 'loading'}
-                  className="w-full bg-white text-black py-4 rounded-2xl font-black uppercase text-xs tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all flex justify-center items-center gap-2 disabled:opacity-50"
+                  className="w-full bg-[var(--accent-color)] text-white py-4 rounded-2xl font-black uppercase text-xs tracking-widest hover:brightness-110 active:scale-[0.98] transition-all flex justify-center items-center gap-2 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.5)] disabled:opacity-50"
                 >
-                  {status === 'loading' ? <Loader2 className="animate-spin" size={18} /> : "Enviar Link"}
+                  {status === 'loading' ? <Loader2 className="animate-spin" size={18} /> : "Enviar Link de Recuperação"}
                 </button>
               </form>
             )}
           </div>
         </div>
+
+        {/* LADO DIREITO - ARTE (Idêntico ao Login) */}
+        <div className="hidden lg:block lg:w-[60%] relative overflow-hidden bg-[#0a0a0a]">
+          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop')] bg-cover bg-center opacity-20 mix-blend-luminosity grayscale"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-transparent to-transparent"></div>
+          
+          <div className="absolute bottom-24 left-24">
+             <div className="w-16 h-1 bg-[var(--accent-color)] mb-8"></div>
+             <h2 className="text-8xl font-black italic uppercase text-white tracking-tighter leading-none opacity-100 drop-shadow-2xl">
+               Secure<br/>Access
+             </h2>
+             <p className="mt-8 text-sm font-medium text-zinc-400 max-w-md leading-relaxed border-l-2 border-zinc-800 pl-6">
+               Recuperação segura de credenciais para garantir a continuidade do controle operacional.
+             </p>
+          </div>
+        </div>
+
       </div>
     </PageTransition>
   );
