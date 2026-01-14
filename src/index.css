@@ -55,11 +55,13 @@ body {
   color: var(--text-primary);
   transition: background-color 0.4s ease, color 0.4s ease;
   overflow-x: hidden;
+  /* Fix para scroll mobile */
+  -webkit-overflow-scrolling: touch;
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px; /* Mais fino para mobile */
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
@@ -95,6 +97,9 @@ button {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 4px 6px -1px var(--shadow-color);
   backdrop-filter: blur(4px);
+  /* Melhorar toque no mobile */
+  touch-action: manipulation; 
+  -webkit-tap-highlight-color: transparent;
 }
 button:hover {
   border-color: var(--accent-color);
@@ -106,6 +111,7 @@ button:active {
 }
 
 
+/* --- SIDEBAR (Desktop) --- */
 .sidebar {
   position: fixed;
   margin-bottom: auto;
@@ -114,7 +120,7 @@ button:active {
   background: linear-gradient(145deg, var(--bg-sidebar), var(--bg-gradient-to));
   z-index: 4000;
   padding: 20px 12px;
-  transition: width 0.2s ease;
+  transition: width 0.2s ease, transform 0.3s ease;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -174,18 +180,17 @@ button:active {
 }
 
 
+/* --- MAIN CONTENT --- */
 .main {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  
   min-height: 100vh;
-  
   background: linear-gradient(135deg, var(--bg-gradient-from) 0%, var(--bg-gradient-to) 100%);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
-  
   padding: 40px;
+  padding-left: calc(95px + 40px); /* Espaço para sidebar desktop */
   transition: all 0.5s ease;
 }
 
@@ -194,135 +199,127 @@ button:active {
   border: none;
   outline: none;
   margin: 1vw;
+  width: 100%; /* Garante uso total */
 }
 
 .typearea:focus{
   outline: none;
 }
 
-/* --- TIPTAP / EDITOR STYLES --- */
-
-/* Garante que o container do editor tenha estilos base */
+/* --- EDITOR (TIPTAP) --- */
 .ProseMirror {
   outline: none !important;
-  min-height: 100px;
-  /* Força a cor do texto para herdar do pai (importante para temas dark/light) */
+  min-height: 200px; /* Altura mínima melhorada */
   color: inherit; 
+  padding-bottom: 100px; /* Espaço extra no final para scroll confortável */
 }
 
-/* Espaçamento */
-.ProseMirror > * + * {
-  margin-top: 0.75em;
-}
-
-/* LISTAS: O Tailwind remove o estilo padrão. 
-   Aqui forçamos a volta das bolinhas e números.
-*/
-.ProseMirror ul {
-  list-style-type: disc !important;
-  padding-left: 1.5rem !important;
-  margin: 1rem 0 !important;
-}
-
-.ProseMirror ol {
-  list-style-type: decimal !important;
-  padding-left: 1.5rem !important;
-  margin: 1rem 0 !important;
-}
-
-.ProseMirror li {
-  margin-top: 0.25em;
-  margin-bottom: 0.25em;
-  /* Garante que o texto do item da lista seja visível */
-  display: list-item !important; 
-}
-
-/* FORMATAÇÃO DE TEXTO
-   Forçamos negrito e itálico caso o reset tenha removido
-*/
-.ProseMirror strong, 
-.ProseMirror b {
-  font-weight: bold !important;
-}
-
-.ProseMirror em, 
-.ProseMirror i {
-  font-style: italic !important;
-}
-
-/* Cabeçalhos */
-.ProseMirror h1,
-.ProseMirror h2,
-.ProseMirror h3 {
-  line-height: 1.3;
-  font-weight: 700 !important; /* Força negrito nos títulos */
-  margin-top: 1.5em;
-  margin-bottom: 0.5em;
-}
-
+.ProseMirror > * + * { margin-top: 0.75em; }
+.ProseMirror ul { list-style-type: disc !important; padding-left: 1.5rem !important; margin: 1rem 0 !important; }
+.ProseMirror ol { list-style-type: decimal !important; padding-left: 1.5rem !important; margin: 1rem 0 !important; }
+.ProseMirror li { margin-top: 0.25em; margin-bottom: 0.25em; display: list-item !important; }
+.ProseMirror strong, .ProseMirror b { font-weight: bold !important; }
+.ProseMirror em, .ProseMirror i { font-style: italic !important; }
+.ProseMirror h1, .ProseMirror h2, .ProseMirror h3 { line-height: 1.3; font-weight: 700 !important; margin-top: 1.5em; margin-bottom: 0.5em; }
 .ProseMirror h1 { font-size: 2.25em !important; }
 .ProseMirror h2 { font-size: 1.75em !important; }
 .ProseMirror h3 { font-size: 1.35em !important; }
+.ProseMirror blockquote { border-left: 4px solid var(--accent-color); padding-left: 1rem; font-style: italic; margin-left: 0; opacity: 0.8; }
+.ProseMirror pre { background: #0d0d0d; color: #fff; font-family: 'JetBrains Mono', monospace; padding: 0.75rem 1rem; border-radius: 0.5rem; overflow-x: auto; max-width: 100%; }
+.ProseMirror code { background-color: rgba(97, 97, 97, 0.2); padding: 0.25em; border-radius: 0.25em; font-family: monospace; font-size: 0.9em; word-wrap: break-word; }
+.ProseMirror a { color: var(--accent-color); cursor: pointer; text-decoration: underline !important; }
+.ProseMirror p.is-editor-empty:first-child::before { color: #adb5bd; content: attr(data-placeholder); float: left; height: 0; pointer-events: none; }
 
-/* Citações */
-.ProseMirror blockquote {
-  border-left: 4px solid var(--accent-color);
-  padding-left: 1rem;
-  font-style: italic;
-  margin-left: 0;
-  opacity: 0.8;
-}
 
-/* Código */
-.ProseMirror pre {
-  background: #0d0d0d;
-  color: #fff;
-  font-family: 'JetBrains Mono', monospace;
-  padding: 0.75rem 1rem;
-  border-radius: 0.5rem;
-  overflow-x: auto; /* Adiciona scroll se o código for longo */
-}
-
-.ProseMirror code {
-  background-color: rgba(97, 97, 97, 0.2);
-  padding: 0.25em;
-  border-radius: 0.25em;
-  font-family: monospace;
-  font-size: 0.9em;
-}
-
-/* Links */
-.ProseMirror a {
-  color: var(--accent-color);
-  cursor: pointer;
-  text-decoration: underline !important;
-}
-
-/* Placeholder */
-.ProseMirror p.is-editor-empty:first-child::before {
-  color: #adb5bd;
-  content: attr(data-placeholder);
-  float: left;
-  height: 0;
-  pointer-events: none;
-}
-
+/* --- MOBILE & TABLET (Responsive Logic) --- */
 @media (max-width: 768px) {
-  .sidebar {
-    width: 70px;
-    left: 0;
-    top: 0;
-    height: 100vh;
-    border-radius: 0;
-  }
-  .sidebar:hover {
-    width: 200px;
-  }
+  
+  /* Reset do layout principal */
   .main {
-    margin-left: 70px;
-    margin-right: 10px;
-    padding: 20px;
-    border-radius: 16px;
+    margin: 0 !important;
+    padding: 20px 16px 110px 16px; /* Padding bottom extra para não esconder conteúdo atrás da nav bar */
+    width: 100%;
+    min-width: 100vw;
+    box-sizing: border-box;
+    padding-left: 16px; /* Remove o recuo da sidebar desktop */
+  }
+
+  /* Transformar Sidebar em Bottom Navigation Bar */
+  .sidebar {
+    width: 100% !important; /* Força largura total */
+    height: auto;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    
+    /* Layout horizontal */
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    
+    /* Estilo Glassmorphism na Nav Bar */
+    background: linear-gradient(180deg, rgba(255,255,255,0.8), var(--bg-sidebar)); 
+    border-radius: 20px 20px 0 0; /* Arredonda apenas o topo */
+    border-top: 1px solid var(--border-color);
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+    
+    padding: 10px 0;
+    margin: 0;
+    
+    /* Garante que fique acima de tudo */
+    z-index: 9999; 
+  }
+  
+  /* Tema Dark na Sidebar Mobile */
+  [data-theme^="dark"] .sidebar {
+    background: linear-gradient(180deg, rgba(40,40,40,0.9), rgba(20,20,20,1));
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+
+  /* Desativa expansão no hover (não existe hover em touch) */
+  .sidebar:hover {
+    width: 100% !important;
+  }
+
+  /* Botões da Sidebar no Mobile */
+  .sidebar .btn {
+    width: auto;
+    flex-direction: column; /* Ícone em cima, (opcionalmente) texto embaixo */
+    justify-content: center;
+    padding: 8px 12px;
+    margin-bottom: 0;
+    border-radius: 12px;
+    background: transparent; /* Remove fundo padrão para ficar mais limpo */
+  }
+
+  /* Ícones maiores para toque */
+  .nav-icon {
+    width: 26px;
+    height: 26px;
+    transform: none;
+    margin-bottom: 0;
+  }
+
+  /* Esconder Labels no Mobile para economizar espaço */
+  /* Se quiser mostrar, mude para display: block e ajuste font-size: 10px */
+  .nav-label {
+    display: none; 
+  }
+
+  /* Estado Ativo no Mobile */
+  .btn.active {
+    background: var(--accent-color);
+    box-shadow: 0 4px 12px var(--accent-color);
+    transform: translateY(-2px);
+  }
+
+  /* Ajustes de Tipografia para telas pequenas */
+  .ProseMirror h1 { font-size: 1.75em !important; }
+  .ProseMirror h2 { font-size: 1.5em !important; }
+  
+  /* Ajuste de margens do editor */
+  .typearea {
+    margin: 10px 0;
   }
 }
-
