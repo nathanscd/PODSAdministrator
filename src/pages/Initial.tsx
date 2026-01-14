@@ -154,10 +154,10 @@ export default function Initial() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-5 mb-24">
             {[
-              { label: "Comparar Planilhas", path: "/comparacao", icon: <Upload size={20} />, color: "bg-emerald-500", shadow: "shadow-emerald-500/20" },
+              { label: "Comparar Planilhas", path: "/construcao", icon: <Upload size={20} />, color: "bg-emerald-500", shadow: "shadow-emerald-500/20" },
               { label: "SharePoint", path: "https://hexingbrasil.sharepoint.com/sites/MSSD/TechSales", icon: <Database size={20} />, color: "bg-blue-600", shadow: "shadow-blue-600/20" },
               { label: "Criar Board", path: "/todo", icon: <Plus size={20} />, color: "bg-[var(--accent-color)]", shadow: "shadow-[var(--accent-rgb)]/20" },
-              { label: "Comparar PDF", path: "/comparador-pdf", icon: <FileSearch size={20} />, color: "bg-rose-500", shadow: "shadow-rose-500/20" },
+              { label: "Comparar PDF", path: "/construcao", icon: <FileSearch size={20} />, color: "bg-rose-500", shadow: "shadow-rose-500/20" },
             ].map((btn, i) => (
               <motion.button 
                 key={i} 
@@ -324,8 +324,8 @@ export default function Initial() {
               <div className="space-y-5">
                 {[
                   { name: "SharePoint", status: "Operacional", color: "text-green-500", dot: "bg-green-500" },
-                  { name: "Notion API", status: "Instável", color: "text-orange-500", dot: "bg-orange-500" },
-                  { name: "Azure Storage", status: "Operacional", color: "text-green-500", dot: "bg-green-500" },
+                  { name: "Comparador", status: "Instável", color: "text-orange-500", dot: "bg-orange-500" },
+                  { name: "Firebase Storage", status: "Operacional", color: "text-green-500", dot: "bg-green-500" },
                   { name: "Auth Service", status: "Operacional", color: "text-green-500", dot: "bg-green-500" },
                 ].map((item, i) => (
                   <div key={i} className="flex items-center justify-between p-3 bg-[var(--bg-app)]/40 rounded-2xl border border-[var(--border-color)]/50">
