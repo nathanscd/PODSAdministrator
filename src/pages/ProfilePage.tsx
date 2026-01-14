@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
-import { User, Palette, ShieldCheck, Sparkles } from "lucide-react";
+import { User, Palette, ShieldCheck, Sparkles, LogOut } from "lucide-react"; // Adicionado LogOut
+import { signOut } from "firebase/auth"; // Adicionado signOut
+import { auth } from "../firebase"; // Adicionado auth
+import { useNavigate } from "react-router-dom"; // Adicionado useNavigate
 
 const themes = [
   { id: "orange", name: "Laranja", color: "#ff6a00" },
@@ -11,6 +14,7 @@ const themes = [
 
 export default function ProfilePage() {
   const { user, updateUserProfile, changeTheme, loading } = useAuth();
+  const navigate = useNavigate(); // Hook de navegação
   
   const [name, setName] = useState("");
   const [role, setRole] = useState("");
@@ -36,6 +40,16 @@ export default function ProfilePage() {
     } catch (error) {
       console.error(error);
       alert("Erro ao salvar.");
+    }
+  };
+
+  // --- LÓGICA DE LOGOUT ---
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigate("/login");
+    } catch (error) {
+      console.error("Erro ao sair:", error);
     }
   };
 
@@ -76,6 +90,14 @@ export default function ProfilePage() {
         </div>
         
         <div className="flex gap-3">
+          {/* BOTÃO DE SAIR */}
+          <button 
+            onClick={handleLogout}
+            className="px-6 py-3 bg-transparent border border-red-500/20 text-red-500 font-black uppercase text-[10px] tracking-widest rounded-full hover:bg-red-500 hover:text-white hover:border-red-500 transition-all flex items-center gap-2 m-0"
+          >
+            <LogOut size={14} /> Sair
+          </button>
+
           <button 
             onClick={handleSave}
             className="px-8 py-3 bg-[var(--accent-color)] text-white font-black uppercase text-[10px] tracking-widest rounded-full hover:scale-105 active:scale-95 transition-all shadow-lg shadow-[var(--accent-color)]/20 border-none m-0"

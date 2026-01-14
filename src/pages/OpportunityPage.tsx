@@ -1,14 +1,13 @@
-import { useState, useEffect, useMemo, memo, useRef } from "react";
+import { useState, useEffect, useMemo, memo } from "react";
 import { collection, onSnapshot, query, addDoc, updateDoc, doc, deleteDoc, where, getDocs, serverTimestamp } from "firebase/firestore";
 import { db, auth } from "../firebase";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Opportunity } from "../types";
-import { Plus, Search, ExternalLink, CheckCircle2, X, Filter, ChevronDown, ChevronRight, Edit3, BookOpen, MoreHorizontal, Trash2 } from "lucide-react";
+import { Plus, Search, ExternalLink, CheckCircle2, X, Filter, ChevronDown, ChevronRight, Edit3, BookOpen, MoreHorizontal, Trash2, ListTodo } from "lucide-react";
 import PageTransition from "../components/PageTransition";
 import OpportunityForm from "../components/OpportunityForm";
 import CsvImporter from "../components/CsvImporter";
-import DatabaseCleaner from "../components/DatabaseCleaner";
 
 // --- TIPO PARA O MENU FLUTUANTE ---
 interface DropdownConfig {
@@ -82,7 +81,7 @@ const OpportunityRow = memo(({ opp, onOpenMenu }: { opp: Opportunity, onOpenMenu
 // --- PÁGINA PRINCIPAL ---
 
 export default function OpportunityPage() {
-  const { isAdmin, userGroup, user } = useAuth();
+  const { isAdmin, userGroup } = useAuth();
   const navigate = useNavigate();
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [search, setSearch] = useState("");
@@ -148,7 +147,9 @@ export default function OpportunityPage() {
 
   const createOpportunity = async () => {
     if (!auth.currentUser) return alert("Login necessário");
+    // Se for admin, não atribui grupo automaticamente, senão atribui o grupo do usuário
     const assignedGroup = isAdmin ? "" : (userGroup || "Unassigned");
+    
     const newOppData: Omit<Opportunity, 'id'> = {
       description: "Nova Oportunidade", technicalSalesGroup: assignedGroup, utility: "", files: "", yearStart: new Date().getFullYear(), yearEnd: new Date().getFullYear() + 1,
       hqInterface: "", kam: "", status: "Draft", product: "", priority: "Média",
@@ -180,11 +181,12 @@ export default function OpportunityPage() {
     const filtered = opportunities.filter(opp => {
       const matchesSearch = opp.description?.toLowerCase().includes(search.toLowerCase()) || opp.utility?.toLowerCase().includes(search.toLowerCase());
       const matchesUtility = filterUtility === "all" || opp.utility === filterUtility;
-      const userGroupLower = (userGroup || "").toLowerCase();
       const oppGroupLower = (opp.technicalSalesGroup || "").toLowerCase();
-      const matchesGroup = isAdmin 
-        ? (filterGroup === "all" || oppGroupLower.includes(filterGroup.toLowerCase()))
-        : (oppGroupLower.includes(userGroupLower) || opp.ownerId === user?.uid);
+      
+      // ALTERAÇÃO: Removemos a lógica de isAdmin/userGroup para visualização.
+      // Agora o filtro funciona apenas se o usuário selecionar algo no dropdown "Group".
+      const matchesGroup = filterGroup === "all" || oppGroupLower.includes(filterGroup.toLowerCase());
+      
       return matchesSearch && matchesUtility && matchesGroup;
     });
 
@@ -200,7 +202,7 @@ export default function OpportunityPage() {
     });
 
     return Object.entries(groups).sort((a, b) => a[0].localeCompare(b[0]));
-  }, [opportunities, search, filterUtility, filterGroup, isAdmin, userGroup, user]);
+  }, [opportunities, search, filterUtility, filterGroup]); // Dependências de usuário removidas
 
   const toggleGroup = (groupName: string) => {
     setExpandedGroups(prev => ({ ...prev, [groupName]: prev[groupName] === false ? true : false }));
@@ -236,6 +238,17 @@ export default function OpportunityPage() {
                 {uniqueUtilities.map(u => <option key={u} value={u} className="bg-[var(--bg-app)]">{u}</option>)}
               </select>
             </div>
+            {/* Opcional: Você pode querer adicionar o filtro de grupo aqui se ele não existir em outro lugar da UI, 
+                já que removemos a filtragem automática por usuário */}
+            <div className="flex items-center gap-2 opacity-60 hover:opacity-100 transition-opacity">
+               <Filter size={14} className="text-[var(--text-primary)]" />
+               <select className="bg-transparent border-none text-[10px] font-black uppercase tracking-widest outline-none cursor-pointer text-[var(--text-primary)]" onChange={(e) => setFilterGroup(e.target.value)}>
+                 <option value="all" className="bg-[var(--bg-app)]">Filter: All Groups</option>
+                 <option value="1st Group" className="bg-[var(--bg-app)]">1st Group</option>
+                 <option value="2nd Group" className="bg-[var(--bg-app)]">2nd Group</option>
+                 <option value="3rd Group" className="bg-[var(--bg-app)]">3rd Group</option>
+               </select>
+             </div>
           </div>
         </header>
 
@@ -295,7 +308,7 @@ export default function OpportunityPage() {
           </div>
         </div>
 
-        {/* --- MENU DROPDOWN FLUTUANTE (NOVO) --- */}
+        {/* --- MENU DROPDOWN FLUTUANTE (ATUALIZADO) --- */}
         {dropdownConfig && (
           <div 
             className="fixed z-[9999] bg-[#1a1a1a] border border-[var(--border-color)] rounded-xl shadow-2xl py-2 w-48 animate-in fade-in zoom-in-95 duration-100"
@@ -314,6 +327,14 @@ export default function OpportunityPage() {
               className="w-full text-left px-4 py-3 flex items-center gap-3 hover:bg-white/5 transition-colors text-sm font-bold text-[var(--text-primary)]"
             >
               <Edit3 size={14} className="text-blue-400" /> Edit Opportunity
+            </button>
+
+            {/* Link para Task Trackers */}
+            <button 
+              onClick={() => { navigate('/task-tracker'); setDropdownConfig(null); }}
+              className="w-full text-left px-4 py-3 flex items-center gap-3 hover:bg-white/5 transition-colors text-sm font-bold text-[var(--text-primary)]"
+            >
+              <ListTodo size={14} className="text-orange-400" /> Task Trackers
             </button>
 
             <button 

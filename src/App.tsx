@@ -12,6 +12,10 @@ import ProfilePage from "./pages/ProfilePage";
 import PrivateRoute from "./components/PrivateRoute";
 import Dashboards from "./pages/Dashboards";
 import Layout from "./components/Layout";
+import Workspace from "./pages/Workspace";
+import TaskTrackerPages from "./pages/TaskTrackerPages";
+import TaskTrackerDashboard from "./pages/TaskTrackerDashboard";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 
 function App() {
   return (
@@ -31,6 +35,10 @@ function App() {
             <Route path="profile" element={<ProfilePage />} />
             <Route path="comparacao" element={<SpreadsheetPage />} />
             <Route path="opportunities" element={<OpportunityPage />} />
+            <Route path="/task-tracker" element={<TaskTrackerDashboard />} />
+            <Route path="/task-tracker/:id" element={<TaskTrackerPages />} />            
+            <Route path="workspace" element={<Workspace />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           </Route>
         </Route>
 

@@ -1,10 +1,12 @@
 import { NavLink } from "react-router-dom";
 import { usePages } from "../hooks/usePages";
-import { Home, User, FileText, CheckSquare, BarChart2, FileSpreadsheet, Layout, Search } from "lucide-react";
+import { 
+  Home, User, FileText, CheckSquare, BarChart2, 
+  FileSpreadsheet, Layout, Search, Globe, Briefcase, ListTodo 
+} from "lucide-react";
 
 export default function Sidebar() {
-  const { pages, userDisplayName } = usePages();
-  const firstDoc = pages.find((p) => p.type === "document");
+  const { userDisplayName } = usePages();
 
   const checkActive = ({ isActive }: { isActive: boolean }) =>
     isActive
@@ -27,6 +29,18 @@ export default function Sidebar() {
         <NavLink to="/profile" className={checkActive}>
           <User className="nav-icon !min-w-[24px] !w-6 !h-6" />
           <span className="nav-label ml-4">Perfil</span>
+        </NavLink>
+
+        <div className="my-4 border-t border-[var(--border-color)] opacity-20 mx-2"></div>
+
+        <NavLink to="/workspace" className={checkActive}>
+          <Briefcase className="nav-icon !min-w-[24px] !w-6 !h-6 text-[var(--accent-color)]" />
+          <span className="nav-label ml-4 font-bold">Workspace</span>
+        </NavLink>
+
+        <NavLink to="/task-tracker" className={checkActive}>
+          <ListTodo className="nav-icon !min-w-[24px] !w-6 !h-6 text-blue-500" />
+          <span className="nav-label ml-4">Task Trackers</span>
         </NavLink>
 
         <div className="my-4 border-t border-[var(--border-color)] opacity-20 mx-2"></div>

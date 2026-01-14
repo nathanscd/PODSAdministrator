@@ -74,3 +74,26 @@ export interface Page {
   columnOrder?: string[];
   linkedOpportunityId?: string | null;
 }
+
+export interface TaskItem {
+  id: string;
+  task: string;
+  startDate: string;      // YYYY-MM-DD
+  plannedEndDate: string; // YYYY-MM-DD
+  currentEndDate: string; // YYYY-MM-DD
+  priority: 'Baixa' | 'Média' | 'Alta' | 'Crítica';
+  responsible: string;
+  team: 'Pre-Sales' | 'Post-Sales' | 'Technical' | 'HQ' | 'Sales';
+  progress: number; // 0 a 100
+}
+
+export interface TaskTracker {
+  title?: string;
+  id: string;
+  opportunityId: string;
+  opportunityName: string;
+  opportunityUtility: string;
+  ownerId: string;
+  tasks: TaskItem[];
+  createdAt: any;
+}
