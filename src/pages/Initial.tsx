@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { usePages } from "../hooks/usePages";
-import { useAuth } from "../contexts/AuthContext"; // Importe para saber quem cria
+import { useAuth } from "../contexts/AuthContext";
 import { db } from "../firebase";
 import { 
   collection, getCountFromServer, query, orderBy, limit, onSnapshot, 
@@ -26,6 +26,9 @@ export default function Initial() {
   
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isLogsOpen, setIsLogsOpen] = useState(false);
+  
+  // Estado para controlar a bolinha vermelha
+  const [hasUnread, setHasUnread] = useState(false);
 
   // --- GOALS COLETIVOS (FIRESTORE) ---
   const [goals, setGoals] = useState<any[]>([]);
@@ -34,6 +37,24 @@ export default function Initial() {
   const [newGoalText, setNewGoalText] = useState("");
   const [selectedUserForGoal, setSelectedUserForGoal] = useState("");
   const [isAddingGoal, setIsAddingGoal] = useState(false);
+
+  // Verifica notificações não lidas
+  useEffect(() => {
+    if (!user) return;
+    
+    const q = query(
+      collection(db, "notifications"),
+      where("recipientId", "==", user.uid),
+      where("read", "==", false),
+      limit(1)
+    );
+
+    const unsub = onSnapshot(q, (snap) => {
+      setHasUnread(!snap.empty);
+    });
+
+    return unsub;
+  }, [user]);
 
   // 1. Carregar Usuários para o Select
   useEffect(() => {
@@ -48,11 +69,9 @@ export default function Initial() {
 
   // 2. Carregar Metas em Tempo Real
   useEffect(() => {
-    // Ordena por status (pendente primeiro) e depois por data
     const q = query(collection(db, "daily_goals"), orderBy("createdAt", "desc"));
     const unsub = onSnapshot(q, (snapshot) => {
       const data = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-      // Ordenação client-side para jogar completados para baixo
       const sorted = data.sort((a: any, b: any) => Number(a.completed) - Number(b.completed));
       setGoals(sorted);
     });
@@ -77,14 +96,13 @@ export default function Initial() {
         createdAt: serverTimestamp()
       });
 
-      // Notificação se atribuiu a alguém
       if (selectedUserForGoal && selectedUserForGoal !== user?.uid) {
          await sendNotification(
             selectedUserForGoal,
             "Nova Meta Diária",
             `${userDisplayName} adicionou uma meta rápida para você: "${newGoalText}"`,
             "assignment",
-            "/" // Link para a home
+            "/" 
          );
       }
       
@@ -186,7 +204,9 @@ export default function Initial() {
               className="relative p-2.5 text-[var(--text-primary)] border border-[var(--border-color)] bg-[var(--card-bg)] rounded-xl shadow-sm hover:border-[var(--accent-color)] transition-colors"
             >
               <Bell size={20} />
-              <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-[var(--bg-app)] animate-pulse" />
+              {hasUnread && (
+                 <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-[var(--bg-app)] animate-pulse" />
+              )}
             </motion.button>
             <div className="hidden md:flex flex-col items-end">
               <span className="text-[10px] font-black uppercase tracking-tighter text-[var(--text-primary)]">{userDisplayName || "Usuário"}</span>

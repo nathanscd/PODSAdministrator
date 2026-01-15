@@ -4,13 +4,14 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   X, Bell, History, CheckCircle2, AlertCircle, Info, 
-  Clock, User, ArrowRight, Rocket 
+  Clock, User, ArrowRight, Rocket, Check 
 } from "lucide-react";
-import { collection, query, where, orderBy, limit, onSnapshot } from "firebase/firestore";
+import { collection, query, where, orderBy, limit, onSnapshot, doc, updateDoc } from "firebase/firestore";
 import { db, auth } from "../firebase";
 import { timeAgo } from "../utils/systemLogger";
+import { useAuth } from "../contexts/AuthContext";
 
-// --- BASE MODAL (Estrutura Visual) ---
+// --- BASE MODAL ---
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -27,7 +28,6 @@ const BaseModal = ({ isOpen, onClose, title, subtitle, icon, children }: ModalPr
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
-          {/* Backdrop Blur */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -36,7 +36,6 @@ const BaseModal = ({ isOpen, onClose, title, subtitle, icon, children }: ModalPr
             className="absolute inset-0 bg-black/40 backdrop-blur-[8px]"
           />
           
-          {/* Modal Content */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -44,10 +43,8 @@ const BaseModal = ({ isOpen, onClose, title, subtitle, icon, children }: ModalPr
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
             className="relative w-full max-w-xl bg-gradient-to-b from-[var(--card-bg)] to-[var(--bg-app)] border border-white/10 rounded-[3rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col max-h-[85vh]"
           >
-            {/* Top Gradient Line */}
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[var(--accent-color)] to-transparent opacity-50" />
             
-            {/* Header */}
             <div className="p-10 flex items-start justify-between shrink-0">
               <div className="flex gap-6">
                 <div className="relative">
@@ -75,7 +72,6 @@ const BaseModal = ({ isOpen, onClose, title, subtitle, icon, children }: ModalPr
               </button>
             </div>
 
-            {/* Scrollable Body */}
             <div className="px-10 pb-10 overflow-y-auto custom-scrollbar flex-1">
               {children}
             </div>
@@ -90,55 +86,71 @@ const BaseModal = ({ isOpen, onClose, title, subtitle, icon, children }: ModalPr
 // --- NOTIFICATIONS MODAL ---
 export const NotificationsModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
   const navigate = useNavigate();
-  const [items, setItems] = useState<any[]>([]);
+  const { user } = useAuth();
+  const [personalNotifs, setPersonalNotifs] = useState<any[]>([]);
+  const [systemNotifs, setSystemNotifs] = useState<any[]>([]);
 
+  // Effect 1: Notificações Pessoais (COM FILTRO DE NÃO LIDAS)
   useEffect(() => {
-    if (!isOpen || !auth.currentUser) return;
+    if (!isOpen || !user) return;
 
-    // 1. Busca Notificações Pessoais (Tarefas atribuídas, alertas, etc)
     const qNotifs = query(
       collection(db, "notifications"), 
-      where("recipientId", "==", auth.currentUser.uid),
+      where("recipientId", "==", user.uid),
+      where("read", "==", false), // <--- FILTRO ADICIONADO: Só busca as não lidas
       orderBy("createdAt", "desc"), 
-      limit(10)
+      limit(20)
     );
 
-    // 2. Busca Última Versão do Sistema (Para avisar de updates)
-    const qVersions = query(collection(db, "app_versions"), orderBy("releaseDate", "desc"), limit(1));
-
-    // Listener principal
-    const unsubNotifs = onSnapshot(qNotifs, (sNotifs) => {
-      const personalNotifs = sNotifs.docs.map(d => ({ 
+    const unsub = onSnapshot(qNotifs, (snapshot) => {
+      setPersonalNotifs(snapshot.docs.map(d => ({ 
         id: d.id, 
         ...d.data(), 
         origin: 'personal' 
-      }));
-      
-      // Listener secundário (nested para garantir merge correto no estado)
-      onSnapshot(qVersions, (sVers) => {
-        const systemNotifs = sVers.docs.map(d => ({ 
-          id: d.id, 
-          title: `Nova Versão v${d.data().version}`,
-          description: "O sistema foi atualizado. Clique para ver as novidades.",
-          type: 'version',
-          link: '/changelog',
-          createdAt: d.data().releaseDate, 
-          origin: 'system'
-        }));
-
-        // Combina: Versão do sistema primeiro (fixada), depois as pessoais
-        const combined = [...systemNotifs, ...personalNotifs]; 
-        setItems(combined);
-      });
+      })));
+    }, (error) => {
+       console.error("Erro nas notificações:", error);
+       // Se der erro de índice, o console do navegador mostrará o link para criar
     });
 
-    return () => unsubNotifs();
+    return () => unsub();
+  }, [isOpen, user]);
+
+  // Effect 2: Notificações do Sistema
+  useEffect(() => {
+    if (!isOpen) return;
+    const qVersions = query(collection(db, "app_versions"), orderBy("releaseDate", "desc"), limit(1));
+    const unsub = onSnapshot(qVersions, (snapshot) => {
+      setSystemNotifs(snapshot.docs.map(d => ({ 
+        id: d.id, 
+        title: `Nova Versão v${d.data().version}`,
+        description: "O sistema foi atualizado. Clique para ver as novidades.",
+        type: 'version',
+        link: '/changelog',
+        createdAt: d.data().releaseDate, 
+        origin: 'system'
+      })));
+    });
+    return () => unsub();
   }, [isOpen]);
 
+  const items = [...systemNotifs, ...personalNotifs];
+
+  // Ação de Clique no Card (Navegação)
   const handleClick = (item: any) => {
     onClose();
-    if (item.link) {
-        navigate(item.link);
+    if (item.link) navigate(item.link);
+  };
+
+  // Ação de Marcar como Lida
+  const markAsRead = async (e: React.MouseEvent, notifId: string) => {
+    e.stopPropagation(); // Impede que o clique no botão dispare a navegação do card
+    try {
+        const notifRef = doc(db, "notifications", notifId);
+        await updateDoc(notifRef, { read: true });
+        // O onSnapshot removerá o item da lista automaticamente
+    } catch (error) {
+        console.error("Erro ao marcar como lida:", error);
     }
   };
 
@@ -176,16 +188,15 @@ export const NotificationsModal = ({ isOpen, onClose }: { isOpen: boolean; onClo
           <div 
             key={item.id} 
             onClick={() => handleClick(item)}
-            className={`cursor-pointer p-5 bg-white/[0.02] border border-white/5 rounded-3xl flex gap-4 transition-all duration-300 group ${getBorderColor(item.type)}`}
+            className={`relative cursor-pointer p-5 bg-white/[0.02] border border-white/5 rounded-3xl flex gap-4 transition-all duration-300 group ${getBorderColor(item.type)}`}
           >
-            {/* Ícone Indicador */}
             <div className="shrink-0 mt-1">
                <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center border border-white/5 shadow-inner">
                  {getIcon(item.type)}
                </div>
             </div>
 
-            <div className="flex-1 min-w-0">
+            <div className="flex-1 min-w-0 pr-8">
                <div className="flex justify-between items-start">
                   <h4 className="text-sm font-bold text-[var(--text-primary)] truncate pr-2">
                     {item.title}
@@ -207,6 +218,17 @@ export const NotificationsModal = ({ isOpen, onClose }: { isOpen: boolean; onClo
                  </p>
                )}
             </div>
+
+            {/* Botão de Marcar como Lida (Só aparece para notificações pessoais) */}
+            {item.origin === 'personal' && (
+                <button 
+                    onClick={(e) => markAsRead(e, item.id)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-[var(--bg-app)] border border-[var(--border-color)] text-[var(--text-secondary)] opacity-0 group-hover:opacity-100 hover:text-green-500 hover:border-green-500 transition-all z-10"
+                    title="Marcar como lida"
+                >
+                    <Check size={14} />
+                </button>
+            )}
           </div>
         ))}
       </div>
@@ -214,13 +236,12 @@ export const NotificationsModal = ({ isOpen, onClose }: { isOpen: boolean; onClo
   );
 };
 
-// --- LOGS MODAL ---
+// --- LOGS MODAL (Mantido igual) ---
 export const LogsModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
   const [logs, setLogs] = useState<any[]>([]);
 
   useEffect(() => {
     if (!isOpen) return;
-    // Busca os últimos 20 logs do sistema
     const q = query(collection(db, "system_logs"), orderBy("createdAt", "desc"), limit(20));
     const unsub = onSnapshot(q, (snapshot) => {
       setLogs(snapshot.docs.map(d => ({ id: d.id, ...d.data() })));

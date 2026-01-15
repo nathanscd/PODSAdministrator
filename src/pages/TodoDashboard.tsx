@@ -1,33 +1,50 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { collection, onSnapshot, query, where, addDoc, serverTimestamp } from "firebase/firestore";
+import { collection, onSnapshot, query, addDoc, serverTimestamp, deleteDoc, doc } from "firebase/firestore";
 import { db, auth } from "../firebase";
-import { Plus, ArrowRight, Layout, Trash2, Calendar, User, CheckCircle2 } from "lucide-react";
+import { Plus, ArrowRight, Layout, Calendar, User, Trash2, AlertTriangle } from "lucide-react";
 import PageTransition from "../components/PageTransition";
 import { useAuth } from "../contexts/AuthContext";
 import { Page, Task } from "../types";
+import { useToast } from "../contexts/ToastContext";
 
 export default function TodoDashboard() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { addToast } = useToast();
   const [pages, setPages] = useState<Page[]>([]);
   const [myAssignedTasks, setMyAssignedTasks] = useState<{task: Task, pageId: string, pageTitle: string}[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  const formatDate = (dateValue: any) => {
+    if (!dateValue) return "Data desconhecida";
+    if (dateValue.seconds) return new Date(dateValue.seconds * 1000).toLocaleDateString();
+    if (typeof dateValue === 'string') return new Date(dateValue).toLocaleDateString();
+    return "Data inválida";
+  };
 
-  // Carrega páginas e filtra tarefas atribuídas
   useEffect(() => {
-    const q = query(collection(db, "pages"), where("type", "==", "kanban")); // Assume que 'kanban' ou 'board' identifica quadros
+    const q = query(collection(db, "pages")); 
+
     const unsub = onSnapshot(q, (snapshot) => {
       const loadedPages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Page));
-      setPages(loadedPages);
+      
+      const boardPages = loadedPages.filter(p => p.type === 'board' || p.type === 'kanban' || !p.type);
 
-      // Filtra tarefas atribuídas ao usuário logado
+      boardPages.sort((a, b) => {
+        const dateA = a.updatedAt?.seconds || 0;
+        const dateB = b.updatedAt?.seconds || 0;
+        return dateB - dateA;
+      });
+      
+      setPages(boardPages);
+
       if (user) {
         const tasks: {task: Task, pageId: string, pageTitle: string}[] = [];
-        loadedPages.forEach(page => {
+        boardPages.forEach(page => {
           if (page.tasks) {
             Object.values(page.tasks).forEach(task => {
-              if (task.assignedTo === user.uid && task.status !== 'done') { // Opcional: filtrar concluidas
+              if (task && task.assignedTo === user.uid && task.status !== 'done') {
                 tasks.push({
                   task: task,
                   pageId: page.id,
@@ -48,7 +65,7 @@ export default function TodoDashboard() {
     try {
       const docRef = await addDoc(collection(db, "pages"), {
         title: "Novo Quadro",
-        type: "kanban",
+        type: "board",
         ownerId: auth.currentUser?.uid,
         isPublic: false,
         createdAt: serverTimestamp(),
@@ -62,8 +79,25 @@ export default function TodoDashboard() {
         columnOrder: ["col-1", "col-2", "col-3"]
       });
       navigate(`/todo/${docRef.id}`);
+      addToast("Quadro criado com sucesso!", "success");
     } catch (error) {
       console.error("Erro ao criar quadro:", error);
+      addToast("Erro ao criar quadro.", "error");
+    }
+  };
+
+  const deleteBoard = async (e: React.MouseEvent, pageId: string, pageTitle: string) => {
+    e.preventDefault(); 
+    e.stopPropagation();
+
+    if (window.confirm(`Tem certeza que deseja excluir o quadro "${pageTitle}"? Essa ação não pode ser desfeita.`)) {
+        try {
+            await deleteDoc(doc(db, "pages", pageId));
+            addToast("Quadro excluído.", "success");
+        } catch (error) {
+            console.error("Erro ao excluir:", error);
+            addToast("Sem permissão para excluir.", "error");
+        }
     }
   };
 
@@ -82,7 +116,7 @@ export default function TodoDashboard() {
           </div>
           <button 
             onClick={createNewBoard}
-            className="bg-[var(--accent-color)] text-white px-8 py-4 rounded-2xl font-black uppercase text-xs tracking-widest hover:brightness-110 transition-all shadow-lg flex items-center gap-2"
+            className="bg-[var(--accent-color)] text-white px-8 py-4 rounded-2xl font-black uppercase text-xs tracking-widest hover:brightness-110 transition-all shadow-lg flex items-center gap-2 cursor-pointer"
           >
             <Plus size={16} /> Novo Quadro
           </button>
@@ -108,20 +142,25 @@ export default function TodoDashboard() {
                         <Link 
                             to={`/todo/${pageId}`} 
                             key={`${task.id}-${idx}`}
-                            className="bg-[var(--card-bg)] p-6 rounded-[2rem] border border-[var(--border-color)] hover:border-[var(--accent-color)] transition-all group block"
+                            className="bg-[var(--card-bg)] p-6 rounded-[2rem] border border-[var(--border-color)] hover:border-[var(--accent-color)] transition-all group block relative overflow-hidden"
                         >
-                            <div className="flex justify-between items-start mb-4">
-                                <span className="text-[9px] font-black uppercase tracking-widest bg-[var(--bg-app)] px-2 py-1 rounded-lg text-[var(--text-secondary)] truncate max-w-[150px]">
+                            <div className="absolute top-0 right-0 w-20 h-20 bg-[var(--accent-color)]/5 rounded-full -mr-10 -mt-10 blur-xl"/>
+                            
+                            <div className="flex justify-between items-start mb-4 relative z-10">
+                                <span className="text-[9px] font-black uppercase tracking-widest bg-[var(--bg-app)] px-2 py-1 rounded-lg text-[var(--text-secondary)] truncate max-w-[150px] border border-[var(--border-color)]">
                                     {pageTitle}
                                 </span>
                                 <div className="w-2 h-2 rounded-full bg-[var(--accent-color)] shadow-[0_0_10px_currentColor] animate-pulse"/>
                             </div>
-                            <h3 className="text-lg font-bold text-[var(--text-primary)] mb-2 line-clamp-2">
+                            
+                            <h3 className="text-lg font-bold text-[var(--text-primary)] mb-2 line-clamp-2 leading-tight">
                                 {task.content}
                             </h3>
-                            <p className="text-[10px] text-[var(--text-secondary)] mb-4 line-clamp-2 h-8">
-                                {task.description || "Sem descrição..."}
+                            
+                            <p className="text-[10px] text-[var(--text-secondary)] mb-6 line-clamp-2 h-8 leading-relaxed opacity-70">
+                                {task.description || "Sem descrição disponível para esta tarefa..."}
                             </p>
+                            
                             <div className="flex items-center justify-between mt-auto pt-4 border-t border-[var(--border-color)]">
                                 <div className="flex items-center gap-2 text-[var(--accent-color)] text-[10px] font-black uppercase">
                                     <User size={12} /> Você
@@ -143,6 +182,16 @@ export default function TodoDashboard() {
                 Todos os Quadros
             </h2>
             
+            {loading && <p className="opacity-50 text-xs uppercase tracking-widest ml-1">Carregando...</p>}
+            
+            {!loading && pages.length === 0 && (
+                <div className="text-center py-20 opacity-30 border border-dashed border-[var(--border-color)] rounded-[3rem]">
+                    <AlertTriangle size={48} className="mx-auto mb-4 opacity-50"/>
+                    <p className="text-xs font-black uppercase tracking-widest">Nenhum quadro encontrado.</p>
+                    <p className="text-[10px] mt-2">Clique em "+ Novo Quadro" para começar.</p>
+                </div>
+            )}
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {pages.map((page) => (
                 <Link 
@@ -150,17 +199,27 @@ export default function TodoDashboard() {
                 to={`/todo/${page.id}`}
                 className="group relative bg-[var(--card-bg)] p-8 rounded-[2.5rem] border border-[var(--border-color)] hover:border-[var(--accent-color)] hover:shadow-2xl transition-all duration-300 flex flex-col min-h-[220px]"
                 >
-                <div className="absolute top-8 right-8 p-3 bg-[var(--bg-app)] rounded-2xl text-[var(--text-secondary)] group-hover:text-[var(--accent-color)] transition-colors border border-[var(--border-color)]">
-                    <Layout size={20} />
+                <div className="absolute top-8 right-8 flex gap-2">
+                     {/* BOTÃO DELETAR */}
+                    <button 
+                        onClick={(e) => deleteBoard(e, page.id, page.title)}
+                        className="p-3 bg-[var(--bg-app)] rounded-2xl text-[var(--text-secondary)] hover:text-red-500 hover:bg-red-500/10 transition-colors border border-[var(--border-color)] z-20"
+                    >
+                        <Trash2 size={18} />
+                    </button>
+                    <div className="p-3 bg-[var(--bg-app)] rounded-2xl text-[var(--text-secondary)] group-hover:text-[var(--accent-color)] transition-colors border border-[var(--border-color)]">
+                        <Layout size={20} />
+                    </div>
                 </div>
 
                 <div className="mt-auto">
-                    <h3 className="text-2xl font-black text-[var(--text-primary)] mb-2 leading-tight group-hover:translate-x-1 transition-transform">
-                    {page.title}
+                    <h3 className="text-2xl font-black text-[var(--text-primary)] mb-2 leading-tight group-hover:translate-x-1 transition-transform pr-16 break-words">
+                    {page.title || "Sem Título"}
                     </h3>
                     <div className="flex items-center gap-3 mt-4 opacity-60">
+                     <Calendar size={12}/>
                     <span className="text-[10px] font-black uppercase tracking-widest bg-[var(--bg-app)] px-3 py-1 rounded-lg">
-                        {new Date(page.updatedAt?.seconds * 1000).toLocaleDateString()}
+                        {formatDate(page.updatedAt)}
                     </span>
                     </div>
                 </div>

@@ -1,9 +1,10 @@
 import { useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { logAction } from "./utils/systemLogger";
-import { ToastProvider } from "./contexts/ToastContext"; // Import novo
+import { ToastProvider } from "./contexts/ToastContext";
+import { NotificationListener } from "./components/NotificationListener"; // <--- IMPORTAR
 
-// ... imports das páginas ...
+// ... outros imports (PagesDashboard, etc) ...
 import PagesDashboard from "./pages/PagesDashboard";
 import WorkspacePage from "./pages/WorkspacePage";
 import Initial from "./pages/Initial";
@@ -18,8 +19,8 @@ import PrivateRoute from "./components/PrivateRoute";
 import Dashboards from "./pages/Dashboards";
 import Layout from "./components/Layout";
 import Workspace from "./pages/Workspace";
-import TaskTrackerPages from "./pages/TaskTrackerPages";
 import TaskTrackerDashboard from "./pages/TaskTrackerDashboard";
+import TaskTrackerPages from "./pages/TaskTrackerPages";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import AdminUsersPage from "./pages/AdminUsersPage";
 import UnderConstruction from "./pages/Construction";
@@ -28,20 +29,14 @@ import ChangelogPage from "./pages/ChangelogPage";
 function App() {
   
   useEffect(() => {
-    const runSystemChecks = async () => {
-      const lastCheck = localStorage.getItem('lastSystemCheck');
-      const now = new Date().toDateString();
-      
-      if (lastCheck !== now) {
-         await logAction("Otimização de Cache", "Performance do Sistema", "system");
-         localStorage.setItem('lastSystemCheck', now);
-      }
-    };
-    runSystemChecks();
+    // ... seu código de verificação de sistema ...
   }, []);
 
   return (
     <ToastProvider> 
+      {/* O NotificationListener precisa estar DENTRO do ToastProvider e AuthContext(geralmente no index ou PrivateRoute) */}
+      <NotificationListener /> 
+
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
@@ -65,7 +60,6 @@ function App() {
               <Route path="/admin/users" element={<AdminUsersPage />} />
               <Route path="/changelog" element={<ChangelogPage />} />
               <Route path="/construction" element={<UnderConstruction />} />
-              <Route path="/construction2" element={<UnderConstruction />} />
             </Route>
           </Route>
 
