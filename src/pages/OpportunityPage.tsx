@@ -250,35 +250,41 @@ export default function OpportunityPage() {
           </div>
         </header>
 
-        <div className="flex-1 overflow-auto custom-scrollbar p-0">
-          <div className="min-w-[4000px]">
-            <table className="w-full text-left border-separate border-spacing-y-0">
-              <thead className="sticky top-0 z-20 bg-[var(--bg-app)] shadow-sm">
+          <div className="relative h-[80vh] overflow-auto custom-scrollbar border border-[var(--border-color)] rounded-[2rem]">
+            <table className="w-full border-collapse text-left">
+              <thead className="sticky top-0 z-40 bg-[var(--bg-app)]">
                 <tr className="text-[9px] font-black uppercase tracking-[0.3em] text-[var(--text-secondary)]">
-                  <th className="px-4 py-4 sticky left-0 bg-[var(--bg-app)] z-30 border-b border-[var(--border-color)] w-[50px]">Action</th>
-                  <th className="px-8 py-4 sticky left-[50px] bg-[var(--bg-app)] z-30 border-b border-[var(--border-color)]">Description</th>
-                  <th className="px-6 border-b border-[var(--border-color)]">Group</th>
-                  <th className="px-6 border-b border-[var(--border-color)]">Utility</th>
-                  <th className="px-6 border-b border-[var(--border-color)]">KAM</th>
-                  <th className="px-6 border-b border-[var(--border-color)]">Product</th>
-                  <th className="px-6 border-b border-[var(--border-color)]">Status</th>
-                  <th className="px-6 border-b border-[var(--border-color)]">Stage</th>
-                  <th className="px-6 border-b border-[var(--border-color)]">Priority</th>
-                  <th className="px-6 border-b border-[var(--border-color)]">Progress</th>
-                  <th className="px-6 border-b border-[var(--border-color)]">Qty</th>
-                  <th className="px-6 border-b border-[var(--border-color)]">SCP (R$)</th>
-                  <th className="px-6 border-b border-[var(--border-color)]">Homologated</th>
-                  <th className="px-6 border-b border-[var(--border-color)]">Country</th>
-                  <th className="px-6 border-b border-[var(--border-color)]">Ecosystem</th>
-                  <th className="px-6 border-b border-[var(--border-color)]">Start</th>
-                  <th className="px-6 border-b border-[var(--border-color)]">End</th>
-                  <th className="px-6 border-b border-[var(--border-color)]">HQ Support</th>
-                  <th className="px-6 border-b border-[var(--border-color)]">Reason</th>
-                  <th className="px-6 border-b border-[var(--border-color)]">Competitors</th>
-                  <th className="px-6 border-b border-[var(--border-color)]">Product Team</th>
-                  <th className="px-6 border-b border-[var(--border-color)]">Sales Mgmt</th>
-                  <th className="px-6 border-b border-[var(--border-color)]">Last Discussion</th>
-                  <th className="px-6 border-b border-[var(--border-color)]">Link</th>
+                  
+                  <th className="px-4 py-4 sticky left-0 top-0 bg-[var(--bg-app)] z-50 border-b border-[var(--border-color)] w-[50px] shadow-[1px_0_0_0_var(--border-color)]">
+                    Action
+                  </th>
+                  
+                  <th className="px-8 py-4 sticky left-[50px] top-0 bg-[var(--bg-app)] z-50 border-b border-[var(--border-color)] min-w-[200px] shadow-[1px_0_0_0_var(--border-color)]">
+                    Description
+                  </th>
+
+                  <th className="px-6 py-4 sticky top-0 bg-[var(--bg-app)] border-b border-[var(--border-color)] whitespace-nowrap">Group</th>
+                  <th className="px-6 py-4 sticky top-0 bg-[var(--bg-app)] border-b border-[var(--border-color)] whitespace-nowrap">Utility</th>
+                  <th className="px-6 py-4 sticky top-0 bg-[var(--bg-app)] border-b border-[var(--border-color)] whitespace-nowrap">KAM</th>
+                  <th className="px-6 py-4 sticky top-0 bg-[var(--bg-app)] border-b border-[var(--border-color)] whitespace-nowrap">Product</th>
+                  <th className="px-6 py-4 sticky top-0 bg-[var(--bg-app)] border-b border-[var(--border-color)] whitespace-nowrap">Status</th>
+                  <th className="px-6 py-4 sticky top-0 bg-[var(--bg-app)] border-b border-[var(--border-color)] whitespace-nowrap">Stage</th>
+                  <th className="px-6 py-4 sticky top-0 bg-[var(--bg-app)] border-b border-[var(--border-color)] whitespace-nowrap">Priority</th>
+                  <th className="px-6 py-4 sticky top-0 bg-[var(--bg-app)] border-b border-[var(--border-color)] whitespace-nowrap">Progress</th>
+                  <th className="px-6 py-4 sticky top-0 bg-[var(--bg-app)] border-b border-[var(--border-color)] whitespace-nowrap">Qty</th>
+                  <th className="px-6 py-4 sticky top-0 bg-[var(--bg-app)] border-b border-[var(--border-color)] whitespace-nowrap">SCP</th>
+                  <th className="px-6 py-4 sticky top-0 bg-[var(--bg-app)] border-b border-[var(--border-color)] whitespace-nowrap">Homologated</th>
+                  <th className="px-6 py-4 sticky top-0 bg-[var(--bg-app)] border-b border-[var(--border-color)] whitespace-nowrap">Country</th>
+                  <th className="px-6 py-4 sticky top-0 bg-[var(--bg-app)] border-b border-[var(--border-color)] whitespace-nowrap">Ecosystem</th>
+                  <th className="px-6 py-4 sticky top-0 bg-[var(--bg-app)] border-b border-[var(--border-color)] whitespace-nowrap">Start</th>
+                  <th className="px-6 py-4 sticky top-0 bg-[var(--bg-app)] border-b border-[var(--border-color)] whitespace-nowrap">End</th>
+                  <th className="px-6 py-4 sticky top-0 bg-[var(--bg-app)] border-b border-[var(--border-color)] whitespace-nowrap">HQ Support</th>
+                  <th className="px-6 py-4 sticky top-0 bg-[var(--bg-app)] border-b border-[var(--border-color)] whitespace-nowrap">Reason</th>
+                  <th className="px-6 py-4 sticky top-0 bg-[var(--bg-app)] border-b border-[var(--border-color)] whitespace-nowrap">Competitors</th>
+                  <th className="px-6 py-4 sticky top-0 bg-[var(--bg-app)] border-b border-[var(--border-color)] whitespace-nowrap">Product Team</th>
+                  <th className="px-6 py-4 sticky top-0 bg-[var(--bg-app)] border-b border-[var(--border-color)] whitespace-nowrap">Sales Mgmt</th>
+                  <th className="px-6 py-4 sticky top-0 bg-[var(--bg-app)] border-b border-[var(--border-color)] whitespace-nowrap">Last Discussion</th>
+                  <th className="px-6 py-4 sticky top-0 bg-[var(--bg-app)] border-b border-[var(--border-color)] whitespace-nowrap">Link</th>
                 </tr>
               </thead>
               <tbody>
@@ -303,7 +309,6 @@ export default function OpportunityPage() {
                 ))}
               </tbody>
             </table>
-          </div>
         </div>
 
         {/* --- MENU DROPDOWN FLUTUANTE (ATUALIZADO) --- */}
