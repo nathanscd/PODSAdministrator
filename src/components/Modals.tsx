@@ -1,7 +1,16 @@
+import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Bell, History, CheckCircle2, AlertCircle, Info, Clock, User, ArrowRight } from "lucide-react";
+import { 
+  X, Bell, History, CheckCircle2, AlertCircle, Info, 
+  Clock, User, ArrowRight, Rocket 
+} from "lucide-react";
+import { collection, query, where, orderBy, limit, onSnapshot } from "firebase/firestore";
+import { db, auth } from "../firebase";
+import { timeAgo } from "../utils/systemLogger";
 
+// --- BASE MODAL (Estrutura Visual) ---
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -18,6 +27,7 @@ const BaseModal = ({ isOpen, onClose, title, subtitle, icon, children }: ModalPr
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+          {/* Backdrop Blur */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -25,16 +35,20 @@ const BaseModal = ({ isOpen, onClose, title, subtitle, icon, children }: ModalPr
             onClick={onClose}
             className="absolute inset-0 bg-black/40 backdrop-blur-[8px]"
           />
+          
+          {/* Modal Content */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 30 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="relative w-full max-w-xl bg-gradient-to-b from-[var(--card-bg)] to-[var(--bg-app)] border border-white/10 rounded-[3rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] overflow-hidden"
+            className="relative w-full max-w-xl bg-gradient-to-b from-[var(--card-bg)] to-[var(--bg-app)] border border-white/10 rounded-[3rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col max-h-[85vh]"
           >
+            {/* Top Gradient Line */}
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[var(--accent-color)] to-transparent opacity-50" />
             
-            <div className="p-10 flex items-start justify-between">
+            {/* Header */}
+            <div className="p-10 flex items-start justify-between shrink-0">
               <div className="flex gap-6">
                 <div className="relative">
                   <div className="absolute inset-0 bg-[var(--accent-color)] blur-2xl opacity-20" />
@@ -53,19 +67,17 @@ const BaseModal = ({ isOpen, onClose, title, subtitle, icon, children }: ModalPr
                   )}
                 </div>
               </div>
-            </div>
-
-            <div className="px-10 pb-10 max-h-[65vh] overflow-y-auto custom-scrollbar">
-              {children}
-            </div>
-
-            <div className="px-10 py-6 bg-black/20 border-t border-white/5 flex justify-end">
               <button 
                 onClick={onClose}
-                className="px-8 py-3 bg-white/5 hover:bg-white/10 text-[var(--text-primary)] text-[10px] font-black uppercase tracking-widest rounded-xl transition-all"
+                className="p-2 hover:bg-white/5 rounded-full text-[var(--text-secondary)] transition-colors"
               >
-                Fechar Painel
+                <X size={20} />
               </button>
+            </div>
+
+            {/* Scrollable Body */}
+            <div className="px-10 pb-10 overflow-y-auto custom-scrollbar flex-1">
+              {children}
             </div>
           </motion.div>
         </div>
@@ -75,41 +87,126 @@ const BaseModal = ({ isOpen, onClose, title, subtitle, icon, children }: ModalPr
   );
 };
 
+// --- NOTIFICATIONS MODAL ---
 export const NotificationsModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
-  const notifications = [
-    { id: 1, title: "Backup do Sistema", desc: "Sincronização com Azure Storage finalizada com sucesso.", time: "2 horas atrás", type: "success" },
-    { id: 2, title: "Segurança", desc: "Nova chave de API gerada para o ambiente de produção.", time: "5 horas atrás", type: "warning" },
-    { id: 3, title: "Atualização", desc: "Versão 2.4.0 disponível. Verifique o changelog.", time: "Ontem", type: "info" },
-  ];
+  const navigate = useNavigate();
+  const [items, setItems] = useState<any[]>([]);
 
-  const getTheme = (type: string) => {
-    switch(type) {
-      case 'success': return 'text-green-400 bg-green-400/10 border-green-400/20';
-      case 'warning': return 'text-amber-400 bg-amber-400/10 border-amber-400/20';
-      default: return 'text-blue-400 bg-blue-400/10 border-blue-400/20';
+  useEffect(() => {
+    if (!isOpen || !auth.currentUser) return;
+
+    // 1. Busca Notificações Pessoais (Tarefas atribuídas, alertas, etc)
+    const qNotifs = query(
+      collection(db, "notifications"), 
+      where("recipientId", "==", auth.currentUser.uid),
+      orderBy("createdAt", "desc"), 
+      limit(10)
+    );
+
+    // 2. Busca Última Versão do Sistema (Para avisar de updates)
+    const qVersions = query(collection(db, "app_versions"), orderBy("releaseDate", "desc"), limit(1));
+
+    // Listener principal
+    const unsubNotifs = onSnapshot(qNotifs, (sNotifs) => {
+      const personalNotifs = sNotifs.docs.map(d => ({ 
+        id: d.id, 
+        ...d.data(), 
+        origin: 'personal' 
+      }));
+      
+      // Listener secundário (nested para garantir merge correto no estado)
+      onSnapshot(qVersions, (sVers) => {
+        const systemNotifs = sVers.docs.map(d => ({ 
+          id: d.id, 
+          title: `Nova Versão v${d.data().version}`,
+          description: "O sistema foi atualizado. Clique para ver as novidades.",
+          type: 'version',
+          link: '/changelog',
+          createdAt: d.data().releaseDate, 
+          origin: 'system'
+        }));
+
+        // Combina: Versão do sistema primeiro (fixada), depois as pessoais
+        const combined = [...systemNotifs, ...personalNotifs]; 
+        setItems(combined);
+      });
+    });
+
+    return () => unsubNotifs();
+  }, [isOpen]);
+
+  const handleClick = (item: any) => {
+    onClose();
+    if (item.link) {
+        navigate(item.link);
     }
+  };
+
+  const getIcon = (type: string) => {
+    switch(type) {
+      case 'assignment': return <User size={18} className="text-blue-400" />;
+      case 'version': return <Rocket size={18} className="text-green-400" />;
+      default: return <AlertCircle size={18} className="text-amber-400" />;
+    }
+  };
+
+  const getBorderColor = (type: string) => {
+     if (type === 'version') return 'hover:border-green-500/50 hover:bg-green-500/5';
+     if (type === 'assignment') return 'hover:border-blue-500/50 hover:bg-blue-500/5';
+     return 'hover:border-white/20';
   };
 
   return (
     <BaseModal 
       isOpen={isOpen} 
       onClose={onClose} 
-      title="Alertas" 
-      subtitle="Centro de Mensagens"
+      title="Notificações" 
+      subtitle="Central de Alertas"
       icon={<Bell size={24}/>}
     >
-      <div className="space-y-4">
-        {notifications.map((n) => (
-          <div key={n.id} className="group relative p-6 bg-white/[0.02] border border-white/5 rounded-[2rem] flex gap-5 hover:bg-white/[0.05] transition-all duration-500">
-            <div className={`shrink-0 w-2 h-2 rounded-full mt-2 shadow-[0_0_12px_currentColor] ${getTheme(n.type)}`} />
-            <div className="flex-1">
-              <div className="flex justify-between items-start mb-2">
-                <span className="text-sm font-bold text-[var(--text-primary)]">{n.title}</span>
-                <span className="text-[9px] font-black opacity-30 uppercase tracking-widest">{n.time}</span>
-              </div>
-              <p className="text-xs text-[var(--text-secondary)] opacity-60 leading-relaxed font-medium">{n.desc}</p>
+      <div className="space-y-3">
+        {items.length === 0 && (
+          <div className="text-center py-10 opacity-30">
+             <Bell size={40} className="mx-auto mb-2 opacity-50"/>
+             <p className="text-xs font-bold uppercase">Tudo limpo por aqui</p>
+          </div>
+        )}
+
+        {items.map((item) => (
+          <div 
+            key={item.id} 
+            onClick={() => handleClick(item)}
+            className={`cursor-pointer p-5 bg-white/[0.02] border border-white/5 rounded-3xl flex gap-4 transition-all duration-300 group ${getBorderColor(item.type)}`}
+          >
+            {/* Ícone Indicador */}
+            <div className="shrink-0 mt-1">
+               <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center border border-white/5 shadow-inner">
+                 {getIcon(item.type)}
+               </div>
             </div>
-            <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 transition-all text-[var(--accent-color)] -translate-x-4 group-hover:translate-x-0" />
+
+            <div className="flex-1 min-w-0">
+               <div className="flex justify-between items-start">
+                  <h4 className="text-sm font-bold text-[var(--text-primary)] truncate pr-2">
+                    {item.title}
+                  </h4>
+                  {item.createdAt && (
+                    <span className="text-[9px] font-black opacity-30 uppercase tracking-widest whitespace-nowrap">
+                      {item.origin === 'system' ? 'Novo' : timeAgo(item.createdAt)}
+                    </span>
+                  )}
+               </div>
+               
+               <p className="text-xs text-[var(--text-secondary)] opacity-70 mt-1 leading-relaxed line-clamp-2">
+                 {item.description}
+               </p>
+               
+               {item.type === 'assignment' && (
+                 <p className="text-[9px] mt-2 font-black uppercase tracking-wider text-[var(--accent-color)] opacity-60 group-hover:opacity-100 transition-opacity">
+                   Ver Tarefa →
+                 </p>
+               )}
+            </div>
           </div>
         ))}
       </div>
@@ -117,27 +214,43 @@ export const NotificationsModal = ({ isOpen, onClose }: { isOpen: boolean; onClo
   );
 };
 
+// --- LOGS MODAL ---
 export const LogsModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
-  const logs = [
-    { id: 1, user: "Nathanael", action: "Exportou PDF", target: "Relatório Mensal", time: "14:20", date: "Hoje" },
-    { id: 2, user: "Sistema", action: "Auto-limpeza", target: "Cache de Imagens", time: "04:00", date: "Hoje" },
-    { id: 3, user: "Admin", action: "Aprovou Acesso", target: "Ligia Taniguchi", time: "18:45", date: "Ontem" },
-  ];
+  const [logs, setLogs] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    // Busca os últimos 20 logs do sistema
+    const q = query(collection(db, "system_logs"), orderBy("createdAt", "desc"), limit(20));
+    const unsub = onSnapshot(q, (snapshot) => {
+      setLogs(snapshot.docs.map(d => ({ id: d.id, ...d.data() })));
+    });
+    return unsub;
+  }, [isOpen]);
 
   return (
     <BaseModal 
       isOpen={isOpen} 
       onClose={onClose} 
       title="Atividade" 
-      subtitle="Logs de Transação"
+      subtitle="Logs do Sistema"
       icon={<History size={24}/>}
     >
       <div className="space-y-3">
+        {logs.length === 0 && (
+            <div className="text-center py-10 opacity-30">
+                <History size={40} className="mx-auto mb-2 opacity-50"/>
+                <p className="text-xs font-bold uppercase">Nenhuma atividade recente</p>
+            </div>
+        )}
+
         {logs.map((log) => (
           <div key={log.id} className="p-4 bg-white/[0.02] border border-white/5 rounded-2xl flex items-center justify-between group hover:border-[var(--accent-color)]/20 transition-colors">
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-xl bg-black/40 flex items-center justify-center border border-white/5 group-hover:border-[var(--accent-color)]/30 group-hover:text-[var(--accent-color)] transition-all">
-                <Clock size={16} />
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center border border-white/5 transition-all
+                 ${log.type === 'system' ? 'bg-amber-500/10 text-amber-500' : 'bg-black/40 text-[var(--text-secondary)]'}
+              `}>
+                {log.type === 'system' ? <AlertCircle size={16} /> : <Clock size={16} />}
               </div>
               <div>
                 <div className="flex items-center gap-2">
@@ -150,8 +263,7 @@ export const LogsModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
               </div>
             </div>
             <div className="text-right">
-              <p className="text-[10px] font-black text-[var(--text-primary)] tracking-widest">{log.time}</p>
-              <p className="text-[8px] font-black uppercase text-[var(--accent-color)] opacity-40 tracking-[0.2em]">{log.date}</p>
+              <p className="text-[10px] font-black text-[var(--text-primary)] tracking-widest">{timeAgo(log.createdAt)}</p>
             </div>
           </div>
         ))}

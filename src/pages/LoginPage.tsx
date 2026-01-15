@@ -5,6 +5,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useNavigate, Link, NavLink } from "react-router-dom";
 import { Mail, Lock, ArrowRight, Loader2, AlertCircle } from "lucide-react";
 import PageTransition from "../components/PageTransition";
+import { logAction } from "../utils/systemLogger";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -15,7 +16,6 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const { user } = useAuth(); 
 
-  // Redireciona se já estiver logado
   useEffect(() => {
     if (user) {
       navigate("/");
@@ -29,6 +29,8 @@ export default function LoginPage() {
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      // Registra o log de acesso automaticamente
+      await logAction("Login realizado", "Acesso ao sistema");
     } catch (err: any) {
       console.error(err);
       let msg = "Falha ao entrar.";

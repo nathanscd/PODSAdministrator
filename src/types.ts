@@ -5,7 +5,8 @@ export type Fiscalizacao = {
   anoReferencia: number;
 };
 
-export type PageType = 'document' | 'board';
+// Expandido para suportar todos os tipos de páginas do sistema
+export type PageType = 'document' | 'board' | 'kanban' | 'spreadsheet' | 'tracker';
 
 export interface Opportunity {
   id: string;
@@ -50,6 +51,9 @@ export interface Task {
   content: string;
   description?: string;
   assignedTo?: string;
+  assignedName?: string; // Obrigatório para o sistema de notificações
+  status?: string;
+  createdAt?: string;
 }
 
 export interface Column {
@@ -69,22 +73,25 @@ export interface Page {
   updatedAt: any;
   theme?: string;
   content?: string;
-  tasks?: any;
-  columns?: any;
+  
+  // CORREÇÃO AQUI: Tipagem estrita para o Board/Kanban
+  tasks?: Record<string, Task>;
+  columns?: Record<string, Column>;
   columnOrder?: string[];
+  
   linkedOpportunityId?: string | null;
 }
 
 export interface TaskItem {
   id: string;
   task: string;
-  startDate: string;      // YYYY-MM-DD
-  plannedEndDate: string; // YYYY-MM-DD
-  currentEndDate: string; // YYYY-MM-DD
+  startDate: string;     
+  plannedEndDate: string; 
+  currentEndDate: string; 
   priority: 'Baixa' | 'Média' | 'Alta' | 'Crítica';
   responsible: string;
   team: 'Pre-Sales' | 'Post-Sales' | 'Technical' | 'HQ' | 'Sales';
-  progress: number; // 0 a 100
+  progress: number; 
 }
 
 export interface TaskTracker {
