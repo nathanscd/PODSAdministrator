@@ -60,6 +60,7 @@ function App() {
               <Route path="/admin/users" element={<AdminUsersPage />} />
               <Route path="/changelog" element={<ChangelogPage />} />
               <Route path="/construction" element={<UnderConstruction />} />
+              <Route path="/construction2" element={<UnderConstruction />} />
             </Route>
           </Route>
 
