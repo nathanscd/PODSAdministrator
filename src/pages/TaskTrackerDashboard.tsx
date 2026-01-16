@@ -2,24 +2,24 @@ import { useState, useEffect, useMemo } from "react";
 import { collection, onSnapshot, addDoc, serverTimestamp, query, orderBy, deleteDoc, doc, where, getDocs, writeBatch } from "firebase/firestore";
 import { db, auth } from "../firebase";
 import { useAuth } from "../contexts/AuthContext";
+import { useToast } from "../contexts/ToastContext";
+import { logAction } from "../utils/systemLogger";
 import { useNavigate } from "react-router-dom";
 import { TaskTracker, Opportunity } from "../types";
 import { Plus, ListTodo, Search, Folder, Trash2, X, FileText, Loader2 } from "lucide-react"; 
 import PageTransition from "../components/PageTransition";
 
 export default function TaskTrackerDashboard() {
-  // 1. Adicionado isAdmin aqui
   const { user, userGroup, isAdmin } = useAuth(); 
+  const { addToast } = useToast();
   const navigate = useNavigate();
 
   const [trackers, setTrackers] = useState<TaskTracker[]>([]);
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   
-  // Modais e UI
   const [showNewModal, setShowNewModal] = useState(false);
   const [viewFolderId, setViewFolderId] = useState<string | null>(null);
   
-  // Form States
   const [selectedOppId, setSelectedOppId] = useState("");
   const [trackerTitle, setTrackerTitle] = useState("");
   const [isCreating, setIsCreating] = useState(false);
@@ -27,9 +27,6 @@ export default function TaskTrackerDashboard() {
   useEffect(() => {
     if (!user) return;
 
-    // --- LOGICA 1: TRACKERS ---
-    // Se for Admin, vê TUDO ordenado por data.
-    // Se for Usuário, vê apenas os SEUS (onde ownerId == uid).
     let qTrackers;
 
     if (isAdmin) {
@@ -41,7 +38,6 @@ export default function TaskTrackerDashboard() {
     const unsubTrackers = onSnapshot(qTrackers, (snapshot) => {
       const data = snapshot.docs.map(d => ({id: d.id, ...d.data()} as TaskTracker));
       
-      // Se não for admin, ordenamos manualmente no cliente (já que não usamos orderBy na query para evitar erro de index)
       if (!isAdmin) {
         data.sort((a, b) => {
           const tA = a.createdAt?.seconds || 0;
@@ -50,17 +46,14 @@ export default function TaskTrackerDashboard() {
         });
       }
       setTrackers(data);
-    }, (error) => console.error("Erro Trackers:", error));
+    }, (error) => {
+        console.error("Erro Trackers:", error);
+        addToast("Erro ao carregar trackers.", "error");
+    });
 
-
-    // --- LOGICA 2: OPORTUNIDADES (Para criar pastas) ---
-    // Admin: Vê TODAS as oportunidades.
-    // Usuário: Vê as SUAS + as do seu GRUPO.
-    
     let unsubOppsList: (() => void)[] = [];
 
     if (isAdmin) {
-      // ADMIN: Query Simples (Tudo)
       const qAllOpps = query(collection(db, "opportunities"));
       const unsub = onSnapshot(qAllOpps, (s) => {
         setOpportunities(s.docs.map(d => ({id: d.id, ...d.data()} as Opportunity)));
@@ -68,7 +61,6 @@ export default function TaskTrackerDashboard() {
       unsubOppsList.push(unsub);
 
     } else {
-      // USUÁRIO COMUM: Lógica Híbrida (Dono + Grupo)
       const myUid = user.uid;
       const myGroup = userGroup || "Unassigned";
       
@@ -81,14 +73,12 @@ export default function TaskTrackerDashboard() {
         setOpportunities(Array.from(map.values()));
       };
 
-      // 1. Sou Dono
       const qOwner = query(collection(db, "opportunities"), where("ownerId", "==", myUid));
       unsubOppsList.push(onSnapshot(qOwner, (s) => {
         localOwnerOpps = s.docs.map(d => ({id: d.id, ...d.data()} as Opportunity));
         updateMergedOpps();
       }));
 
-      // 2. Meu Grupo
       const qGroup = query(collection(db, "opportunities"), where("technicalSalesGroup", "==", myGroup));
       unsubOppsList.push(onSnapshot(qGroup, (s) => {
         localGroupOpps = s.docs.map(d => ({id: d.id, ...d.data()} as Opportunity));
@@ -96,14 +86,12 @@ export default function TaskTrackerDashboard() {
       }, (e) => console.warn("Erro ao buscar grupo opps:", e)));
     }
 
-    // Cleanup function
     return () => {
       unsubTrackers();
       unsubOppsList.forEach(u => u());
     };
-  }, [user, userGroup, isAdmin]); // Recarrega se o status de admin mudar
+  }, [user, userGroup, isAdmin]);
 
-  // --- RESTO DO CÓDIGO (Agrupamento e Actions) ---
   const groupedTrackers = useMemo(() => {
     const groups: Record<string, TaskTracker[]> = {};
     trackers.forEach(t => {
@@ -120,23 +108,28 @@ export default function TaskTrackerDashboard() {
 
     try {
       setIsCreating(true);
+      const title = trackerTitle || `Tracker ${new Date().toLocaleDateString()}`;
       const newTracker = {
         opportunityId: opp.id,
         opportunityName: opp.description,
         opportunityUtility: opp.utility,
         ownerId: auth.currentUser.uid,
-        title: trackerTitle || `Tracker ${new Date().toLocaleDateString()}`,
+        title: title,
         tasks: [], 
         createdAt: serverTimestamp()
       };
 
       await addDoc(collection(db, "taskTrackers"), newTracker);
+      
+      logAction("Criou Tracker", `${title} em ${opp.utility}`);
+      addToast("Tracker criado com sucesso!", "success");
+
       setShowNewModal(false);
       setTrackerTitle("");
       setViewFolderId(opp.id); 
     } catch (error) {
       console.error("Erro ao criar:", error);
-      alert("Erro ao criar tracker.");
+      addToast("Erro ao criar tracker.", "error");
     } finally {
       setIsCreating(false);
     }
@@ -145,9 +138,16 @@ export default function TaskTrackerDashboard() {
   const deleteTracker = async (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
     if (confirm("Tem certeza que deseja excluir este Tracker?")) {
-      await deleteDoc(doc(db, "taskTrackers", id));
-      const currentFolderTrackers = trackers.filter(t => t.opportunityId === viewFolderId);
-      if (currentFolderTrackers.length <= 1) setViewFolderId(null);
+      try {
+        await deleteDoc(doc(db, "taskTrackers", id));
+        logAction("Removeu Tracker", id);
+        addToast("Tracker removido.", "info");
+
+        const currentFolderTrackers = trackers.filter(t => t.opportunityId === viewFolderId);
+        if (currentFolderTrackers.length <= 1) setViewFolderId(null);
+      } catch (error) {
+        addToast("Erro ao remover tracker.", "error");
+      }
     }
   };
 
@@ -160,9 +160,14 @@ export default function TaskTrackerDashboard() {
         const snapshot = await getDocs(q);
         snapshot.docs.forEach((doc) => batch.delete(doc.ref));
         await batch.commit();
+        
+        logAction("Removeu Pasta de Trackers", oppId);
+        addToast("Pasta excluída com sucesso.", "info");
+        
         setViewFolderId(null);
       } catch (error) {
         console.error("Erro ao deletar pasta:", error);
+        addToast("Erro ao excluir pasta.", "error");
       }
     }
   };
@@ -185,7 +190,6 @@ export default function TaskTrackerDashboard() {
           </button>
         </header>
 
-        {/* GRID DE PASTAS */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {Object.entries(groupedTrackers).map(([oppId, groupTrackers]) => {
             const firstTracker = groupTrackers[0];
@@ -227,7 +231,6 @@ export default function TaskTrackerDashboard() {
           )}
         </div>
 
-        {/* MODAL VIEW FOLDER */}
         {viewFolderId && groupedTrackers[viewFolderId] && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
             <div className="bg-[var(--card-bg)] border border-[var(--border-color)] p-8 rounded-[2.5rem] w-full max-w-4xl shadow-2xl max-h-[80vh] flex flex-col">
@@ -270,7 +273,6 @@ export default function TaskTrackerDashboard() {
           </div>
         )}
 
-        {/* MODAL NEW TRACKER */}
         {showNewModal && (
           <div className="fixed inset-0 z-[150] flex items-center justify-center bg-black/70 backdrop-blur-md p-4 animate-in zoom-in-95">
             <div className="bg-[var(--card-bg)] border border-[var(--border-color)] p-8 rounded-3xl w-full max-w-md shadow-2xl">

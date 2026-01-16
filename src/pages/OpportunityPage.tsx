@@ -2,6 +2,8 @@ import { useState, useEffect, useMemo, memo } from "react";
 import { collection, onSnapshot, query, addDoc, updateDoc, doc, deleteDoc, where, getDocs, serverTimestamp } from "firebase/firestore";
 import { db, auth } from "../firebase";
 import { useAuth } from "../contexts/AuthContext";
+import { useToast } from "../contexts/ToastContext"; // Importado
+import { logAction } from "../utils/systemLogger"; // Importado
 import { useNavigate } from "react-router-dom";
 import { Opportunity } from "../types";
 import { Plus, Search, ExternalLink, CheckCircle2, X, Filter, ChevronDown, ChevronRight, Edit3, BookOpen, MoreHorizontal, Trash2, ListTodo } from "lucide-react";
@@ -82,6 +84,7 @@ const OpportunityRow = memo(({ opp, onOpenMenu }: { opp: Opportunity, onOpenMenu
 
 export default function OpportunityPage() {
   const { isAdmin, userGroup } = useAuth();
+  const { addToast } = useToast(); // Hook Toast
   const navigate = useNavigate();
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [search, setSearch] = useState("");
@@ -89,8 +92,8 @@ export default function OpportunityPage() {
   const [filterGroup, setFilterGroup] = useState("all");
   
   // States de Seleção
-  const [dropdownConfig, setDropdownConfig] = useState<DropdownConfig | null>(null); // Menu Dropdown
-  const [editingOpp, setEditingOpp] = useState<Opportunity | null>(null); // Form de Edição
+  const [dropdownConfig, setDropdownConfig] = useState<DropdownConfig | null>(null); 
+  const [editingOpp, setEditingOpp] = useState<Opportunity | null>(null); 
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
 
   // Fecha o menu ao clicar fora
@@ -105,6 +108,9 @@ export default function OpportunityPage() {
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const data = snapshot.docs.map(d => ({ id: d.id, ...d.data() } as Opportunity));
       setOpportunities(data);
+    }, (error) => {
+       console.error(error);
+       addToast("Erro ao carregar oportunidades.", "error");
     });
     return unsubscribe;
   }, []);
@@ -113,11 +119,11 @@ export default function OpportunityPage() {
 
   // Abre o menu na posição do clique
   const handleOpenMenu = (e: React.MouseEvent, opp: Opportunity) => {
-    e.stopPropagation(); // Impede que feche imediatamente
+    e.stopPropagation(); 
     const rect = (e.target as Element).getBoundingClientRect();
     setDropdownConfig({
       x: rect.left,
-      y: rect.bottom + 5, // Um pouco abaixo do botão
+      y: rect.bottom + 5, 
       opp
     });
   };
@@ -133,21 +139,28 @@ export default function OpportunityPage() {
     if (!querySnapshot.empty) {
       navigate(`/page/${querySnapshot.docs[0].id}`);
     } else {
-      const newPage = {
-        title: `Notes: ${opp.description}`,
-        content: `<h1>${opp.description}</h1><p>Notes regarding this opportunity...</p>`,
-        ownerId: auth.currentUser.uid,
-        updatedAt: serverTimestamp(),
-        linkedOpportunityId: opp.id
-      };
-      const docRef = await addDoc(collection(db, "pages"), newPage);
-      navigate(`/page/${docRef.id}`);
+      try {
+        const newPage = {
+            title: `Notes: ${opp.description}`,
+            content: `<h1>${opp.description}</h1><p>Notes regarding this opportunity...</p>`,
+            ownerId: auth.currentUser.uid,
+            updatedAt: serverTimestamp(),
+            linkedOpportunityId: opp.id
+        };
+        const docRef = await addDoc(collection(db, "pages"), newPage);
+        
+        logAction("Criou Nota de Oportunidade", opp.description);
+        addToast("Nota vinculada criada!", "success");
+        
+        navigate(`/page/${docRef.id}`);
+      } catch (error) {
+        addToast("Erro ao criar nota.", "error");
+      }
     }
   };
 
   const createOpportunity = async () => {
     if (!auth.currentUser) return alert("Login necessário");
-    // Se for admin, não atribui grupo automaticamente, senão atribui o grupo do usuário
     const assignedGroup = isAdmin ? "" : (userGroup || "Unassigned");
     
     const newOppData: Omit<Opportunity, 'id'> = {
@@ -161,19 +174,40 @@ export default function OpportunityPage() {
     };
     try {
       const docRef = await addDoc(collection(db, "opportunities"), newOppData);
+      
+      logAction("Criou Oportunidade", "Nova Oportunidade");
+      addToast("Oportunidade criada!", "success");
+
       setEditingOpp({ id: docRef.id, ...newOppData });
-    } catch (error) { console.error(error); }
+    } catch (error) { 
+        console.error(error); 
+        addToast("Erro ao criar oportunidade.", "error");
+    }
   };
 
   const updateOpp = async (id: string, updates: Partial<Opportunity>) => {
-    setOpportunities(prev => prev.map(o => o.id === id ? { ...o, ...updates } : o));
-    await updateDoc(doc(db, "opportunities", id), updates);
+    try {
+        setOpportunities(prev => prev.map(o => o.id === id ? { ...o, ...updates } : o));
+        await updateDoc(doc(db, "opportunities", id), updates);
+        addToast("Alterações salvas.", "success");
+    } catch (error) {
+        addToast("Erro ao atualizar.", "error");
+    }
   };
 
   const deleteOpp = async (id: string) => {
     if(confirm("Remover permanentemente?")) {
-      await deleteDoc(doc(db, "opportunities", id));
-      setEditingOpp(null);
+      try {
+        const oppToDelete = opportunities.find(o => o.id === id);
+        await deleteDoc(doc(db, "opportunities", id));
+        
+        logAction("Excluiu Oportunidade", oppToDelete?.description || id);
+        addToast("Oportunidade removida.", "info");
+
+        setEditingOpp(null);
+      } catch (error) {
+        addToast("Erro ao excluir.", "error");
+      }
     }
   };
 
@@ -183,8 +217,6 @@ export default function OpportunityPage() {
       const matchesUtility = filterUtility === "all" || opp.utility === filterUtility;
       const oppGroupLower = (opp.technicalSalesGroup || "").toLowerCase();
       
-      // ALTERAÇÃO: Removemos a lógica de isAdmin/userGroup para visualização.
-      // Agora o filtro funciona apenas se o usuário selecionar algo no dropdown "Group".
       const matchesGroup = filterGroup === "all" || oppGroupLower.includes(filterGroup.toLowerCase());
       
       return matchesSearch && matchesUtility && matchesGroup;
@@ -202,7 +234,7 @@ export default function OpportunityPage() {
     });
 
     return Object.entries(groups).sort((a, b) => a[0].localeCompare(b[0]));
-  }, [opportunities, search, filterUtility, filterGroup]); // Dependências de usuário removidas
+  }, [opportunities, search, filterUtility, filterGroup]); 
 
   const toggleGroup = (groupName: string) => {
     setExpandedGroups(prev => ({ ...prev, [groupName]: prev[groupName] === false ? true : false }));

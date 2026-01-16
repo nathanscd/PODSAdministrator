@@ -3,6 +3,8 @@ import { collection, query, where, onSnapshot, addDoc, serverTimestamp, deleteDo
 import { db, auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import { useToast } from "../contexts/ToastContext";
+import { logAction } from "../utils/systemLogger";
 import { Plus, FileText, Briefcase, StickyNote, Trash2, Globe, User } from "lucide-react";
 import PageTransition from "../components/PageTransition";
 import { Page } from "../types";
@@ -11,6 +13,7 @@ export default function PagesDashboard() {
   const [pages, setPages] = useState<Page[]>([]);
   const [activeTab, setActiveTab] = useState<'personal' | 'opportunities'>('personal');
   const { isAdmin } = useAuth(); 
+  const { addToast } = useToast();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,6 +35,9 @@ export default function PagesDashboard() {
       });
 
       setPages(sortedDocs);
+    }, (error) => {
+      console.error(error);
+      addToast("Erro ao carregar páginas.", "error");
     });
 
     return unsubscribe;
@@ -39,24 +45,37 @@ export default function PagesDashboard() {
 
   const createNewPage = async () => {
     if (!auth.currentUser) return;
-    const docRef = await addDoc(collection(db, "pages"), {
-      title: "Nova Anotação",
-      content: "",
-      type: "document", // Define como documento na criação
-      ownerId: auth.currentUser.uid,
-      ownerName: auth.currentUser.displayName || "Usuário",
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp(),
-      isPublic: false,
-      linkedOpportunityId: null
-    });
-    navigate(`/page/${docRef.id}`);
+    try {
+      const docRef = await addDoc(collection(db, "pages"), {
+        title: "Nova Anotação",
+        content: "",
+        type: "document", 
+        ownerId: auth.currentUser.uid,
+        ownerName: auth.currentUser.displayName || "Usuário",
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+        isPublic: false,
+        linkedOpportunityId: null
+      });
+      
+      logAction("Criou Página", "Nova Anotação");
+      addToast("Página criada com sucesso!", "success");
+      navigate(`/page/${docRef.id}`);
+    } catch (error) {
+      addToast("Erro ao criar página.", "error");
+    }
   };
 
   const deletePage = async (e: React.MouseEvent, pageId: string) => {
     e.stopPropagation();
     if (confirm("Deseja excluir permanentemente esta anotação?")) {
-      await deleteDoc(doc(db, "pages", pageId));
+      try {
+        await deleteDoc(doc(db, "pages", pageId));
+        logAction("Excluiu Página", pageId);
+        addToast("Página excluída.", "info");
+      } catch (error) {
+        addToast("Erro ao excluir página.", "error");
+      }
     }
   };
 
