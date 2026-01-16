@@ -12,6 +12,8 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend 
 } from "recharts";
 import { FileDown, Loader2, ShieldCheck, Clock } from "lucide-react";
+import BrazilMap3D from "../components/BrazilMap3D";
+import { Map } from "lucide-react"; 
 
 export default function Report() {
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
@@ -186,7 +188,7 @@ export default function Report() {
               <div className="text-[10px] uppercase font-black tracking-[0.2em]" style={{ color: '#000000' }}>
                 Hexing Brasil <br /> {new Date().toLocaleDateString('pt-BR')}
               </div>
-              <div className="text-6xl font-black italic tracking-tighter" style={{ color: '#000000' }}>25/26</div>
+              <div className="text-6xl font-black italic tracking-tighter" style={{ color: '#000000' }}>01/2026</div>
             </div>
           </div>
 
@@ -220,6 +222,35 @@ export default function Report() {
                 <div className="p-4 rounded-xl font-black uppercase text-[10px]" style={{ backgroundColor: '#000000', color: '#ffffff' }}>2nd Group<br/><span className="font-light opacity-50">Lígia Taniguchi</span></div>
                 <div className="p-4 rounded-xl font-black uppercase text-[10px]" style={{ backgroundColor: '#000000', color: '#ffffff' }}>3rd Group<br/><span className="font-light opacity-50">Nathali Sperança</span></div>
               </div>
+            </div>
+          </div>
+
+          {/* ================= PÁGINA: MAPA GEOGRÁFICO ================= */}
+          <div className="pdf-page bg-white shadow-2xl" 
+              style={{ width: '210mm', height: '297mm', padding: '40px', boxSizing: 'border-box', backgroundColor: '#ffffff', color: '#000000' }}>
+            
+            <div className="flex items-center gap-4 mb-4 pb-4" style={{ borderBottom: '4px solid #000000' }}>
+              <Map size={30} color="#000000" />
+              <h2 className="text-2xl font-black uppercase italic" style={{ color: '#000000' }}>03. Geographic Distribution</h2>
+            </div>
+            
+            <div style={{ marginBottom: '10px' }}>
+              <p className="text-xs uppercase font-bold opacity-60" style={{ color: '#000000' }}>
+                Distribution of Utilities by Technical Group Responsability
+              </p>
+            </div>
+
+            {/* O MAPA ENTRA AQUI - Altura aumentada para 650px */}
+            <div style={{ width: '100%', height: '650px', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
+              <BrazilMap3D opportunities={opportunities} />
+            </div>
+
+            <div style={{ marginTop: '20px', padding: '15px', border: '1px solid #e5e7eb', borderRadius: '12px', backgroundColor: '#f9fafb' }}>
+              <h4 className="text-[10px] font-black uppercase mb-2" style={{ color: '#000000' }}>Regional Insight</h4>
+              <p className="text-[9px] opacity-70 leading-relaxed" style={{ color: '#000000' }}>
+                This isometric map highlights the operational density across Brazil and Latin America. 
+                Use the toggle button above to switch views. Each marker details the responsible Technical Group and Manager upon interaction.
+              </p>
             </div>
           </div>
 
