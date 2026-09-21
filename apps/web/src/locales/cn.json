@@ -1,0 +1,1009 @@
+{
+  "sidebar": {
+    "member": "成员",
+    "home": "主页",
+    "profile": "个人资料",
+    "workspace": "工作空间",
+    "taskTrackers": "任务追踪器",
+    "pages": "页面",
+    "tasks": "任务",
+    "opportunities": "商机",
+    "compareSheets": "对比",
+    "report": "报告",
+    "etlSearch": "ETL 搜索"
+  },
+
+  "defaultUser": "用户",
+  "verifiedMember": "已认证成员",
+  "logout": "退出登录",
+  "saveChanges": "保存更改",
+  "userIdentity": "用户身份",
+  "fullName": "全名",
+  "namePlaceholder": "你的姓名",
+  "role": "职能 / 职位",
+  "rolePlaceholder": "例：高级开发工程师",
+  "bio": "简介",
+  "bioPlaceholder": "介绍一下你自己...",
+  "systemLanguage": "系统语言",
+  "selectedLanguage": "已选语言",
+  "appearance": "外观",
+  "interfaceMode": "界面模式",
+  "light": "浅色",
+  "dark": "深色",
+  "accentColor": "强调色",
+  "loginMessage": "登录你的账号以管理个人资料。",
+  "successMessage": "个人资料更新成功！",
+  "errorMessage": "保存出错。",
+  "selectLanguagePlaceholder": "请选择语言...",
+  "orange": "橙色",
+  "pink": "粉色",
+  "purple": "紫色",
+  "red": "红色",
+  "blue": "蓝色",
+
+  "underConstructionTitle": "建设中",
+  "underConstructionDesc": "此功能即将上线。",
+  "backToHome": "返回主页",
+
+  "searchPlaceholder": "搜索...",
+  "admin": "管理员",
+  "member": "成员",
+  "opportunities": "商机",
+  "active": "活跃",
+  "pages_initial": "页面",
+  "onGoing": "进行中",
+  "totalUsers": "总用户数",
+  "registered": "已注册",
+  "systemStatus": "系统状态",
+  "operational": "正常运行",
+  "comparison": "对比",
+  "sharePoint": "SharePoint",
+  "taskBoards": "任务看板",
+  "changelog_initial": "变更日志",
+  "samples": "样品管理",
+  "simcards": "SIM卡管理",
+  "testbooks": "测试手册",
+  "dailyGoals": "每日目标",
+  "yourTaskPlaceholder": "在此输入你的任务...",
+  "forEveryone": "对所有人",
+  "post": "发布",
+  "allDone": "全部完成！",
+  "performance": "性能",
+  "globalStatus": "全局状态",
+  "stable": "稳定",
+  "systems": "系统",
+  "recents": "最近",
+  "nothingHere": "暂无内容。",
+  "seeHistory": "查看历史",
+  "construction": "建设中",
+  "connected": "已连接",
+  "secure": "安全",
+
+  "opp": {
+    "title": "AMI 商机",
+    "subtitle": "商机概览",
+    "searchPlaceholder": "搜索...",
+    "newOpportunity": "新建商机",
+    "noGroup": "无分组",
+    "unassigned": "未分配",
+    "filters": {
+      "allCustomers": "筛选：所有客户",
+      "allGroups": "筛选：所有分组",
+      "group1": "第一组",
+      "group2": "第二组",
+      "group3": "第三组"
+    },
+    "table": {
+      "action": "操作",
+      "description": "描述",
+      "group": "分组",
+      "utility": "电力公司",
+      "kam": "客户经理",
+      "product": "产品",
+      "status": "状态",
+      "stage": "阶段",
+      "priority": "优先级",
+      "progress": "进度",
+      "qty": "数量",
+      "scp": "SCP",
+      "homologated": "已认证",
+      "country": "国家",
+      "ecosystem": "生态系统",
+      "start": "开始",
+      "end": "结束",
+      "hqSupport": "总部支持",
+      "reason": "原因",
+      "competitors": "竞争对手",
+      "productTeam": "产品团队",
+      "salesMgmt": "销售管理",
+      "lastDiscussion": "最近讨论",
+      "link": "链接"
+    },
+    "menu": {
+      "edit": "编辑商机",
+      "taskTrackers": "任务追踪器",
+      "openNotes": "打开备注",
+      "delete": "删除"
+    },
+    "messages": {
+      "loginRequired": "需要登录",
+      "createdSuccess": "商机已创建！",
+      "createdError": "创建商机时出错。",
+      "updatedSuccess": "更改已保存。",
+      "updatedError": "更新时出错。",
+      "confirmDelete": "永久删除？",
+      "deletedSuccess": "商机已删除。",
+      "deletedError": "删除时出错。",
+      "noteCreated": "关联备注已创建！",
+      "noteError": "创建备注时出错。"
+    }
+  },
+
+  "pages": {
+    "title": "笔记",
+    "subtitle": "内容管理",
+    "admin": "管理员",
+    "tabs": {
+      "personal": "个人",
+      "opportunities": "商机"
+    },
+    "defaults": {
+      "newPageTitle": "新建笔记",
+      "user": "用户",
+      "unknown": "未知",
+      "untitled": "无标题"
+    },
+    "status": {
+      "saving": "保存中...",
+      "noDate": "无日期",
+      "public": "公开",
+      "linked": "已关联"
+    },
+    "messages": {
+      "loadError": "加载页面时出错。",
+      "createdSuccess": "页面创建成功！",
+      "createError": "创建页面时出错。",
+      "confirmDelete": "是否永久删除此笔记？",
+      "deletedSuccess": "页面已删除。",
+      "deleteError": "删除页面时出错。",
+      "emptyState": "此分区未找到任何笔记。"
+    }
+  },
+
+  "changelog": {
+    "title": "版本历史",
+    "subtitle": "系统演进时间线",
+    "empty": "系统时间线已初始化",
+    "v1_2_5": {
+      "title": "全球语言更新",
+      "desc": "打破语言壁垒，PODS 现已支持多语言。我们实施了强大的国际化 (i18n) 引擎，支持葡萄牙语、英语和简体中文。用户偏好设置现在可跨会话持久保存，直接存储在 Firestore 个人资料中。",
+      "changes": [
+        "多语言支持（PT、EN、CN）",
+        "Firestore 中的持久语言偏好",
+        "全局语言切换组件",
+        "本地化侧边栏和导航",
+        "已翻译的仪表板和商机看板",
+        "用于实时切换的动态上下文 API"
+      ]
+    },
+    "v1_2_0": {
+      "title": "协作与智能更新",
+      "desc": "此版本将 PODS 管理员转变为一个动态生态系统。我们用 Firestore 实时数据流替换了静态占位符，引入了全局通知中心，并推出了集体任务系统“快速通道”。",
+      "changes": [
+        "实时集体每日目标（快速通道）",
+        "带深度链接的全局通知中心",
+        "自动化系统日志和审计记录",
+        "动态仪表板统计数据",
+        "看板中的用户分配和推送提醒",
+        "Firestore 索引优化和安全规则"
+      ]
+    }
+  },
+
+  "trackerDashboard": {
+    "title": "追踪器",
+    "subtitle": "管理",
+    "adminMode": "（管理员模式）",
+    "personalMode": "个人",
+    "newTracker": "新建追踪器",
+    "trackerCount": "追踪器",
+    "trackerCountSingular": "追踪器",
+    "noFolders": "未找到文件夹。",
+    "files": "文件",
+    "untitled": "无标题",
+    "tasks": "任务",
+    "add": "添加",
+    "modalTitle": "新建追踪器",
+    "opportunityLabel": "商机",
+    "nameLabel": "追踪器名称",
+    "namePlaceholder": "例：第一阶段安装",
+    "selectPlaceholder": "请选择...",
+    "cancel": "取消",
+    "create": "创建",
+    "save": "保存",
+    "messages": {
+      "loadError": "加载追踪器时出错。",
+      "createdSuccess": "追踪器创建成功！",
+      "createError": "创建追踪器时出错。",
+      "confirmDelete": "确定要删除此追踪器吗？",
+      "deleteSuccess": "追踪器已删除。",
+      "deleteError": "删除追踪器时出错。",
+      "confirmDeleteFolder": "这将删除此文件夹中的所有追踪器。是否继续？",
+      "deleteFolderSuccess": "文件夹删除成功。",
+      "deleteFolderError": "删除文件夹时出错。"
+    }
+  },
+
+  "trackerDetail": {
+    "loading": "加载中...",
+    "linkedOpportunity": "关联商机",
+    "untitled": "无标题",
+    "newTask": "新建任务",
+    "manageTask": "管理任务",
+    "describeTask": "描述任务...",
+    "deleteConfirm": "删除任务？",
+    "table": {
+      "description": "任务描述",
+      "startDate": "开始日期",
+      "plannedEnd": "计划结束",
+      "currentEnd": "当前结束",
+      "priority": "优先级",
+      "responsible": "负责人",
+      "team": "团队",
+      "progress": "进度",
+      "status": "状态",
+      "delayControl": "延迟控制",
+      "action": "操作"
+    },
+    "status": {
+      "running": "执行中",
+      "finished": "已完成",
+      "delayed": "已延迟",
+      "neverDelayed": "按时进行"
+    },
+    "empty": "暂无记录任务。",
+    "buttons": {
+      "cancel": "取消",
+      "save": "保存任务"
+    }
+  },
+
+  "todoDashboard": {
+    "title": "工作流",
+    "subtitle": "看板管理",
+    "newBoard": "新建看板",
+    "assignedToMe": "分配给我",
+    "noAssignedTasks": "暂无分配给你的待处理任务。",
+    "allBoards": "所有看板",
+    "loading": "加载中...",
+    "noBoardsFound": "未找到看板。",
+    "startPrompt": "点击新建看板开始使用。",
+    "untitled": "无标题",
+    "confirmDelete": "确定要删除看板{title}吗？此操作无法撤销。",
+    "deleteSuccess": "看板已删除。",
+    "deleteError": "无删除权限。",
+    "createSuccess": "看板创建成功！",
+    "createError": "创建看板时出错。",
+    "unknownDate": "未知日期",
+    "invalidDate": "无效日期",
+    "noDesc": "此任务暂无可用描述...",
+    "you": "你"
+  },
+
+  "todoPage": {
+    "defaults": {
+      "todo": "待办",
+      "inProgress": "进行中",
+      "done": "已完成",
+      "newTask": "新任务",
+      "newColumn": "新列",
+      "task": "任务",
+      "noName": "无名称",
+      "user": "用户"
+    },
+    "ui": {
+      "public": "公开",
+      "private": "私有",
+      "add": "添加",
+      "taskLabel": "任务",
+      "assignee": "负责人",
+      "unassigned": "未分配",
+      "creationDate": "创建日期",
+      "description": "描述",
+      "descPlaceholder": "添加详情、备注或清单...",
+      "deleteTask": "删除任务",
+      "saveClose": "保存并关闭",
+      "back": "返回"
+    },
+    "logs": {
+      "movedTask": "移动了任务",
+      "createdTask": "创建了任务",
+      "createdColumn": "创建了列",
+      "newSection": "已向看板添加新分区",
+      "deletedColumn": "删除了列",
+      "assignmentRemoved": "已移除分配",
+      "assignedTo": "已分配给",
+      "changedAssignee": "更改了负责人",
+      "deletedTask": "删除了任务"
+    },
+    "notifications": {
+      "title": "新任务已分配",
+      "body": "{user} 在看板 {board} 中将任务{task}分配给了你。",
+      "successAssign": "任务已成功分配给 {name}！",
+      "removedAssign": "分配已移除。",
+      "deletedTask": "任务已删除。"
+    }
+  },
+
+  "workspace": {
+    "greeting": {
+      "morning": "早上好",
+      "afternoon": "下午好",
+      "evening": "晚上好"
+    },
+    "status": {
+      "unknown": "未知",
+      "unassigned": "未分配",
+      "general": "常规"
+    },
+    "admin": "管理控制台",
+    "group": "分组",
+    "labels": {
+      "next": "下一个",
+      "eventTitle": "事件标题",
+      "meetingLink": "会议链接",
+      "assignTo": "分配给",
+      "personalOnly": "个人（仅限我）",
+      "forMe": "对我",
+      "for": "对",
+      "schedule": "日程",
+      "link": "链接",
+      "management": "管理"
+    },
+    "headers": {
+      "oppsStatus": "商机状态",
+      "topUtilities": "主要客户",
+      "opportunities": "商机",
+      "fastTasks": "快速任务",
+      "editEvent": "编辑事件",
+      "newEvent": "新建事件"
+    },
+    "buttons": {
+      "newEvent": "新建事件",
+      "viewAll": "查看全部",
+      "add": "添加",
+      "cancel": "取消",
+      "saveChanges": "保存更改",
+      "scheduleEvent": "安排事件"
+    },
+    "placeholders": {
+      "taskInput": "需要做什么？",
+      "eventTitle": "例：与客户会议",
+      "link": "https://..."
+    },
+    "messages": {
+      "deletePrompt": "删除事件{title}？",
+      "eventRemoved": "事件已删除",
+      "eventError": "处理事件时出错",
+      "eventUpdated": "事件已更新",
+      "eventScheduled": "事件已安排",
+      "taskAdded": "任务已添加",
+      "taskCompleted": "任务已完成",
+      "noEvents": "暂无安排的事件",
+      "noOpps": "未找到商机",
+      "allDone": "全部完成！",
+      "notificationNewEvent": "已分配新事件",
+      "notificationNewTask": "已分配新任务",
+      "notificationBodyEvent": "{user} 已安排：{title}",
+      "notificationBodyTask": "{user} 分配给你：{task}"
+    },
+    "chart": {
+      "good": "良好",
+      "attention": "注意",
+      "bad": "较差"
+    }
+  },
+
+  "workspacePage": {
+    "placeholder": "输入 '/' 使用命令...",
+    "untitled": "无标题",
+    "public": "公开",
+    "private": "私有",
+    "pageTitlePlaceholder": "页面标题",
+    "commands": {
+      "h1": "标题 1",
+      "h2": "标题 2",
+      "bulletList": "无序列表",
+      "orderedList": "有序列表",
+      "quote": "引用"
+    }
+  },
+
+  "testbookspage": {
+    "Streetlight": {
+      "title": "Streetlight - 测试手册",
+      "subtitle": "探索 Streetlight：PODS 管理员完整指南",
+      "sections": {
+        "overview": "Streetlight 概述",
+        "dashboard": "监控仪表板",
+        "reports": "报告与分析",
+        "lessDeviceCenter": "LESS - 设备中心",
+        "analysis": "LESS - 分析",
+        "intro": {
+          "navTitle": "1. 介绍",
+          "1_1": {
+            "title": "1.1 文档结构",
+            "p1": "此处每项测试均包含：<strong>前置条件</strong>（测试发生的最低条件）、<strong>执行步骤</strong>（执行测试的编号步骤）和<strong>后置条件</strong>（预期结果）。",
+            "p2": "部分测试还将包含提示或错误注释，标准如下：",
+            "alertTip": {
+              "title": "提示",
+              "content": "此标记用于在执行测试时提供提示。"
+            },
+            "alertInfo": {
+              "title": "信息",
+              "content": "此标记用于提供附加信息。"
+            },
+            "alertWarning": {
+              "title": "注意",
+              "content": "此标记用于指出有关测试或预期结果的注意事项。"
+            },
+            "alertError": {
+              "title": "错误",
+              "content": "此标记用于指出文档中的问题。"
+            }
+          },
+          "1_2": {
+            "title": "1.2 关于测试",
+            "p1": "此处描述的测试通过 MDC 图形界面（即 ORCA）进行。所有测试还预设存在以下设备：",
+            "items": [
+              "一个 AP（接入点/网关）。",
+              "一个带智能控制器的灯具。",
+              "（可选）智能电能表。"
+            ]
+          }
+        },
+        "NMS": {
+          "navTitle": "2. NMS",
+          "2_1": {
+            "title": "2.1 网络管理系统（Network Management System）",
+            "p1": "网络管理系统菜单用于注册、配置和管理网络设备。本页面将提供网络设备注册、监控和维护的所有必要指导。要访问此菜单，请点击侧边栏中的 Network Management。",
+            "precondition": {
+              "title": "前置条件",
+              "content": "使用有效凭据访问 Streetlight 系统。"
+            },
+            "2_1_1": {
+              "title": "2.1.1 仪表板",
+              "p1": "仪表板（Dashboard）是分析网络行为最快捷的方式。它提供以下信息：",
+              "items": [
+                "在线设备数量；",
+                "设备通信质量；",
+                "LastGasp 告警。"
+              ],
+              "instruction": "要访问仪表板，请在侧边栏选择 Network Management > Dashboard 菜单。将显示以下页面：",
+              "imageDashboard": "NMS Dashboard"
+            },
+            "2_1_2": {
+              "title": "2.1.2 质量测量",
+              "p1": "以下是各质量测量指标的简要说明：",
+              "rssiTitle": "RSSI",
+              "rssiContent": "接收无线信号中存在的功率的测量值。用于确定信号是否足以建立良好的无线连接。测量参数高于 -90dBm 的设备被归类为功率满意类别。",
+              "lqiTitle": "LQI",
+              "lqiContent": "接收器接收到的数据包质量的指示。指标高于 85 的设备被归类为质量满意类别。"
+            }
+          },
+          "2_2": {
+            "title": "2.2 监控",
+            "2_2_1_network": {
+              "title": "2.2.1 网络（Network）",
+              "p1": "网络（Network）页面用于逐一监控每个网关的通信情况，提供当前拓扑结构及连接到特定网关的设备的图形视图。",
+              "imageNetwork": "NMS Dashboard",
+              "p2": "网络页面功能的搜索条件简单，仅以网关 ID 作为筛选条件。选择网关后，点击 <strong>CALL</strong> 按钮查看实时拓扑，或点击 <strong>LOADING</strong> 查看系统最后收集的拓扑的详细视图。",
+              "warningCall": {
+                "title": "注意",
+                "content": "为避免网络过载，<strong>CALL</strong> 操作功能最短间隔为 5 分钟。"
+              },
+              "infoExport": {
+                "title": "信息",
+                "content": "点击 <strong>EXPORT</strong> 按钮可将信息下载为 <strong>CSV</strong> 或 <strong>XLSX（Excel）</strong> 文件以便进行更好的分析。"
+              },
+              "p3": "点击<strong>统计信息（Statistical Information）</strong>选项，将弹出一个新窗口，显示以下信息：",
+              "imageBtnNetwork": "NMS Statistical Information",
+              "imageStatisticalInfo": "NMS Statistical Information",
+              "p4": "点击<strong>网关信息（Gateway Information）</strong>选项，将弹出一个新窗口，显示以下信息：",
+              "imageGatewayInfo": "NMS Gateway Information",
+              "p5": "点击拓扑图中显示的任意节点，可查看所选节点的详细信息。",
+              "imageNodeInfo": "NMS Node Information"
+            },
+            "2_2_1_device": {
+              "title": "2.2.1 设备（Device）",
+              "p1": "设备（Device）页面可用于收集网络设备的单独分析信息。该页面显示一个表格，用于逐一检查网络设备，并查看最后通信日期、LQI、RSSI 等相关信息。",
+              "imageDevice": "NMS Dashboard",
+              "infoDisplay": {
+                "title": "信息",
+                "content": "点击 <strong>Display Setting</strong> 可查看设备的其他参数。"
+              },
+              "p2": "<strong>操作（Action）</strong>列允许用户对特定设备执行两种不同的操作：诊断和统计。",
+              "diagnoseTitle": "诊断操作",
+              "diagnoseContent": "当需要逐一检查每个设备的连通性时，此操作非常有用。可以使用特定设备行 Action 列中的（Diagnose）按钮执行 Ping 操作。点击此按钮将显示一个小窗口：",
+              "imageDiagnose": "Diagnose",
+              "warningDiagnose": {
+                "title": "注意",
+                "content": "当诊断结果显示 0% 丢包率时，视为最佳状态。"
+              },
+              "statsTitle": "统计操作",
+              "statsContent": "当需要查看特定设备的详细信息时，此操作非常有用。可以查看地理位置、告警、子节点和网络质量测量等信息。点击特定设备行 Action 列中的 <strong>Statistics</strong> 按钮。点击此按钮将显示以下页面：",
+              "imageStatsOPP": "NMS Statistical Information"
+            }
+          }
+        },
+        "controle-iluminacao": {
+          "navTitle": "3. LESS - 监控",
+          "p1": "本章详细介绍 Streetlight 系统中的照明控制操作，包括开/关及其他功能。",
+          "3_1": {
+            "title": "3.1 开/关灯具",
+            "precondition": {
+              "title": "前置条件",
+              "content": "智能照明控制器必须已注册并与系统通信。"
+            },
+            "executionTitle": "执行步骤：",
+            "executionItems": [
+              "进入：<strong>LESS > Monitor</strong>；",
+              "选择所需的智能控制器；",
+              "点击 [On/Off] 进行远程操作。",
+              "拖动垂直滑条设置调光级别。"
+            ],
+            "imageMonitorONOFF": "监控与控制"
+          },
+          "3_2": {
+            "title": "3.2 其他控制功能",
+            "precondition": {
+              "title": "前置条件",
+              "content": "智能照明控制器必须已注册并与系统通信。"
+            },
+            "executionTitle": "执行步骤：",
+            "executionItems": [
+              "读取实时数据",
+              "位置。"
+            ],
+            "imageRTU": "其他功能",
+            "imagePosition": "其他功能",
+            "postcondition": {
+              "title": "后置条件",
+              "content": "将显示成功或失败的通知。成功时，灯具状态将根据指令更新为关闭或开启。"
+            }
+          }
+        },
+        "LESS": {
+          "navTitle": "4. LESS - 设备中心",
+          "4_1": {
+            "title": "4.1 设备管理",
+            "p1": "本章介绍 Streetlight 系统中设备中心的功能，包括组织、管理和固件更新。",
+            "precondition": {
+              "title": "前置条件",
+              "content": "使用有效凭据访问 Streetlight 系统。"
+            },
+            "4_1_1": {
+              "title": "4.1.1 组织列表",
+              "p1": "将路灯按不同区域分组，实现分散控制。",
+              "items": [
+                "进入：<strong>LESS > Device Center > Organize List</strong>；",
+                "点击节点以显示其下属的公共照明设备；",
+                "点击 [Add Device] 显示未分组设备，选择后将其分配到组织节点；",
+                "点击 [Action] 删除设备的分组。"
+              ]
+            },
+            "4_1_2": {
+              "title": "4.1.2 设备管理",
+              "p1": "设备管理支持查看照明状态、设备详细信息、添加、导入和修改设备基本信息、配置和读取任务执行模式、配置和读取光照阈值，以及配置经度、纬度和时区。",
+              "instruction": "进入：<strong>LESS > Device Center > Device Manage</strong> 以编辑分组和设备配置。",
+              "4_1_2_1": {
+                "title": "4.1.2.1 运行模式配置",
+                "p1": "点击 [Running Mode] > [Set Running Mode/Read Running Mode] 来设置或读取控制器的运行模式。",
+                "imageModeDevice": "截图：已接收告警界面",
+                "note": "运行模式配置仅支持配备光照传感器的控制器。"
+              },
+              "4_1_2_2": {
+                "title": "4.1.2.2 设备添加和移除配置",
+                "items": [
+                  "点击 <strong>[Device Action] > Add</strong> 以添加单个设备。",
+                  "点击 <strong>[Device Action] > Import</strong> 以导入设备列表。",
+                  "点击 <strong>[Device Action] > Export</strong> 以导出已注册的设备列表。",
+                  "点击 <strong>[Device Action] > Remove</strong> 以移除设备。",
+                  "点击 <strong>[Device Action] > Edit Group</strong> 以修改设备分组。"
+                ],
+                "imageDeviceAction": "截图：已接收告警界面"
+              },
+              "4_1_2_3": {
+                "title": "4.1.2.3 光照阈值配置",
+                "p1": "点击 [illumination Threshold] > [Set/Read illumination Threshold] 来设置或读取光照阈值。",
+                "imageThreshold": "截图：已接收告警界面",
+                "note": "光照阈值定义灯具自动开启或关闭的触发阈值，即用于灯具开/关控制的临界亮度点。"
+              },
+              "4_1_2_4": {
+                "title": "4.1.2.4 配置设备信息",
+                "p1": "点击 [Actions] 可修改：纬度、经度、控制器信息和时区。",
+                "imageActions": "截图：已接收告警界面",
+                "warning": "如果需要重新发送时区信息，可以使用 <strong>Retry Timezone</strong> 按钮。"
+              }
+            }
+          },
+          "4_2": {
+            "title": "4.2 固件更新",
+            "p1": "支持查看固件更新状态、更新软件包和创建更新记录。",
+            "items": [
+              "点击 <strong>LESS > Device Center > Firmware Update</strong>",
+              "选择 ID 并点击 <strong>UPGRADE</strong>"
+            ],
+            "imageUpgrade": "截图：已接收告警界面"
+          }
+        },
+        "Analysis": {
+          "navTitle": "5. LESS - 分析",
+          "5_1": {
+            "title": "5.1 光照分析",
+            "p1": "点击 <strong>[LESS] > [Analysis] > [Light Analysis]</strong> 查看历史数据。",
+            "imageLightAnalysis": "截图：已接收告警界面"
+          },
+          "5_2": {
+            "title": "5.2 照明分析",
+            "p1": "点击 <strong>[LESS] > [Analysis] > [Lighting Analysis]</strong> 查看所选时间段内的照明率分析图表。",
+            "imageLighitiningAnalysis": "截图：已接收告警界面",
+            "info": "如需导出图表，可使用 <strong>下载</strong> 按钮。"
+          },
+          "5_3": {
+            "title": "5.3 能耗分析",
+            "imageEnergyAnalysis": "截图：已接收告警界面",
+            "imageGraph": "截图：已接收告警界面"
+          }
+        },
+        "dispositivos": {
+          "navTitle": "6. LESS - 任务策略",
+          "6_1": {
+            "title": "6.1 策略",
+            "p1": "点击 <strong>[LESS] > [Task Strategy] > [Strategy]</strong>",
+            "imageStrategy": "strategy",
+            "p2": "点击 <strong>Add</strong> 添加新策略。",
+            "imageStrategyAdd": "strategy",
+            "p3": "创建后，需要向已创建的策略中添加任务。点击已创建的策略，然后点击 <strong>Add</strong> 添加新任务。",
+            "imageTaskAddStrategy": "strategy",
+            "imageStrategyTasks": "strategy",
+            "p4": "上例中的策略指定了以下时间间隔：",
+            "items": [
+              "18:30 至 02:00 之间 > 100% 照明；",
+              "02:00 至 06:00 之间 > 80% 照明；",
+              "06:00 至 18:30 之间 > 0% 照明（关闭）。"
+            ]
+          },
+          "6_2": {
+            "title": "6.2 任务",
+            "p1": "点击 <strong>[LESS] > [Task Strategy] > [Task]</strong>",
+            "imageTask": "strategy",
+            "p2": "选择照明控制器，然后点击 <strong>Add</strong> 按钮应用任务。",
+            "imageTaskAdd": "strategy"
+          },
+          "6_3": {
+            "title": "6.3 日志",
+            "p1": "点击 <strong>[LESS] > [Task Strategy] > [Task Log]</strong>",
+            "imageTaskLog": "strategy"
+          }
+        },
+        "corte-religue": {
+          "navTitle": "7. 断电/复电",
+          "p1": "本节介绍继电器开/闭（断电/复电）功能。执行命令前，了解待操作模块的当前状态非常重要。因此，建议阅读<strong>附录 A - 如何读取继电器状态</strong>。",
+          "7_1": {
+            "title": "7.1 断电",
+            "precondition": {
+              "title": "前置条件",
+              "content": "至少一个 MM 的继电器处于闭合或 <strong>Connected</strong> 状态。"
+            },
+            "executionTitle": "执行步骤：",
+            "executionItems": [
+              "打开 ORCA；",
+              "在侧边栏菜单中进入 <strong>Operational Commands > Disconnect/Connect</strong>；",
+              "选择电表并发送断开连接命令。"
+            ],
+            "imageCorte": "op commands",
+            "imageSelect": "select",
+            "imageResult": "result",
+            "postcondition": {
+              "title": "后置条件",
+              "content": "将显示包含所选模块列表及进度的界面。成功时，消息将返回 <strong>Disconnect Success</strong>。读取状态时，将显示为断开或 <strong>Disconnected</strong>。"
+            }
+          },
+          "7_2": {
+            "title": "7.2 复电",
+            "precondition": {
+              "title": "前置条件",
+              "content": "至少一个电表的继电器处于断开或 <strong>Disconnected</strong> 状态。"
+            },
+            "executionTitle": "执行步骤：",
+            "executionItems": [
+              "打开 ORCA；",
+              "在侧边栏菜单中进入 <strong>Operational Commands > Disconnect/Connect</strong>；",
+              "选择协议（例：IDIS）并发送连接命令。"
+            ],
+            "imageReligue": "op commands",
+            "imageSelect": "select",
+            "imageResult": "result",
+            "postcondition": {
+              "title": "后置条件",
+              "content": "成功时，消息将返回 <strong>Connect Success</strong>。读取状态时，将显示为 <strong>Connected</strong>。"
+            }
+          }
+        },
+        "leitura-demanda": {
+          "navTitle": "8. 按需读取",
+          "precondition": {
+            "title": "前置条件",
+            "content": "电表在线且已在 MDC 中正确注册。"
+          },
+          "p1": "按需读取需要选择正确的协议和所需的数据项（Data Item）。",
+          "executionTitle": "执行步骤：",
+          "executionItems": [
+            "进入 <strong>Operational Commands > On Demand Reading</strong>；",
+            "在资产树中选择适当的节点；",
+            "选择 <strong>Protocol Type</strong>；",
+            "输入 <strong>Meter No.</strong>（或从列表中选择）；",
+            "选择要读取的参数（电能、电压、电流等）；",
+            "点击 <strong>Read</strong> 或 <strong>On Demand Reading</strong>。"
+          ],
+          "imageDemand": "demand",
+          "imageSelect": "select",
+          "imageResult": "result"
+        },
+        "data-hora": {
+          "navTitle": "9. 日期和时间更新",
+          "9_1": {
+            "title": "9.1 更新日期和时间",
+            "precondition": {
+              "title": "前置条件",
+              "content": "至少一个电表在线并与系统通信。"
+            },
+            "executionTitle": "执行步骤：",
+            "executionItems": [
+              "打开 ORCA，进入 <strong>Operational Commands > Time Synchronization</strong>；",
+              "选择电表协议；",
+              "选择将接收命令的电表或箱体；",
+              "点击 <strong>Synchronizing Time</strong> 按钮；",
+              "在 <strong>Server Clock</strong>（服务器时间）和 <strong>Customized Selection</strong>（手动时间）之间选择；",
+              "点击确定，然后点击 <strong>Confirm</strong> 发送命令。"
+            ],
+            "imageDataHora": "截图：时钟同步（Time Sync）",
+            "postcondition": {
+              "title": "后置条件",
+              "content": "将显示包含所有所选模块及操作结果（成功/失败）的界面。"
+            }
+          }
+        },
+        "tela-lcd": {
+          "navTitle": "10. LCD 屏幕",
+          "10_1": {
+            "title": "10.1 读取",
+            "p1": "验证电表当前的显示配置。",
+            "items": [
+              "选择电表并点击按钮读取屏幕上显示的内容；",
+              "读取结果应与显示屏上物理显示的内容一致。"
+            ],
+            "imageLeituraLcd": "截图：LCD 配置读取"
+          },
+          "10_2": {
+            "title": "10.2 更改显示内容",
+            "executionTitle": "执行步骤：",
+            "executionItems": [
+              "选择要修改显示内容的电表；",
+              "选择将在显示屏上显示的项目；",
+              "项目的选择顺序即为其在 LCD 屏幕自动轮播中显示的顺序；",
+              "确认并发送配置。"
+            ],
+            "imageAlterarLcd": "截图：更改显示项目",
+            "postcondition": {
+              "title": "后置条件",
+              "content": "请在设备 LCD 屏幕上物理检查所选项目是否确实按照配置的顺序显示。"
+            }
+          }
+        },
+        "parametrizacao": {
+          "navTitle": "11. 参数配置",
+          "p1": "参数配置包含读取当前参数和发送新配置两个流程。",
+          "11_1": {
+            "title": "11.1 读取",
+            "p1": "允许读取终端/电表中存储的当前参数。",
+            "imageLeituraParametros": "截图：参数读取界面"
+          },
+          "11_2": {
+            "title": "11.2 配置",
+            "executionTitle": "执行步骤：",
+            "executionItems": [
+              "在侧边栏菜单中进入：<strong>Configuration > Parameters Configuration > Meter Parameters</strong>；",
+              "选择电表协议（例：IDIS）；",
+              "将出现设备列表，选择测试设备；",
+              "选择参数配置类别；",
+              "右侧将出现配置列表（例：选择要激活的告警）；",
+              "发送命令。"
+            ],
+            "imageSetParametros": "截图：发送参数配置",
+            "postcondition": {
+              "title": "后置条件",
+              "content": "将显示操作成功的界面。"
+            }
+          }
+        },
+        "tarifas": {
+          "navTitle": "12. 电价配置",
+          "p1": "电价模型的配置遵循严格的创建流程（Daily、Weekly、Seasonal、Holiday），然后再进行应用。",
+          "12_1": {
+            "title": "12.1 注册电价模型",
+            "p1": "首先，需要通过进入 <strong>Configuration > Parameters Configuration > Meter Tariff Definitions</strong> 创建通用电价模型；",
+            "imageTariffDefinition": "截图：Daily Template",
+            "p2": "然后，点击放大镜按分期配置模板：",
+            "imageTariffSelect": "截图：Daily Template",
+            "12_1_1": {
+              "title": "12.1.1 Daily Template（日模板）",
+              "items": [
+                "进入 <strong>Configuration > Parameters Configuration > Meter Tariff</strong>；",
+                "选择 <strong>Daily Template</strong> 并点击 Add；",
+                "创建时间段（Time Period List）、时间表和适用费率（Tariff Rate）；",
+                "保存日模型。"
+              ],
+              "imageDailyTemplate": "截图：Daily Template"
+            },
+            "12_1_2": {
+              "title": "12.1.2 Weekly Template（周模板）",
+              "items": [
+                "选择 <strong>Weekly Template</strong> 并点击 Add；",
+                "定义周模型名称；",
+                "为每天选择之前创建的 <strong>Daily Template</strong>；",
+                "保存操作。"
+              ],
+              "imageWeeklyTemplate": "截图：Weekly Template"
+            },
+            "12_1_3": {
+              "title": "12.1.3 Seasonal Template（季节模板）",
+              "items": [
+                "选择 <strong>Seasonal Template</strong> 并添加新模板；",
+                "设置开始日期并与已创建的 <strong>Weekly Template</strong> 关联；",
+                "保存。"
+              ]
+            },
+            "12_1_4": {
+              "title": "12.1.4 Holiday Template（节假日模板，普通与特殊）",
+              "items": [
+                "选择 <strong>Holiday</strong> 并在 Common 或 Special Holiday 字段中点击 Add；",
+                "定义名称、固定（或重复）日期，并应用节假日专用的 <strong>Daily Template</strong>。"
+              ]
+            }
+          },
+          "12_2": {
+            "title": "12.2 选择电价模型",
+            "p1": "要应用已创建的模型，请选择所需电表并点击 <strong>Current Tariff</strong> 按钮，或将已编译的电价参数发送至节点。",
+            "imageCurrentTariff": "截图：电价模型应用（Current Tariff）",
+            "postcondition": {
+              "title": "结果",
+              "content": "界面将显示电价参数请求的结果及成功状态。"
+            }
+          }
+        },
+        "relatorios": {
+          "navTitle": "13. 报告",
+          "p1": "本章介绍环境读数界面（MDC Reports）。",
+          "13_1": {
+            "title": "13.1 读数",
+            "precondition": {
+              "title": "前置条件",
+              "content": "至少一个已注册的电表，已配置数据推送任务且在系统中正常通信。"
+            },
+            "executionTitle": "执行步骤：",
+            "executionItems": [
+              "在侧边栏菜单中进入 <strong>Reports > Readings</strong>；",
+              "选择查询时间段（Time/Date）；",
+              "选择要查询的节点（Node）；",
+              "选择读数类型（例：Energy、Billing、Load Profile）；",
+              "点击搜索/导出。"
+            ],
+            "imageRelatorios": "截图：Reports > Readings 界面"
+          }
+        },
+        "alarmes": {
+          "navTitle": "14. 告警",
+          "p1": "验证和查询设备向系统报告的事件和告警的程序。",
+          "items": [
+            "访问 ORCA 中的告警/事件菜单；",
+            "按特定终端/电表筛选；",
+            "以物理方式触发告警（例：打开盖子，如适用且安全）或通过命令模拟；",
+            "验证系统收到的告警数据包是否具有正确的时间戳。"
+          ],
+          "imageAlarmes": "截图：已接收告警界面",
+          "imageAlarmes2": "截图：已接收告警界面"
+        },
+        "apendice": {
+          "navTitle": "15. 附录",
+          "15_1": {
+            "title": "15.1 A - 如何读取继电器状态",
+            "p1": "在发送按需读取操作命令之前，了解继电器的当前状态至关重要；",
+            "items": [
+              "进入按需读取操作命令界面；",
+              "查找与<strong>继电器状态（Relay Status / Disconnect Control）</strong>相关的数据项；",
+              "执行读取；",
+              "解读表格中返回的数字/布尔结果（例：0 = 已连接，1 = 已断开）。"
+            ],
+            "imageStatusRele": "截图：继电器状态数据项读取"
+          }
+        },
+        "changelog": {
+          "navTitle": "16. 变更日志",
+          "v1_0_0": {
+            "version": "v1.0.0",
+            "date": "2026年3月",
+            "changes": [
+              "Streetlight 测试手册初始创建。"
+            ]
+          }
+        }
+      }
+    },
+    "Zeus": {
+  "title": "宙斯系列 - 测试手册",
+  "subtitle": "电表探索：PODS 管理员完整指南",
+  "MDC": {
+    "title": "MDC - ZEUS-TM",
+    "meters": {
+      "title": "电表",
+      "item": "查看新电表型号：<strong>ZEUS TM</strong>"
+    },
+    "parameters": {
+      "title": "参数",
+      "item": "查看参数：<strong>GPS 信息</strong>"
+    },
+    "onDemandReading": {
+      "title": "按需读取",
+      "items": [
+        "能量读取：<strong>视在电能 (L1/L2/L3)</strong>"
+      ]
+    },
+    "historicalData": {
+      "title": "历史数据",
+      "items": [
+        "历史读取：<strong>负载曲线 1 和 2</strong>",
+        "可用周期：<strong>每日 / 每月</strong>"
+      ]
+    },
+    "taskConfig": {
+      "title": "任务配置",
+      "items": [
+        "配置 <strong>负载曲线 1 和 2</strong> 的任务",
+        "周期：<strong>每日 / 每月</strong>"
+      ]
+    },
+    "reports": {
+      "title": "报表",
+      "item": "读取查询：<strong>负载曲线 1 和 2</strong>"
+    },
+    "oamLogs": {
+      "title": "运维日志",
+      "items": [
+        "<strong>WISUN 电表</strong> 与 <strong>4G 电表</strong> 的区别",
+        "监控 <strong>心跳</strong>"
+      ]
+    }
+  },
+  "MDM": {
+    "title": "MDM - ZEUS-TM",
+    "lineLossModel": {
+      "title": "线损模型",
+      "item": "创建技术损耗模型"
+    },
+    "measurementPoint": {
+      "title": "测量点",
+      "items": [
+        "创建测量点",
+        "定义类型：<strong>Supply</strong> 或 <strong>Increase</strong>"
+      ]
+    },
+    "lineLossResult": {
+      "title": "线损结果",
+      "item": "查看损耗计算结果"
+    }
+  }
+}
+  }
+}

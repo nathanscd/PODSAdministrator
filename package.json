@@ -1,0 +1,19 @@
+{
+  "name": "podsadm-monorepo",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "apps/web",
+    "firebase",
+    "shared"
+  ],
+  "scripts": {
+    "web:dev": "npm run dev --workspace=apps/web",
+    "web:build": "npm run build --workspace=apps/web",
+    "web:lint": "npm run lint --workspace=apps/web",
+    "firebase:emulators": "firebase emulators:start"
+  },
+  "devDependencies": {
+    "vite-tsconfig-paths": "^6.1.1"
+  }
+}

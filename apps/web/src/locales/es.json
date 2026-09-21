@@ -1,0 +1,1009 @@
+{
+  "sidebar": {
+    "member": "Miembro",
+    "home": "Inicio",
+    "profile": "Perfil",
+    "workspace": "Espacio de Trabajo",
+    "taskTrackers": "Task Trackers",
+    "pages": "Páginas",
+    "tasks": "Tareas",
+    "opportunities": "Oportunidades",
+    "compareSheets": "Comparación",
+    "report": "Informe",
+    "etlSearch": "Búsquedas ETL"
+  },
+
+  "defaultUser": "Usuario",
+  "verifiedMember": "Miembro Verificado",
+  "logout": "Cerrar Sesión",
+  "saveChanges": "Guardar Cambios",
+  "userIdentity": "Identidad del Usuario",
+  "fullName": "Nombre Completo",
+  "namePlaceholder": "Tu nombre",
+  "role": "Función / Cargo",
+  "rolePlaceholder": "Ej: Desarrollador Senior",
+  "bio": "Descripción",
+  "bioPlaceholder": "Cuéntanos un poco sobre ti...",
+  "systemLanguage": "Idioma del Sistema",
+  "selectedLanguage": "Idioma seleccionado",
+  "appearance": "Apariencia",
+  "interfaceMode": "Modo de Interfaz",
+  "light": "CLARO",
+  "dark": "OSCURO",
+  "accentColor": "Color de acento",
+  "loginMessage": "Accede a tu cuenta para gestionar el perfil.",
+  "successMessage": "¡Perfil actualizado con éxito!",
+  "errorMessage": "Error al guardar.",
+  "selectLanguagePlaceholder": "Selecciona un idioma...",
+  "orange": "Naranja",
+  "pink": "Rosa",
+  "purple": "Morado",
+  "red": "Rojo",
+  "blue": "Azul",
+
+  "underConstructionTitle": "En Construcción",
+  "underConstructionDesc": "Esta funcionalidad estará disponible pronto.",
+  "backToHome": "Volver al Inicio",
+
+  "searchPlaceholder": "Buscar...",
+  "admin": "Administrador",
+  "member": "Miembro",
+  "opportunities": "Oportunidades",
+  "active": "Activo",
+  "pages_initial": "Páginas",
+  "onGoing": "En Curso",
+  "totalUsers": "Usuarios Totales",
+  "registered": "Registrados",
+  "systemStatus": "Estado del Sistema",
+  "operational": "Operacional",
+  "comparison": "Comparación",
+  "sharePoint": "SharePoint",
+  "taskBoards": "Tableros de Tareas",
+  "changelog_initial": "Historial de Cambios",
+  "samples": "Control de Muestras",
+  "simcards": "Control de SIM Cards",
+  "testbooks": "Testbooks",
+  "dailyGoals": "Metas Diarias",
+  "yourTaskPlaceholder": "Tu tarea aquí...",
+  "forEveryone": "Para todos",
+  "post": "Publicar",
+  "allDone": "¡Todo listo!",
+  "performance": "Rendimiento",
+  "globalStatus": "Estado Global",
+  "stable": "Estable",
+  "systems": "Sistemas",
+  "recents": "Recientes",
+  "nothingHere": "Nada aquí.",
+  "seeHistory": "Ver historial",
+  "construction": "Construcción",
+  "connected": "Conectado",
+  "secure": "Seguro",
+
+  "opp": {
+    "title": "Oportunidades AMI",
+    "subtitle": "Visión general de oportunidades",
+    "searchPlaceholder": "BUSCAR...",
+    "newOpportunity": "Nueva Oportunidad",
+    "noGroup": "Sin Grupo",
+    "unassigned": "Sin asignar",
+    "filters": {
+      "allCustomers": "Filtro: Todos los Clientes",
+      "allGroups": "Filtro: Todos los Grupos",
+      "group1": "1er Grupo",
+      "group2": "2do Grupo",
+      "group3": "3er Grupo"
+    },
+    "table": {
+      "action": "Acción",
+      "description": "Descripción",
+      "group": "Grupo",
+      "utility": "Concesionaria",
+      "kam": "KAM",
+      "product": "Producto",
+      "status": "Estado",
+      "stage": "Etapa",
+      "priority": "Prioridad",
+      "progress": "Progreso",
+      "qty": "Cant.",
+      "scp": "SCP",
+      "homologated": "Homologado",
+      "country": "País",
+      "ecosystem": "Ecosistema",
+      "start": "Inicio",
+      "end": "Fin",
+      "hqSupport": "Soporte HQ",
+      "reason": "Motivo",
+      "competitors": "Competidores",
+      "productTeam": "Equipo de Producto",
+      "salesMgmt": "Gestión de Ventas",
+      "lastDiscussion": "Última Discusión",
+      "link": "Enlace"
+    },
+    "menu": {
+      "edit": "Editar Oportunidad",
+      "taskTrackers": "Task Trackers",
+      "openNotes": "Abrir Notas",
+      "delete": "Eliminar"
+    },
+    "messages": {
+      "loginRequired": "Inicio de sesión requerido",
+      "createdSuccess": "¡Oportunidad creada!",
+      "createdError": "Error al crear la oportunidad.",
+      "updatedSuccess": "Cambios guardados.",
+      "updatedError": "Error al actualizar.",
+      "confirmDelete": "¿Eliminar permanentemente?",
+      "deletedSuccess": "Oportunidad eliminada.",
+      "deletedError": "Error al eliminar.",
+      "noteCreated": "¡Nota vinculada creada!",
+      "noteError": "Error al crear la nota."
+    }
+  },
+
+  "pages": {
+    "title": "Notas",
+    "subtitle": "Gestión de Contenido",
+    "admin": "Administrador",
+    "tabs": {
+      "personal": "Personales",
+      "opportunities": "Oportunidades"
+    },
+    "defaults": {
+      "newPageTitle": "Nueva Anotación",
+      "user": "Usuario",
+      "unknown": "Desconocido",
+      "untitled": "Sin Título"
+    },
+    "status": {
+      "saving": "Guardando...",
+      "noDate": "Sin fecha",
+      "public": "Pública",
+      "linked": "Vinculada"
+    },
+    "messages": {
+      "loadError": "Error al cargar páginas.",
+      "createdSuccess": "¡Página creada con éxito!",
+      "createError": "Error al crear la página.",
+      "confirmDelete": "¿Desea eliminar permanentemente esta anotación?",
+      "deletedSuccess": "Página eliminada.",
+      "deleteError": "Error al eliminar la página.",
+      "emptyState": "No se encontraron notas en esta sección."
+    }
+  },
+
+  "changelog": {
+    "title": "Historial de Versiones",
+    "subtitle": "Línea de tiempo de la evolución del sistema",
+    "empty": "Línea de tiempo del sistema inicializada",
+    "v1_2_5": {
+      "title": "La Actualización Global de Idiomas",
+      "desc": "Rompiendo barreras lingüísticas, PODS ahora es multilingüe. Implementamos un motor robusto de internacionalización (i18n) con soporte para Portugués, Inglés y Chino Simplificado. Las preferencias del usuario ahora son persistentes entre sesiones, almacenadas directamente en su perfil de Firestore.",
+      "changes": [
+        "Soporte Multiidioma (PT, EN, CN)",
+        "Preferencias de Idioma Persistentes en Firestore",
+        "Componente Global de Cambio de Idioma",
+        "Barra Lateral y Navegación Localizadas",
+        "Paneles y Tableros de Oportunidades Traducidos",
+        "API de Contexto Dinámico para Cambio en Tiempo Real"
+      ]
+    },
+    "v1_2_0": {
+      "title": "La Actualización de Colaboración e Inteligencia",
+      "desc": "Esta versión transforma el Administrador PODS en un ecosistema vivo. Reemplazamos marcadores estáticos con flujos de datos en tiempo real de Firestore, introdujimos un Centro de Notificaciones Global y lanzamos el sistema de tareas colectivas 'Fast Track'.",
+      "changes": [
+        "Metas Diarias Colectivas en Tiempo Real (Fast Track)",
+        "Centro de Notificaciones Global con Deep Links",
+        "Registros de Sistema y Auditoría Automatizados",
+        "Estadísticas Dinámicas del Panel",
+        "Asignación de Usuarios y Alertas Push en Kanban",
+        "Optimización de Índices Firestore y Reglas de Seguridad"
+      ]
+    }
+  },
+
+  "trackerDashboard": {
+    "title": "Trackers",
+    "subtitle": "Gestión",
+    "adminMode": "(Modo Admin)",
+    "personalMode": "Personal",
+    "newTracker": "Nuevo Tracker",
+    "trackerCount": "Trackers",
+    "trackerCountSingular": "Tracker",
+    "noFolders": "No se encontraron carpetas.",
+    "files": "Archivos",
+    "untitled": "Sin Título",
+    "tasks": "Tareas",
+    "add": "Agregar",
+    "modalTitle": "Nuevo Tracker",
+    "opportunityLabel": "Oportunidad",
+    "nameLabel": "Nombre del Tracker",
+    "namePlaceholder": "Ej: Instalación Fase 1",
+    "selectPlaceholder": "Seleccionar...",
+    "cancel": "Cancelar",
+    "create": "Crear",
+    "save": "Guardar",
+    "messages": {
+      "loadError": "Error al cargar trackers.",
+      "createdSuccess": "¡Tracker creado con éxito!",
+      "createError": "Error al crear tracker.",
+      "confirmDelete": "¿Está seguro de que desea eliminar este Tracker?",
+      "deleteSuccess": "Tracker eliminado.",
+      "deleteError": "Error al eliminar tracker.",
+      "confirmDeleteFolder": "Esto eliminará TODOS los trackers de esta carpeta. ¿Continuar?",
+      "deleteFolderSuccess": "Carpeta eliminada con éxito.",
+      "deleteFolderError": "Error al eliminar carpeta."
+    }
+  },
+
+  "trackerDetail": {
+    "loading": "Cargando...",
+    "linkedOpportunity": "Oportunidad Vinculada",
+    "untitled": "Sin Título",
+    "newTask": "Nueva Tarea",
+    "manageTask": "Gestionar Tarea",
+    "describeTask": "Describe la tarea...",
+    "deleteConfirm": "¿Eliminar tarea?",
+    "table": {
+      "description": "Descripción de la Tarea",
+      "startDate": "Fecha de Inicio",
+      "plannedEnd": "Fin Planificado",
+      "currentEnd": "Fin Actual",
+      "priority": "Prioridad",
+      "responsible": "Responsable",
+      "team": "Equipo",
+      "progress": "Progreso",
+      "status": "Estado",
+      "delayControl": "Control de Retraso",
+      "action": "Acción"
+    },
+    "status": {
+      "running": "En Ejecución",
+      "finished": "Finalizado",
+      "delayed": "Retrasado",
+      "neverDelayed": "En Plazo"
+    },
+    "empty": "No hay tareas registradas.",
+    "buttons": {
+      "cancel": "Cancelar",
+      "save": "Guardar Tarea"
+    }
+  },
+
+  "todoDashboard": {
+    "title": "Flujos de Trabajo",
+    "subtitle": "Gestión de Tableros",
+    "newBoard": "Nuevo Tablero",
+    "assignedToMe": "Asignadas a Mí",
+    "noAssignedTasks": "No tienes tareas pendientes asignadas.",
+    "allBoards": "Todos los Tableros",
+    "loading": "Cargando...",
+    "noBoardsFound": "No se encontraron tableros.",
+    "startPrompt": "Haz clic en \"+ Nuevo Tablero\" para comenzar.",
+    "untitled": "Sin Título",
+    "confirmDelete": "¿Estás seguro de que deseas eliminar el tablero \"{title}\"? Esta acción no se puede deshacer.",
+    "deleteSuccess": "Tablero eliminado.",
+    "deleteError": "Sin permiso para eliminar.",
+    "createSuccess": "¡Tablero creado con éxito!",
+    "createError": "Error al crear tablero.",
+    "unknownDate": "Fecha desconocida",
+    "invalidDate": "Fecha inválida",
+    "noDesc": "No hay descripción disponible para esta tarea...",
+    "you": "Tú"
+  },
+
+  "todoPage": {
+    "defaults": {
+      "todo": "Por Hacer",
+      "inProgress": "En Progreso",
+      "done": "Hecho",
+      "newTask": "Nueva tarea",
+      "newColumn": "Nueva Columna",
+      "task": "Tarea",
+      "noName": "Sin nombre",
+      "user": "Usuario"
+    },
+    "ui": {
+      "public": "Público",
+      "private": "Privado",
+      "add": "Agregar",
+      "taskLabel": "Tarea",
+      "assignee": "Responsable",
+      "unassigned": "Sin asignar",
+      "creationDate": "Fecha de Creación",
+      "description": "Descripción",
+      "descPlaceholder": "Agrega detalles, notas o listas de verificación...",
+      "deleteTask": "Eliminar Tarea",
+      "saveClose": "Guardar y Cerrar",
+      "back": "Volver"
+    },
+    "logs": {
+      "movedTask": "Movió Tarea",
+      "createdTask": "Creó Tarea",
+      "createdColumn": "Creó Columna",
+      "newSection": "Nueva sección añadida al tablero",
+      "deletedColumn": "Eliminó Columna",
+      "assignmentRemoved": "Asignación eliminada",
+      "assignedTo": "Asignó a",
+      "changedAssignee": "Cambió Responsable",
+      "deletedTask": "Eliminó Tarea"
+    },
+    "notifications": {
+      "title": "Nueva Tarea Asignada",
+      "body": "{user} te asignó la tarea \"{task}\" en el tablero {board}.",
+      "successAssign": "¡Tarea asignada a {name} con éxito!",
+      "removedAssign": "Asignación eliminada.",
+      "deletedTask": "Tarea eliminada."
+    }
+  },
+
+  "workspace": {
+    "greeting": {
+      "morning": "Buenos Días",
+      "afternoon": "Buenas Tardes",
+      "evening": "Buenas Noches"
+    },
+    "status": {
+      "unknown": "Desconocido",
+      "unassigned": "Sin asignar",
+      "general": "General"
+    },
+    "admin": "Consola Admin",
+    "group": "Grupo",
+    "labels": {
+      "next": "Siguiente",
+      "eventTitle": "Título del Evento",
+      "meetingLink": "Enlace de la Reunión",
+      "assignTo": "Asignar a",
+      "personalOnly": "Personal (Solo Yo)",
+      "forMe": "Para Mí",
+      "for": "Para",
+      "schedule": "Agenda",
+      "link": "Enlace",
+      "management": "Gestión"
+    },
+    "headers": {
+      "oppsStatus": "Estado de Oportunidades",
+      "topUtilities": "Principales Clientes",
+      "opportunities": "Oportunidades",
+      "fastTasks": "Tareas Rápidas",
+      "editEvent": "Editar Evento",
+      "newEvent": "Nuevo Evento"
+    },
+    "buttons": {
+      "newEvent": "Nuevo Evento",
+      "viewAll": "Ver Todo",
+      "add": "Agregar",
+      "cancel": "Cancelar",
+      "saveChanges": "Guardar Cambios",
+      "scheduleEvent": "Programar Evento"
+    },
+    "placeholders": {
+      "taskInput": "¿Qué necesita hacerse?",
+      "eventTitle": "Ej: Reunión con Cliente",
+      "link": "https://..."
+    },
+    "messages": {
+      "deletePrompt": "¿Eliminar evento \"{title}\"?",
+      "eventRemoved": "Evento eliminado",
+      "eventError": "Error al procesar evento",
+      "eventUpdated": "Evento actualizado",
+      "eventScheduled": "Evento programado",
+      "taskAdded": "Tarea agregada",
+      "taskCompleted": "Tarea completada",
+      "noEvents": "No hay eventos programados",
+      "noOpps": "No se encontraron oportunidades",
+      "allDone": "¡Todo listo!",
+      "notificationNewEvent": "Nuevo Evento Asignado",
+      "notificationNewTask": "Nueva Tarea Asignada",
+      "notificationBodyEvent": "{user} programó: {title}",
+      "notificationBodyTask": "{user} te asignó: \"{task}\""
+    },
+    "chart": {
+      "good": "Bueno",
+      "attention": "Atención",
+      "bad": "Malo"
+    }
+  },
+
+  "workspacePage": {
+    "placeholder": "Escribe '/' para comandos...",
+    "untitled": "Sin título",
+    "public": "Público",
+    "private": "Privado",
+    "pageTitlePlaceholder": "Título de la Página",
+    "commands": {
+      "h1": "Título 1",
+      "h2": "Título 2",
+      "bulletList": "Lista con Viñetas",
+      "orderedList": "Lista Numerada",
+      "quote": "Cita"
+    }
+  },
+
+  "testbookspage": {
+    "Streetlight": {
+      "title": "Streetlight - Testbook",
+      "subtitle": "Explorando Streetlight: Guía Completa para Administradores PODS",
+      "sections": {
+        "overview": "Visión General de Streetlight",
+        "dashboard": "Panel de Monitoreo",
+        "reports": "Informes y Análisis",
+        "lessDeviceCenter": "LESS - Device Center",
+        "analysis": "LESS - Analysis",
+        "intro": {
+          "navTitle": "1. Introducción",
+          "1_1": {
+            "title": "1.1 Estructura del Documento",
+            "p1": "Cada prueba aquí presentada incluye: <strong>precondición</strong> (condiciones mínimas para que ocurra la prueba), <strong>ejecución</strong> (pasos numerados para realizar las pruebas) y <strong>postcondición</strong> (resultado esperado).",
+            "p2": "Algunas pruebas también tendrán anotaciones de consejos o errores según los estándares a continuación:",
+            "alertTip": {
+              "title": "Consejo",
+              "content": "Esta es la marca para indicar consejos al realizar una prueba."
+            },
+            "alertInfo": {
+              "title": "Info",
+              "content": "Esta es la marca para indicar información adicional."
+            },
+            "alertWarning": {
+              "title": "Atención",
+              "content": "Esta es la marca para indicar puntos de atención respecto a la prueba o al resultado esperado."
+            },
+            "alertError": {
+              "title": "Error",
+              "content": "Esta es la marca para indicar problemas en la documentación."
+            }
+          },
+          "1_2": {
+            "title": "1.2 Sobre las Pruebas",
+            "p1": "Las pruebas aquí descritas se realizan a través de la interfaz gráfica del MDC, conocida como ORCA. Todas las pruebas también presuponen la existencia de:",
+            "items": [
+              "Un AP (Access Point/Gateway).",
+              "Una luminaria con controlador inteligente.",
+              "(Opcional) Medidores de energía inteligentes."
+            ]
+          }
+        },
+        "NMS": {
+          "navTitle": "2. NMS",
+          "2_1": {
+            "title": "2.1 Sistema de Gestión de Red (Network Management System)",
+            "p1": "El menú Sistema de Gestión de Red (Network Management System) se utiliza para registrar, configurar y gestionar los dispositivos de red. Esta página proporcionará todas las orientaciones necesarias en cuanto al registro, monitoreo y mantenimiento de dispositivos de red. Para acceder a este menú, haz clic en Network Management en la barra lateral.",
+            "precondition": {
+              "title": "Precondición",
+              "content": "Acceso al sistema Streetlight con credenciales válidas."
+            },
+            "2_1_1": {
+              "title": "2.1.1 Panel",
+              "p1": "El Panel (Dashboard) es la manera más rápida de analizar el comportamiento de la red. Proporciona información sobre:",
+              "items": [
+                "Cantidad de equipos en línea;",
+                "Calidad de comunicación de los equipos;",
+                "Alarmas de LastGasp."
+              ],
+              "instruction": "Para acceder al Panel, selecciona en la barra lateral el menú Network Management > Dashboard. Se mostrará la siguiente página:",
+              "imageDashboard": "NMS Dashboard"
+            },
+            "2_1_2": {
+              "title": "2.1.2 Medición de Calidad",
+              "p1": "A continuación, una breve explicación de cada medición de calidad:",
+              "rssiTitle": "RSSI",
+              "rssiContent": "Medición de la potencia presente en una señal de radio recibida. Es útil para determinar si la señal es suficiente para obtener una buena conexión inalámbrica. Los dispositivos con un parámetro medido por encima de -90dBm se clasifican en una categoría de potencia satisfactoria.",
+              "lqiTitle": "LQI",
+              "lqiContent": "Indicación de la calidad de los paquetes de datos recibidos por el receptor. Los dispositivos con un indicador por encima de 85 se clasifican en una categoría de calidad satisfactoria."
+            }
+          },
+          "2_2": {
+            "title": "2.2 Monitor",
+            "2_2_1_network": {
+              "title": "2.2.1 Red (Network)",
+              "p1": "La página Red (Network) se utiliza para monitorear la comunicación de cada Gateway individualmente, proporcionando una vista gráfica de la topología actual y los dispositivos conectados a un Gateway determinado.",
+              "imageNetwork": "NMS Dashboard",
+              "p2": "La condición de búsqueda para la funcionalidad de la página Network es simple y solo utiliza el ID del Gateway como criterio. Después de elegir el Gateway, haz clic en el botón <strong>CALL</strong> para una visualización de la topología en tiempo real, o en <strong>LOADING</strong> para una visualización más detallada de la última topología recopilada por el sistema.",
+              "warningCall": {
+                "title": "Atención",
+                "content": "Para no sobrecargar la red, la función de operación <strong>CALL</strong> puede realizarse en intervalos mínimos de 5 minutos."
+              },
+              "infoExport": {
+                "title": "Información",
+                "content": "Es posible descargar información en archivos de tipo: <strong>CSV</strong> o <strong>XLSX (Excel)</strong> para un mejor análisis al hacer clic en el botón <strong>EXPORT</strong>."
+              },
+              "p3": "Haciendo clic en la opción <strong>Información Estadística (Statistical Information)</strong>, se mostrará una nueva ventana con la siguiente información:",
+              "imageBtnNetwork": "NMS Statistical Information",
+              "imageStatisticalInfo": "NMS Statistical Information",
+              "p4": "Haciendo clic en la opción <strong>Información del Gateway (Gateway Information)</strong>, se mostrará una nueva ventana con la siguiente información:",
+              "imageGatewayInfo": "NMS Gateway Information",
+              "p5": "Al hacer clic en cualquier nodo mostrado en la topología, es posible visualizar información detallada sobre el nodo seleccionado.",
+              "imageNodeInfo": "NMS Node Information"
+            },
+            "2_2_1_device": {
+              "title": "2.2.1 Dispositivo (Device)",
+              "p1": "La página Dispositivo (Device) es útil para reunir información para el análisis individual de dispositivos de red. Se muestra una tabla para verificar los dispositivos de red individualmente y verificar información como Última Fecha de Comunicación, LQI, RSSI y otra información relevante.",
+              "imageDevice": "NMS Dashboard",
+              "infoDisplay": {
+                "title": "Información",
+                "content": "Es posible consultar otros parámetros del dispositivo haciendo clic en <strong>Display Setting</strong>."
+              },
+              "p2": "La columna <strong>Acción (Action)</strong> permite al usuario ejecutar dos operaciones diferentes en un dispositivo específico: Diagnóstico y Estadísticas.",
+              "diagnoseTitle": "Operación de Diagnóstico",
+              "diagnoseContent": "Esta operación es útil cuando es necesario verificar la conectividad de cada dispositivo listado individualmente. Se puede realizar una operación de Ping usando el botón (Diagnose) en la columna Action de la fila de un dispositivo específico. Al hacer clic en este botón se mostrará una pequeña ventana:",
+              "imageDiagnose": "Diagnose",
+              "warningDiagnose": {
+                "title": "Atención",
+                "content": "El Diagnóstico se considera un estado óptimo cuando resulta en 0% de Pérdida de Paquetes."
+              },
+              "statsTitle": "Operación de Estadísticas",
+              "statsContent": "Esta operación es útil cuando es necesario verificar información detallada de un dispositivo específico. Es posible consultar información sobre posición geográfica, alarmas, nodos hijos y mediciones de calidad de red. Haciendo clic en el botón <strong>Statistics</strong> en la columna Action de la fila de un dispositivo específico. Al hacer clic en este botón se mostrará la página:",
+              "imageStatsOPP": "NMS Statistical Information"
+            }
+          }
+        },
+        "controle-iluminacao": {
+          "navTitle": "3. LESS - Monitor",
+          "p1": "Este capítulo detalla las operaciones de control de iluminación en el sistema Streetlight, incluyendo encendido/apagado y otras funciones.",
+          "3_1": {
+            "title": "3.1 Encender/Apagar Luminarias",
+            "precondition": {
+              "title": "Precondición",
+              "content": "Un controlador inteligente de iluminación debe estar registrado y comunicándose con el sistema."
+            },
+            "executionTitle": "Ejecución:",
+            "executionItems": [
+              "Accede a: <strong>LESS > Monitor</strong>;",
+              "Selecciona el controlador inteligente deseado;",
+              "Haz clic en [On/Off] para operar remotamente.",
+              "Arrastra la barra vertical para definir la regulación de intensidad."
+            ],
+            "imageMonitorONOFF": "Monitoreo y Control"
+          },
+          "3_2": {
+            "title": "3.2 Otras Funciones de Control",
+            "precondition": {
+              "title": "Precondición",
+              "content": "Un controlador inteligente de iluminación debe estar registrado y comunicándose con el sistema."
+            },
+            "executionTitle": "Ejecución:",
+            "executionItems": [
+              "Read Real Time Data",
+              "Position."
+            ],
+            "imageRTU": "Otras Funciones",
+            "imagePosition": "Otras Funciones",
+            "postcondition": {
+              "title": "Postcondición",
+              "content": "Se mostrará una notificación de éxito o fallo. En caso de éxito, el estado de la luminaria se actualizará a apagado o encendido, según el comando."
+            }
+          }
+        },
+        "LESS": {
+          "navTitle": "4. LESS - Device Center",
+          "4_1": {
+            "title": "4.1 Device Manage",
+            "p1": "Este capítulo describe las funcionalidades del Centro de Dispositivos en el sistema Streetlight, incluyendo organización, gestión y actualización de firmware.",
+            "precondition": {
+              "title": "Precondición",
+              "content": "Acceso al sistema Streetlight con credenciales válidas."
+            },
+            "4_1_1": {
+              "title": "4.1.1 Lista de Organización",
+              "p1": "Organiza y agrupa las luminarias de calle en diferentes regiones para un control descentralizado.",
+              "items": [
+                "Accede a: <strong>LESS > Device Center > Organize List</strong>;",
+                "Haz clic en un nodo para mostrar los equipos de iluminación pública bajo él;",
+                "Haz clic en [Add Device] para mostrar dispositivos no agrupados, selecciónalos y asígnalos al nodo organizacional;",
+                "Haz clic en [Action] para eliminar la agrupación del dispositivo."
+              ]
+            },
+            "4_1_2": {
+              "title": "4.1.2 Gestión de Dispositivos",
+              "p1": "La gestión de dispositivos permite visualizar el estado de iluminación, información detallada del dispositivo, agregar, importar y modificar información básica del dispositivo, configurar y leer modos de ejecución de tareas, configurar y leer límites de luz, y configurar longitud, latitud y zonas horarias.",
+              "instruction": "Accede a: <strong>LESS > Device Center > Device Manage</strong> para editar la configuración del grupo y del dispositivo.",
+              "4_1_2_1": {
+                "title": "4.1.2.1 Configuración del Modo de Ejecución",
+                "p1": "Haz clic en [Running Mode] > [Set Running Mode/Read Running Mode] para definir o leer el modo de ejecución del controlador.",
+                "imageModeDevice": "Impresión: Pantalla de Alarmas Recibidas",
+                "note": "La configuración del modo de ejecución solo es compatible con controladores que tienen sensor de iluminación."
+              },
+              "4_1_2_2": {
+                "title": "4.1.2.2 Configuración de Adición y Eliminación de Dispositivos",
+                "items": [
+                  "Haz clic en <strong>[Device Action] > Add</strong> para agregar solo un equipo.",
+                  "Haz clic en <strong>[Device Action] > Import</strong> para agregar una lista de equipos.",
+                  "Haz clic en <strong>[Device Action] > Export</strong> para exportar la lista de equipos registrados.",
+                  "Haz clic en <strong>[Device Action] > Remove</strong> para eliminar un equipo.",
+                  "Haz clic en <strong>[Device Action] > Edit Group</strong> para modificar el grupo del equipo."
+                ],
+                "imageDeviceAction": "Impresión: Pantalla de Alarmas Recibidas"
+              },
+              "4_1_2_3": {
+                "title": "4.1.2.3 Configuración del Umbral de Iluminación",
+                "p1": "Haz clic en [illumination Threshold] > [Set/Read illumination Threshold] para definir o leer el umbral de iluminación.",
+                "imageThreshold": "Impresión: Pantalla de Alarmas Recibidas",
+                "note": "El umbral de iluminación define el límite de activación para que la lámpara se encienda o apague automáticamente, es decir, el punto crítico de luminosidad para el control de encendido/apagado de la lámpara."
+              },
+              "4_1_2_4": {
+                "title": "4.1.2.4 Configurar Información del Dispositivo",
+                "p1": "Haz clic en [Actions] para modificar: Latitud, Longitud, Información del Controlador y Zona Horaria.",
+                "imageActions": "Impresión: Pantalla de Alarmas Recibidas",
+                "warning": "Si es necesario reenviar la información de Zona Horaria, es posible utilizar el botón <strong>Retry Timezone</strong>."
+              }
+            }
+          },
+          "4_2": {
+            "title": "4.2 Actualización de Firmware",
+            "p1": "Permite visualizar el estado de actualización de firmware, actualizar paquetes y crear registros de actualización.",
+            "items": [
+              "Haz clic en <strong>LESS > Device Center > Firmware Update</strong>",
+              "Selecciona el ID y haz clic en <strong>UPGRADE</strong>"
+            ],
+            "imageUpgrade": "Impresión: Pantalla de Alarmas Recibidas"
+          }
+        },
+        "Analysis": {
+          "navTitle": "5. LESS - Analysis",
+          "5_1": {
+            "title": "5.1 Light Analysis",
+            "p1": "Haz clic en <strong>[LESS] > [Analysis] > [Light Analysis]</strong> para visualizar los datos históricos.",
+            "imageLightAnalysis": "Impresión: Pantalla de Alarmas Recibidas"
+          },
+          "5_2": {
+            "title": "5.2 Lighting Analysis",
+            "p1": "Haz clic en <strong>[LESS] > [Analysis] > [Lighting Analysis]</strong> para visualizar el gráfico de análisis de tasa de iluminación en el período de tiempo seleccionado.",
+            "imageLighitiningAnalysis": "Impresión: Pantalla de Alarmas Recibidas",
+            "info": "Si necesitas exportar el gráfico, está disponible en el botón <strong>Download</strong>."
+          },
+          "5_3": {
+            "title": "5.3 Energy Analysis",
+            "imageEnergyAnalysis": "Impresión: Pantalla de Alarmas Recibidas",
+            "imageGraph": "Impresión: Pantalla de Alarmas Recibidas"
+          }
+        },
+        "dispositivos": {
+          "navTitle": "6. LESS - Task Strategy",
+          "6_1": {
+            "title": "6.1 Strategy",
+            "p1": "Haz clic en <strong>[LESS] > [Task Strategy] > [Strategy]</strong>",
+            "imageStrategy": "strategy",
+            "p2": "Haz clic en <strong>Add</strong> para agregar una nueva Strategy.",
+            "imageStrategyAdd": "strategy",
+            "p3": "Una vez creada, es necesario agregar Tasks a la Strategy creada. Haz clic en la Strategy creada y luego en <strong>Add</strong> para agregar una nueva Task.",
+            "imageTaskAddStrategy": "strategy",
+            "imageStrategyTasks": "strategy",
+            "p4": "En el ejemplo anterior tenemos una estrategia que indica los siguientes intervalos:",
+            "items": [
+              "Entre las 18:30 y las 02:00 > 100% de iluminación;",
+              "Entre las 02:00 y las 06:00 > 80% de iluminación;",
+              "Entre las 06:00 y las 18:30 > 0% de iluminación (APAGADO)."
+            ]
+          },
+          "6_2": {
+            "title": "6.2 Tasks",
+            "p1": "Haz clic en <strong>[LESS] > [Task Strategy] > [Task]</strong>",
+            "imageTask": "strategy",
+            "p2": "Selecciona un controlador de iluminación y haz clic en el botón <strong>Add</strong> para aplicar la tarea.",
+            "imageTaskAdd": "strategy"
+          },
+          "6_3": {
+            "title": "6.3 Logs",
+            "p1": "Haz clic en <strong>[LESS] > [Task Strategy] > [Task Log]</strong>",
+            "imageTaskLog": "strategy"
+          }
+        },
+        "corte-religue": {
+          "navTitle": "7. Corte/Reenganche",
+          "p1": "Aquí se presentará la funcionalidad de apertura/cierre del relé (corte/reenganche). Para ejecutar el comando, es importante conocer el estado actual del módulo que será operado. Por eso, se recomienda leer el <strong>Apéndice A - Cómo leer el estado del relé</strong>.",
+          "7_1": {
+            "title": "7.1 Corte",
+            "precondition": {
+              "title": "Precondición",
+              "content": "Al menos uno de los MM debe tener el relé cerrado o <strong>Connected</strong>."
+            },
+            "executionTitle": "Ejecución:",
+            "executionItems": [
+              "Abrir ORCA;",
+              "En el menú lateral accede a <strong>Operational Commands > Disconnect/Connect</strong>;",
+              "Selecciona el medidor y envía el comando de desconexión."
+            ],
+            "imageCorte": "op commands",
+            "imageSelect": "select",
+            "imageResult": "result",
+            "postcondition": {
+              "title": "Postcondición",
+              "content": "Aparecerá una pantalla con la lista de los módulos seleccionados mostrando el progreso. En caso de éxito, el mensaje retornará <strong>Disconnect Success</strong>. Al realizar la lectura del estado, aparecerá como Abierto o <strong>Disconnected</strong>."
+            }
+          },
+          "7_2": {
+            "title": "7.2 Reenganche",
+            "precondition": {
+              "title": "Precondición",
+              "content": "Al menos un medidor debe tener el relé Abierto o <strong>Disconnected</strong>."
+            },
+            "executionTitle": "Ejecución:",
+            "executionItems": [
+              "Abrir ORCA;",
+              "En el menú lateral accede a <strong>Operational Commands > Disconnect/Connect</strong>;",
+              "Selecciona el protocolo (ej: IDIS) y envía el comando de conexión."
+            ],
+            "imageReligue": "op commands",
+            "imageSelect": "select",
+            "imageResult": "result",
+            "postcondition": {
+              "title": "Postcondición",
+              "content": "En caso de éxito, el mensaje retornará <strong>Connect Success</strong>. Al realizar la lectura del estado, aparecerá como <strong>Connected</strong>."
+            }
+          }
+        },
+        "leitura-demanda": {
+          "navTitle": "8. Lectura bajo Demanda",
+          "precondition": {
+            "title": "Precondición",
+            "content": "Medidor en línea y debidamente registrado en el MDC."
+          },
+          "p1": "La lectura bajo demanda requiere la selección del protocolo correcto y del Elemento de Datos (Data Item) deseado.",
+          "executionTitle": "Ejecución:",
+          "executionItems": [
+            "Navega a <strong>Operational Commands > On Demand Reading</strong>;",
+            "Selecciona el Nodo apropiado en el árbol de activos;",
+            "Elige el <strong>Protocol Type</strong>;",
+            "Ingresa el <strong>Meter No.</strong> (o selecciona de la lista);",
+            "Selecciona los parámetros que deseas leer (Energía, Tensión, Corriente, etc.);",
+            "Haz clic en <strong>Read</strong> o <strong>On Demand Reading</strong>."
+          ],
+          "imageDemand": "demand",
+          "imageSelect": "select",
+          "imageResult": "result"
+        },
+        "data-hora": {
+          "navTitle": "9. Actualización de Fecha y Hora",
+          "9_1": {
+            "title": "9.1 Actualizar Fecha y Hora",
+            "precondition": {
+              "title": "Precondición",
+              "content": "Al menos un medidor debe estar en línea y comunicándose con el sistema."
+            },
+            "executionTitle": "Ejecución:",
+            "executionItems": [
+              "Abrir ORCA e ir a <strong>Operational Commands > Time Synchronization</strong>;",
+              "Selecciona el protocolo del medidor;",
+              "Selecciona los medidores o la caja que recibirá el comando;",
+              "Haz clic en el botón <strong>Synchronizing Time</strong>;",
+              "Elige entre <strong>Server Clock</strong> (hora del servidor) o <strong>Customized Selection</strong> (hora manual);",
+              "Haz clic en Ok y luego en <strong>Confirm</strong> para enviar el comando."
+            ],
+            "imageDataHora": "Impresión: Sincronización de Reloj (Time Sync)",
+            "postcondition": {
+              "title": "Postcondición",
+              "content": "Se mostrará una pantalla con todos los módulos seleccionados y el resultado de la operación (Éxito/Fallo)."
+            }
+          }
+        },
+        "tela-lcd": {
+          "navTitle": "10. Pantalla LCD",
+          "10_1": {
+            "title": "10.1 Lectura",
+            "p1": "Verificación de la configuración actual de la pantalla del medidor.",
+            "items": [
+              "Selecciona el medidor y haz clic en el botón para leer lo que se muestra en la pantalla;",
+              "El resultado de la lectura debe ser equivalente a lo que se muestra físicamente en la pantalla."
+            ],
+            "imageLeituraLcd": "Impresión: Lectura de Configuración del LCD"
+          },
+          "10_2": {
+            "title": "10.2 Cambiar la Pantalla",
+            "executionTitle": "Ejecución:",
+            "executionItems": [
+              "Selecciona el medidor cuya pantalla será modificada;",
+              "Selecciona los elementos que se mostrarán en la pantalla;",
+              "El orden de selección de los elementos será el orden en que se mostrarán en la rotación automática de la pantalla LCD;",
+              "Confirma y envía la configuración."
+            ],
+            "imageAlterarLcd": "Impresión: Cambio de Elementos de la Pantalla",
+            "postcondition": {
+              "title": "Postcondición",
+              "content": "Verifica físicamente en la pantalla LCD del equipo si los elementos seleccionados se están mostrando realmente en el orden en que fueron configurados."
+            }
+          }
+        },
+        "parametrizacao": {
+          "navTitle": "11. Parametrización",
+          "p1": "Para la parametrización, contamos con flujos de lectura de la parametrización actual y envío de nueva configuración.",
+          "11_1": {
+            "title": "11.1 Lectura",
+            "p1": "Permite leer los parámetros actuales grabados en el Terminal/Medidor.",
+            "imageLeituraParametros": "Impresión: Pantalla de Lectura de Parámetros"
+          },
+          "11_2": {
+            "title": "11.2 Configuración",
+            "executionTitle": "Ejecución:",
+            "executionItems": [
+              "En el menú lateral accede a: <strong>Configuration > Parameters Configuration > Meter Parameters</strong>;",
+              "Selecciona el protocolo del medidor (ej: IDIS);",
+              "Deberá aparecer una lista de equipos; selecciona el equipo de prueba;",
+              "Selecciona la categoría de parametrización;",
+              "Aparecerá una lista de configuración a la derecha (ej: selección de alarmas a activar);",
+              "Envía el comando."
+            ],
+            "imageSetParametros": "Impresión: Envío de Configuración de Parámetros",
+            "postcondition": {
+              "title": "Postcondición",
+              "content": "Se mostrará una pantalla indicando el éxito de la operación."
+            }
+          }
+        },
+        "tarifas": {
+          "navTitle": "12. Configuración de Tarifas",
+          "p1": "La configuración de los modelos tarifarios sigue un flujo estricto de creación (Daily, Weekly, Seasonal, Holiday) para su posterior aplicación.",
+          "12_1": {
+            "title": "12.1 Registrando un Modelo Tarifario",
+            "p1": "Primero, es necesario crear un modelo tarifario genérico, yendo a <strong>Configuration > Parameters Configuration > Meter Tariff Definitions</strong>;",
+            "imageTariffDefinition": "Impresión: Daily Template",
+            "p2": "Luego, es necesario hacer clic en la lupa para configurar las plantillas por período:",
+            "imageTariffSelect": "Impresión: Daily Template",
+            "12_1_1": {
+              "title": "12.1.1 Daily Template",
+              "items": [
+                "Accede a <strong>Configuration > Parameters Configuration > Meter Tariff</strong>;",
+                "Selecciona <strong>Daily Template</strong> y haz clic en Add;",
+                "Crea los períodos de tiempo (Time Period List), horarios y las tarifas aplicadas (Tariff Rate);",
+                "Guarda el modelo diario."
+              ],
+              "imageDailyTemplate": "Impresión: Daily Template"
+            },
+            "12_1_2": {
+              "title": "12.1.2 Weekly Template",
+              "items": [
+                "Selecciona <strong>Weekly Template</strong> y haz clic en Add;",
+                "Define el nombre del modelo semanal;",
+                "Para cada día de la semana, selecciona el <strong>Daily Template</strong> creado anteriormente;",
+                "Guarda la operación."
+              ],
+              "imageWeeklyTemplate": "Impresión: Weekly Template"
+            },
+            "12_1_3": {
+              "title": "12.1.3 Seasonal Template",
+              "items": [
+                "Selecciona <strong>Seasonal Template</strong> y agrega uno nuevo;",
+                "Define la fecha de inicio y asóciala al <strong>Weekly Template</strong> creado;",
+                "Guarda."
+              ]
+            },
+            "12_1_4": {
+              "title": "12.1.4 Holiday Template (Common y Special)",
+              "items": [
+                "Selecciona <strong>Holiday</strong> y haz clic en Add en el campo Common o Special Holiday;",
+                "Define el nombre, la fecha fija (o recurrente) y aplica el <strong>Daily Template</strong> específico para el día festivo."
+              ]
+            }
+          },
+          "12_2": {
+            "title": "12.2 Seleccionando un Modelo Tarifario",
+            "p1": "Para aplicar el modelo creado, selecciona el medidor deseado y haz clic en el botón <strong>Current Tariff</strong> o envía la parametrización tarifaria compilada al Nodo.",
+            "imageCurrentTariff": "Impresión: Aplicación del Modelo Tarifario (Current Tariff)",
+            "postcondition": {
+              "title": "Resultado",
+              "content": "La pantalla mostrará el resultado de la solicitud de parametrización tarifaria con estado de éxito."
+            }
+          }
+        },
+        "relatorios": {
+          "navTitle": "13. Informes",
+          "p1": "En este capítulo se presentará la pantalla de lecturas del entorno (MDC Reports).",
+          "13_1": {
+            "title": "13.1 Lecturas",
+            "precondition": {
+              "title": "Precondición",
+              "content": "Al menos un medidor registrado, con tarea de envío de datos configurada y comunicándose correctamente en el sistema."
+            },
+            "executionTitle": "Ejecución:",
+            "executionItems": [
+              "En el menú lateral accede a <strong>Reports > Readings</strong>;",
+              "Selecciona el período de consulta (Time/Date);",
+              "Selecciona el nodo que será consultado (Node);",
+              "Selecciona el tipo de lectura (ej: Energy, Billing, Load Profile);",
+              "Haz clic en buscar/exportar."
+            ],
+            "imageRelatorios": "Impresión: Pantalla de Reports > Readings"
+          }
+        },
+        "alarmes": {
+          "navTitle": "14. Alarmas",
+          "p1": "Procedimientos para validación y consulta de eventos y alarmas reportados por el equipo al sistema.",
+          "items": [
+            "Accede al menú de Alarmas/Eventos en ORCA;",
+            "Filtra por el Terminal/Medidor específico;",
+            "Provoca la alarma físicamente (ej: tapa abierta, si corresponde y es seguro) o simula mediante comando;",
+            "Verifica la recepción del paquete de alarma en el sistema con el Timestamp correcto."
+          ],
+          "imageAlarmes": "Impresión: Pantalla de Alarmas Recibidas",
+          "imageAlarmes2": "Impresión: Pantalla de Alarmas Recibidas"
+        },
+        "apendice": {
+          "navTitle": "15. Apéndice",
+          "15_1": {
+            "title": "15.1 A - Cómo Leer el Estado del Relé",
+            "p1": "Conocer el estado actual del relé es crucial antes de enviar comandos operacionales de lectura bajo demanda;",
+            "items": [
+              "Ve a la pantalla de comandos operacionales de lectura bajo demanda;",
+              "Busca el Elemento de Datos referente al <strong>Estado del Relé (Relay Status / Disconnect Control)</strong>;",
+              "Realiza la lectura;",
+              "Interpreta el resultado numérico/booleano retornado en la tabla (ej: 0 = Conectado, 1 = Desconectado)."
+            ],
+            "imageStatusRele": "Impresión: Lectura del Elemento de Datos de Estado del Relé"
+          }
+        },
+        "changelog": {
+          "navTitle": "16. Changelog",
+          "v1_0_0": {
+            "version": "v1.0.0",
+            "date": "MARZO/2026",
+            "changes": [
+              "Creación inicial del Testbook Streetlight."
+            ]
+          }
+        }
+      }
+    },
+    "Zeus": {
+  "title": "Línea Zeus - Testbook",
+  "subtitle": "Explorando el medidor: Guía completa para administradores PODS",
+  "MDC": {
+    "title": "MDC - ZEUS-TM",
+    "meters": {
+      "title": "Medidores",
+      "item": "Ver nuevo modelo de medidor: <strong>ZEUS TM</strong>"
+    },
+    "parameters": {
+      "title": "Parámetros",
+      "item": "Consultar parámetro: <strong>Información GPS</strong>"
+    },
+    "onDemandReading": {
+      "title": "Lectura bajo demanda",
+      "items": [
+        "Lectura de energía: <strong>Energía Aparente (L1/L2/L3)</strong>"
+      ]
+    },
+    "historicalData": {
+      "title": "Datos históricos",
+      "items": [
+        "Lectura histórica: <strong>Perfil de carga 1 y 2</strong>",
+        "Perfiles disponibles: <strong>Diario / Mensual</strong>"
+      ]
+    },
+    "taskConfig": {
+      "title": "Configuración de tareas",
+      "items": [
+        "Configuración de tareas para <strong>Perfil de carga 1 y 2</strong>",
+        "Perfiles: <strong>Diario / Mensual</strong>"
+      ]
+    },
+    "reports": {
+      "title": "Reportes",
+      "item": "Consulta de lecturas: <strong>Perfil de carga 1 y 2</strong>"
+    },
+    "oamLogs": {
+      "title": "Logs O&M",
+      "items": [
+        "Diferencia entre <strong>medidor WISUN</strong> y <strong>medidor 4G</strong>",
+        "Monitoreo de <strong>heartbeat</strong>"
+      ]
+    }
+  },
+  "MDM": {
+    "title": "MDM - ZEUS-TM",
+    "lineLossModel": {
+      "title": "Modelo de pérdidas",
+      "item": "Crear modelo de pérdidas técnicas"
+    },
+    "measurementPoint": {
+      "title": "Punto de medición",
+      "items": [
+        "Crear puntos de medición",
+        "Definir tipo: <strong>Supply</strong> o <strong>Increase</strong>"
+      ]
+    },
+    "lineLossResult": {
+      "title": "Resultado de pérdidas",
+      "item": "Visualizar resultado del cálculo de pérdidas"
+    }
+  }
+}
+  }
+}
