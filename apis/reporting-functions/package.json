@@ -1,6 +1,6 @@
 {
-  "name": "functions",
-  "description": "Cloud Functions for Firebase serverless PDF rendering and audit triggers",
+  "name": "podsadministrator-reporting-functions",
+  "description": "Cloud Functions for PODSAdministrator serverless PDF reporting",
   "scripts": {
     "lint": "npx eslint .",
     "serve": "firebase emulators:start --only functions",

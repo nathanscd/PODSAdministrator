@@ -1,0 +1,16 @@
+{
+  "name": "podsadministrator-research-etl-api",
+  "version": "1.0.0",
+  "description": "Web research and LLM enrichment API for PODSAdministrator reports",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^4.22.1"
+  },
+  "type": "module"
+}

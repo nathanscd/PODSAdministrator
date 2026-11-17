@@ -1,11 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
-import { ReportData } from '../types';
+import type { ReportData } from '../types';
 
 type ServerStatus = 'unknown' | 'checking' | 'waking' | 'online' | 'offline';
 
-const PROXY_URL = 'https://podsadministrator.onrender.com';
+const PROXY_URL = (import.meta.env.VITE_ETL_API_URL || 'https://podsadministrator.onrender.com').replace(/\/+$/, '');
 const HEALTH_URL = `${PROXY_URL}/health`;
-const API_URL = `${PROXY_URL}/api/claude`;
+const API_URL = `${PROXY_URL}/api/research`;
+const LEGACY_API_URL = `${PROXY_URL}/api/claude`;
 const WAKE_TIMEOUT_MS = 60_000;
 const HEALTH_POLL_MS = 5_000;
 
@@ -51,12 +52,8 @@ export const useETLResearch = () => {
 
   const fetchRealReport = async (
     theme: string,
-    sources: Record<string, boolean>
+    _sources: Record<string, boolean>
   ): Promise<ReportData> => {
-    const activeSources = Object.entries(sources)
-      .filter(([, v]) => v)
-      .map(([k]) => k);
-
     const prompt = `Faça uma pesquisa detalhada e real sobre: "${theme}".
 Use web search para buscar dados concretos e atuais. Consulte múltiplas fontes.
 Retorne SOMENTE um objeto JSON válido, sem markdown, sem backticks, com esta estrutura:
@@ -69,17 +66,25 @@ Retorne SOMENTE um objeto JSON válido, sem markdown, sem backticks, com esta es
 }
 Responda em português do Brasil.`;
 
-    const response = await fetch(API_URL, {
+    const body = JSON.stringify({
+      prompt,
+      system:
+        'Você é um analista de dados sênior especializado em ETL e BI. Retorne APENAS JSON válido.',
+    });
+    let response = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        prompt,
-        system:
-          'Você é um analista de dados sênior especializado em ETL e BI. Retorne APENAS JSON válido.',
-      }),
+      body,
     });
+    if (response.status === 404) {
+      response = await fetch(LEGACY_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body,
+      });
+    }
 
-    if (!response.ok) throw new Error(`Erro no servidor proxy: ${response.status}`);
+    if (!response.ok) throw new Error(`Erro na API de pesquisa: ${response.status}`);
 
     const data = await response.json();
     if (data.error) throw new Error(data.error);

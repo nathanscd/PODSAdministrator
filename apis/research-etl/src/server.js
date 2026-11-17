@@ -1,3 +1,4 @@
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
 
@@ -73,7 +74,7 @@ async function callGroq(systemPrompt, userPrompt) {
   return data.choices?.[0]?.message?.content ?? "";
 }
 
-app.post("/api/claude", async (req, res) => {
+async function research(req, res) {
   const { prompt, system } = req.body;
   if (!prompt) return res.status(400).json({ error: "prompt ausente." });
 
@@ -110,7 +111,10 @@ Com base nos dados acima, gere o JSON solicitado.`;
     console.error("Error:", err.message);
     res.status(500).json({ error: err.message });
   }
-});
+}
+
+app.post("/api/research", research);
+app.post("/api/claude", research);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Proxy rodando na porta ${PORT}`));

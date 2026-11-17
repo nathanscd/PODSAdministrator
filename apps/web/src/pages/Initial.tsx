@@ -23,7 +23,7 @@ import { Card, CardContent } from '../components/ui/card';
 const COLORS = ['#8b5cf6', '#06b6d4', '#f43f5e', '#f59e0b', '#10b981'];
 
 export default function Initial() {
-  useTitle('Atlas');
+  useTitle('PODSAdministrator');
   const navigate = useNavigate();
   
   const {
@@ -135,7 +135,7 @@ export default function Initial() {
 
             <DashboardWidget
               title="Ferramentas Rápidas"
-              subtitle="Acesso direto aos principais módulos do Atlas"
+              subtitle="Acesso direto aos principais módulos do aplicativo"
               icon={<LayoutGrid className="w-4 h-4 text-[var(--muted-foreground)]" />}
             >
               <DashboardQuickLinks searchQuery={searchQuery} t={dashboardT} />

@@ -180,7 +180,7 @@ body {
 
 ::selection {
   background-color: var(--primary);
-  color: var(--primary-foreground);
+  color: white;
 }
 
 ::-webkit-scrollbar {

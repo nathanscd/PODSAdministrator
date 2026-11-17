@@ -9,7 +9,7 @@ import type {
   SimcardDetailResponse,
 } from "../types/simcard";
 
-const API_URL = (import.meta.env.VITE_DATATEM_API_URL || "http://localhost:8000").replace(/\/+$/, "");
+const API_URL = (import.meta.env.VITE_DATATEM_API_URL || "https://datatemapi-podsadministrator.onrender.com").replace(/\/+$/, "");
 
 const FRIENDLY_MESSAGES: Record<string, string> = {
   datatem_invalid_request: "Não foi possível atualizar o inventário de chips.",
