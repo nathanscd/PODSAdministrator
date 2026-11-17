@@ -1,49 +1,99 @@
+
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 
 export default function PrivateRoute() {
   const { user, loading } = useAuth();
+  const reduceMotion = useReducedMotion();
 
   if (loading) {
     return (
-      <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[var(--bg-app)] overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-[var(--accent-color)] rounded-full blur-[100px] opacity-20 animate-pulse" />
-        
+      <div
+        className="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden"
+        style={{ backgroundColor: "#030316" }}
+      >
         <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="relative z-10 flex flex-col items-center gap-8"
+          initial={{ opacity: 0, scale: 0.92 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="relative flex flex-col items-center"
         >
-          <motion.div 
-            animate={{ 
-              boxShadow: ["0 0 0 rgba(255,106,0,0)", "0 0 40px rgba(255,106,0,0.5)", "0 0 0 rgba(255,106,0,0)"] 
+          {/* SVG Loading Symbol */}
+          <motion.svg
+            width="76"
+            height="76"
+            viewBox="0 0 100 100"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            animate={
+              reduceMotion
+                ? { rotate: 0 }
+                : { rotate: 360 }
+            }
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              ease: "linear",
             }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[var(--accent-color)] to-[#ff8c38] flex items-center justify-center text-white text-2xl font-black border border-white/20 shadow-2xl"
+            style={{ transformOrigin: "center" }}
           >
-            P
-          </motion.div>
+            <path
+              d="M60 5H100L94 45H54L60 5Z"
+              fill="#F5F5F5"
+            />
 
-          <div className="flex flex-col items-center gap-3">
-            <span className="text-[var(--text-primary)] font-black tracking-[0.2em] uppercase text-xs">
-              Carregando...
+            <path
+              d="M6 55H46L40 95H0L6 55Z"
+              fill="#F5F5F5"
+            />
+          </motion.svg>
+
+          {/* Loading Text */}
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+            className="mt-12 flex flex-col items-center gap-5"
+          >
+            <span
+              className="text-[10px] font-medium uppercase tracking-[0.35em]"
+              style={{ color: "rgba(255,255,255,0.55)" }}
+            >
+              Carregando ambiente
             </span>
-            
-            <div className="w-32 h-1 bg-[var(--border-color)] rounded-full overflow-hidden relative">
-              <motion.div 
-                initial={{ x: "-100%" }}
-                animate={{ x: "100%" }}
-                transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut" }}
-                className="absolute top-0 bottom-0 left-0 w-full bg-[var(--accent-color)] rounded-full"
-              />
+
+            {/* Progress Indicator */}
+            <div
+              className="relative h-[2px] w-24 overflow-hidden"
+              style={{ backgroundColor: "rgba(255,255,255,0.12)" }}
+            >
+              {!reduceMotion && (
+                <motion.div
+                  className="absolute inset-y-0 left-0 w-1/2"
+                  style={{ backgroundColor: "#F5F5F5" }}
+                  animate={{ x: ["-100%", "200%"] }}
+                  transition={{
+                    duration: 1.4,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                />
+              )}
             </div>
-          </div>
+          </motion.div>
         </motion.div>
+
+        {/* Subtle Footer */}
+        <div
+          className="absolute bottom-8 text-[9px] font-medium tracking-[0.3em] uppercase"
+          style={{ color: "rgba(255,255,255,0.2)" }}
+        >
+          PODSAdministrator
+        </div>
       </div>
     );
   }
 
-  return user ? <Outlet /> : <Navigate to="/login" />;
+  return user ? <Outlet /> : <Navigate to="/login" replace />;
 }

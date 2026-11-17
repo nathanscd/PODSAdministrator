@@ -41,7 +41,6 @@ function AppRoutes() {
   const { modules } = usePlatform();
 
   return (
-    <Suspense fallback={<div className="p-6 text-[var(--text-primary)]">Loading Atlas…</div>}>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
@@ -86,7 +85,6 @@ function AppRoutes() {
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </Suspense>
   );
 }
 
