@@ -48,7 +48,7 @@ export const TodoColumn: React.FC<TodoColumnProps> = ({
                 }`}
               />
               <input
-                className="font-black text-[11px] uppercase tracking-[0.2em] text-[var(--text-primary)] bg-transparent border-none outline-none focus:text-[var(--accent-color)] w-full"
+                className="text-[11px] text-[var(--text-primary)] bg-transparent border-none outline-none focus:text-[var(--accent-color)] w-full"
                 value={column.title}
                 onChange={(e) => updateColumnTitle(column.id, e.target.value)}
               />

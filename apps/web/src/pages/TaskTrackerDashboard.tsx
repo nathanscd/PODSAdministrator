@@ -175,10 +175,10 @@ export default function TaskTrackerDashboard() {
         
         <header className="flex flex-col md:flex-row  justify-between items-start md:items-end gap-6 mb-12 border-b border-[var(--border-color)] pb-8">
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="space-y-2">
-            <h1 className="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-[var(--text-primary)]">
+            <h1 className="text-4xl md:text-5xl tracking-tighter text-[var(--text-primary)]">
               {t?.trackerDashboard?.title || "Task Trackers"}
             </h1>
-            <p className="text-sm font-bold text-[var(--text-secondary)]">
+            <p className="text-sm text-[var(--text-secondary)]">
               {t?.trackerDashboard?.subtitle || "Manage your public workspace trackers"}
             </p>
           </motion.div>
@@ -233,7 +233,7 @@ export default function TaskTrackerDashboard() {
                 </div>
                 
                 <div>
-                  <h3 className="text-lg font-bold text-[var(--text-primary)] line-clamp-2 leading-snug">
+                  <h3 className="text-lg text-[var(--text-primary)] line-clamp-2 leading-snug">
                     {firstTracker.opportunityName || t?.trackerDashboard?.untitled || "Untitled"}
                   </h3>
                 </div>
@@ -271,10 +271,10 @@ export default function TaskTrackerDashboard() {
                 
                 <div className="bg-[var(--card-bg)] px-8 py-6 border-b border-[var(--border-color)] flex justify-between items-center shrink-0">
                   <div>
-                    <h3 className="text-xl font-black text-[var(--text-primary)]">
+                    <h3 className="text-xl text-[var(--text-primary)]">
                       {groupedTrackers[viewFolderId][0].opportunityName}
                     </h3>
-                    <p className="text-xs font-semibold text-[var(--text-secondary)] mt-1 flex items-center gap-2">
+                    <p className="text-xs  text-[var(--text-secondary)] mt-1 flex items-center gap-2">
                       <Folder size={14} className="text-[var(--accent-color)]" /> {groupedTrackers[viewFolderId][0].opportunityUtility}
                     </p>
                   </div>
@@ -297,7 +297,7 @@ export default function TaskTrackerDashboard() {
                           <FileText size={18} />
                         </div>
                         <div className="min-w-0">
-                          <h4 className="font-bold text-sm text-[var(--text-primary)] truncate">{tracker.title || t?.trackerDashboard?.untitled || "Untitled Tracker"}</h4>
+                          <h4 className=" text-sm text-[var(--text-primary)] truncate">{tracker.title || t?.trackerDashboard?.untitled || "Untitled Tracker"}</h4>
                           <div className="flex items-center gap-3 mt-1 text-[11px] font-semibold text-[var(--text-secondary)]">
                             <span className="flex items-center gap-1.5">
                               <LayoutList size={12} /> {tracker.tasks?.length || 0} tasks

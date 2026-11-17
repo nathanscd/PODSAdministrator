@@ -39,7 +39,7 @@ export const TodoHeader: React.FC<TodoHeaderProps> = ({
           <ArrowLeft size={20} />
         </button>
         <input
-          className="text-3xl md:text-5xl font-black bg-transparent border-none outline-none w-full text-[var(--text-primary)] italic uppercase tracking-tighter"
+          className="text-3xl md:text-5xl bg-transparent border-none outline-none w-full text-[var(--text-primary)] tracking-tighter"
           value={boardTitle}
           onChange={(e) => {
             setBoardTitle(e.target.value);

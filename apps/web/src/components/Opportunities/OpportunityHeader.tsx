@@ -30,15 +30,15 @@ export const OpportunityHeader: React.FC<OpportunityHeaderProps> = ({
   setIsFullScreen,
 }) => {
   return (
-    <header className="relative z-40 pt-18 pb-6 px-6 sm:px-10 lg:px-16 shrink-0 bg-[var(--bg-app)] border-b border-[var(--border-color)]">
+    <header className="relative z-40 pt-5 pb-10 px-6 sm:px-10 lg:px-16 shrink-0 bg-[var(--bg-app)] border-b border-[var(--border-color)]">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         
         {/* Título e Subtítulo */}
         <div className="flex flex-col gap-1">
-          <h1 className="text-6xl font-black italic uppercase tracking-tighter text-[var(--text-primary)]">
+          <h1 className="text-5xl  uppercase tracking-tighter text-[var(--text-primary)]">
             {t.opp.title}
           </h1>
-          <span className="text-[10px] font-black uppercase tracking-[0.4em] text-[var(--accent-color)] mt-2">
+          <span className="text-[10px] uppercase tracking-[0.4em] text-[var(--accent-color)] mt-2">
             {t.opp.subtitle}
           </span>
         </div>

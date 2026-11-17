@@ -107,14 +107,9 @@ const Header = () => {
       <header className="fixed top-0 left-[70px] right-0 z-[6000] h-13 bg-[var(--background)] border-b border-[var(--border)] px-6 flex items-center justify-between gap-4 transition-all">
         {/* Brand / Title */}
         <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-xl bg-gradient-to-tr from-[var(--primary)] to-amber-500 text-[var(--primary-foreground)] flex items-center justify-center font-black text-xs shadow-sm">
-            A
-          </div>
+    
           <div className="flex items-baseline gap-2">
-            <span className="text-xs font-bold tracking-tight text-[var(--foreground)]">Atlas</span>
-            <span className="hidden sm:inline-block text-[10px] font-semibold text-[var(--muted-foreground)] opacity-70">
-              Commercial SaaS
-            </span>
+            <span className="text-xs font-bold tracking-tight text-[var(--foreground)]">PODSAdministrator</span>
           </div>
         </div>
 
@@ -235,4 +230,4 @@ const Header = () => {
 };
 
 export default Header;
-
+

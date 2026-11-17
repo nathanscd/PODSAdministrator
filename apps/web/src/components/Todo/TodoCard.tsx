@@ -69,13 +69,22 @@ export const TodoCard: React.FC<TodoCardProps> = ({
 
             <div className="flex-1">
               <p
-                className={`text-sm font-bold leading-snug mb-3 transition-colors ${
+                className={`text-sm mb-3 transition-colors ${
                   isDoneColumn
                     ? 'text-[var(--text-secondary)] line-through decoration-[var(--border-color)]'
                     : 'text-[var(--text-primary)]'
                 }`}
               >
                 {task.content}
+              </p>
+              <p
+                className={`text-xs mb-3 opacity-60 transition-colors ${
+                  isDoneColumn
+                    ? 'text-[var(--text-secondary)] line-through decoration-[var(--border-color)]'
+                    : 'text-[var(--text-primary)]'
+                }`}
+              >
+                {task.description}
               </p>
 
               <div className="flex items-center justify-between mt-2">
@@ -88,11 +97,6 @@ export const TodoCard: React.FC<TodoCardProps> = ({
                       <span className="text-[8px] font-black uppercase text-[var(--text-secondary)] truncate max-w-[70px]">
                         {task.assignedName.split(' ')[0]}
                       </span>
-                    </div>
-                  )}
-                  {task.description && (
-                    <div className="text-[var(--text-secondary)] opacity-40">
-                      <AlignLeft size={12} />
                     </div>
                   )}
                 </div>

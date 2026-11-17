@@ -197,7 +197,7 @@ export default function Initial() {
             </DashboardWidget>
           </div>
 
-          <div className="lg:col-span-12">
+          {/*<div className="lg:col-span-12">
             <DashboardWidget
               title="Agenda & Eventos"
               subtitle="Calendário corporativo e datas importantes"
@@ -214,7 +214,7 @@ export default function Initial() {
                 </CardContent>
               </Card>
             </DashboardWidget>
-          </div>
+          </div>*/}
         </div>
 
         <NotificationsModal

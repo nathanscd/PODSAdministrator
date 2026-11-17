@@ -186,7 +186,7 @@ export default function TaskTrackerDetail() {
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2 opacity-50">
               <LinkIcon size={12} />
-              <span className="text-[10px] uppercase font-black tracking-[0.2em] text-[var(--text-secondary)]">
+              <span className="text-[10px]  tracking-[0.2em] text-[var(--text-secondary)]">
                 {t.trackerDetail.linkedOpportunity}: <span className="text-[var(--accent-color)]">{tracker.opportunityUtility}</span> — {tracker.opportunityName}
               </span>
             </div>
@@ -195,7 +195,7 @@ export default function TaskTrackerDetail() {
               <div className="flex items-center gap-2">
                 <input 
                   autoFocus
-                  className="bg-transparent border-b-2 border-[var(--accent-color)] text-3xl font-black italic uppercase tracking-tighter text-[var(--text-primary)] outline-none w-full max-w-lg pb-1"
+                  className="bg-transparent border-b-2 border-[var(--accent-color)] text-3xl  tracking-tighter text-[var(--text-primary)] outline-none w-full max-w-lg pb-1"
                   value={titleInput}
                   onChange={(e) => setTitleInput(e.target.value)}
                   onBlur={saveTitle}
@@ -207,7 +207,7 @@ export default function TaskTrackerDetail() {
               </div>
             ) : (
               <div className="flex items-center gap-4 group cursor-pointer w-fit" onClick={() => setIsEditingTitle(true)}>
-                <h1 className="text-3xl font-black italic uppercase tracking-tighter text-[var(--text-primary)] group-hover:text-[var(--accent-color)] transition-colors">
+                <h1 className="text-3xl tracking-tighter text-[var(--text-primary)] group-hover:text-[var(--accent-color)] transition-colors">
                   {tracker.title || t.trackerDetail.untitled}
                 </h1>
                 <Edit3 size={18} className="opacity-0 group-hover:opacity-100 transition-opacity text-[var(--text-secondary)]" />
@@ -277,10 +277,10 @@ export default function TaskTrackerDetail() {
                         <td className="p-5 text-center hidden-print">
                             <GripVertical size={14} className="opacity-30 mx-auto" />
                         </td>
-                        <td className="p-5 font-bold">{task.task}</td>
+                        <td className="p-5">{task.task}</td>
                         <td className="p-5 opacity-60 font-mono">{formatDateUTC(task.startDate)}</td>
                         <td className="p-5 opacity-60 font-mono">{formatDateUTC(task.plannedEndDate)}</td>
-                        <td className="p-5 font-mono font-bold">{formatDateUTC(task.currentEndDate)}</td>
+                        <td className="p-5 font-mono ">{formatDateUTC(task.currentEndDate)}</td>
                         <td className="p-5">
                         <span className={`px-2 py-1 rounded text-[9px] font-black uppercase ${
                             task.priority === 'Crítica' ? 'bg-red-500 text-white' : 
@@ -289,8 +289,8 @@ export default function TaskTrackerDetail() {
                             {task.priority}
                         </span>
                         </td>
-                        <td className="p-5 font-bold italic">{task.responsible}</td>
-                        <td className="p-5 uppercase font-bold text-[10px] opacity-80 text-[var(--text-primary)]">{task.team}</td>
+                        <td className="p-5">{task.responsible}</td>
+                        <td className="p-5 uppercase text-[10px] opacity-80 text-[var(--text-primary)]">{task.team}</td>
                         <td className="p-5">
                         <div className="flex items-center gap-2">
                             <div className="w-16 h-1.5 bg-gray-700 rounded-full overflow-hidden">

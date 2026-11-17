@@ -48,70 +48,9 @@ export default function Sidebar() {
   return (
     <aside 
       className="fixed top-0 left-0 bottom-0 z-[7000] w-[70px] flex flex-col items-center py-4 bg-[var(--sidebar)] border-r border-[var(--sidebar-border)] transition-all duration-300 select-none"
-    >
-      {/* Workspace / Company Switcher Indicator */}
-      <div className="relative mb-5">
-        <Button
-          onClick={() => setIsWorkspaceMenuOpen(!isWorkspaceMenuOpen)}
-          className="w-10 h-10 text-[var(--foreground)] bg-[var(--muted-foreground)]/30 flex justify-center items-center border"
-          title={company?.name || "Atlas Workspace"}
-        >
-          {company?.logoUrl ? (
-            <img src={company.logoUrl} alt="Logo" className="w-5 h-5 rounded-md object-cover" />
-          ) : (
-            <Building size={19} className="transition-transform absolute" />
-          )}
-        </Button>
-
-        {/* Workspace Popup Menu */}
-        <AnimatePresence>
-          {isWorkspaceMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, x: 8, scale: 0.95 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              exit={{ opacity: 0, x: 8, scale: 0.95 }}
-              transition={{ duration: 0.14, ease: [0.16, 1, 0.3, 1] }}
-              className="absolute left-[78px] top-0 w-60 bg-[var(--popover)]/90 backdrop-blur-2xl border border-[var(--border)]/60 rounded-2xl shadow-[var(--shadow-elevation)] p-3 z-[8000]"
-            >
-              <div className="text-[10px] font-bold uppercase tracking-wider text-[var(--muted-foreground)] mb-2 px-2">
-                {company?.name || "Organização"}
-              </div>
-              <div className="space-y-1 mb-2">
-                {workspaces.map((ws) => (
-                  <button
-                    key={ws.id}
-                    onClick={() => {
-                      setActiveWorkspace(ws);
-                      setIsWorkspaceMenuOpen(false);
-                    }}
-                    className={`w-full text-left px-3 py-1.5 rounded-xl text-xs font-medium transition-all flex items-center justify-between ${
-                      activeWorkspace?.id === ws.id
-                        ? "bg-[var(--primary)] text-[var(--primary-foreground)] font-semibold shadow-sm"
-                        : "hover:bg-[var(--muted)] text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
-                    }`}
-                  >
-                    <span className="truncate">{ws.name}</span>
-                    {activeWorkspace?.id === ws.id && <Check size={14} className="shrink-0" />}
-                  </button>
-                ))}
-              </div>
-              <div className="border-t border-[var(--border)]/50 pt-2 mt-2 px-2 flex items-center justify-between text-xs text-[var(--muted-foreground)]">
-                <span className="truncate max-w-[140px] font-medium">{user?.displayName || user?.email}</span>
-                <button 
-                  onClick={() => logout()}
-                  className="p-1 hover:bg-rose-500/10 text-rose-500 rounded-lg transition-colors"
-                  title="Sair"
-                >
-                  <LogOut size={14} />
-                </button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
+    >  
       {/* Navigation Icons */}
-      <nav className="flex-1 flex flex-col items-center gap-2 w-full px-2">
+      <nav className="flex-1 flex flex-col items-center gap-5 w-full px-2">
         {navItems.map((item) => {
           const isActive = location.pathname === item.to;
           return (

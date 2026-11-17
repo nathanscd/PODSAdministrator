@@ -75,13 +75,6 @@ const SIDEBAR_CATEGORIES = [
     ],
   },
   {
-    title: "Company",
-    items: [
-      { id: "company-branding", name: "Marca e Empresa", icon: <Building size={16} /> },
-      { id: "company-departments", name: "Departamentos", icon: <Briefcase size={16} /> },
-    ],
-  },
-  {
     title: "Product",
     items: [
       { id: "notifications", name: "Notificações", icon: <Bell size={16} /> },
@@ -98,48 +91,38 @@ const SIDEBAR_CATEGORIES = [
     ],
   },
   {
-    title: "Administration",
-    items: [
-      { id: "billing", name: "Faturamento e Planos", icon: <CreditCard size={16} /> },
-      { id: "api", name: "API e Webhooks", icon: <Database size={16} /> },
-    ],
-  },
-  {
     title: "About",
     items: [
-      { id: "about", name: "Sobre o Atlas", icon: <Info size={16} /> },
+      { id: "about", name: "Sobre o aplicativo", icon: <Info size={16} /> },
       { id: "support", name: "Suporte", icon: <LifeBuoy size={16} /> },
     ],
   },
 ];
 
 export const SettingsLayout = ({ children }: { children: React.ReactNode }) => (
-  <div className="flex w-full h-full bg-background overflow-hidden">{children}</div>
+  <div className="flex w-full h-full bg-background overflow-hidden" data-lenis-prevent>{children}</div>
 );
 
 export const SettingsSidebar = ({ children }: { children: React.ReactNode }) => (
-  <div className="w-[280px] flex-shrink-0 border-r border-border/50 bg-muted/20 flex flex-col h-full">
+  <div className="w-[280px] flex-shrink-0 border-r border-border/50 bg-muted/20 flex flex-col h-full overflow-scroll">
     {children}
   </div>
 );
 
 export const SettingsMainContent = ({ children }: { children: React.ReactNode }) => (
-  <div className="flex-1 flex flex-col h-full overflow-hidden bg-background relative">
+  <div className="flex-1 flex flex-col h-full overflow-scroll bg-background relative">
     {children}
   </div>
 );
 
 export const SettingsRightPanel = () => (
-  <div className="w-[260px] flex-shrink-0 border-l border-border/50 bg-muted/10 hidden xl:flex flex-col p-6 h-full">
-    <div className="sticky top-0 space-y-6">
-      <div className="space-y-2">
+  <div className="w-[260px] scroll flex-shrink-0 border-l border-border/50 bg-muted/10 xl:flex flex-col p-6 h-full" lenis-data-prevent>
+    <div className="sticky top-0 space-y-6 scroll">
+      <div className="space-y-2 scroll">
         <h4 className="text-sm font-semibold text-foreground flex items-center gap-2">
           <Sparkles size={14} className="text-primary" />
           Dicas de Configuração
         </h4>
-        <p className="text-xs text-muted-foreground leading-relaxed">
-          O Atlas suporta multi-tenancy. Algumas configurações podem estar bloqueadas pela sua organização.
-        </p>
       </div>
       <Separator className="bg-border/50" />
       <div className="space-y-3">
@@ -147,14 +130,11 @@ export const SettingsRightPanel = () => (
           Links Úteis
         </h4>
         <div className="flex flex-col gap-2">
-          <a className="text-xs text-foreground hover:text-primary transition-colors cursor-pointer">
-            Documentação da API
+          <a href="/testbooks" className="text-xs text-foreground hover:text-primary transition-colors cursor-pointer">
+            Documentação do aplicativo
           </a>
           <a className="text-xs text-foreground hover:text-primary transition-colors cursor-pointer">
             Política de Privacidade
-          </a>
-          <a className="text-xs text-foreground hover:text-primary transition-colors cursor-pointer">
-            Contatar Suporte
           </a>
         </div>
       </div>
@@ -370,7 +350,6 @@ export const SettingsModal = ({
                           {activeTab === "audit" && <PlaceholderSection title="Logs de Auditoria" scope="organization" />}
                           {activeTab === "billing" && <PlaceholderSection title="Faturamento e Planos" scope="organization" />}
                           {activeTab === "api" && <PlaceholderSection title="API e Webhooks" scope="organization" />}
-                          {activeTab === "about" && <PlaceholderSection title="Sobre o Atlas" />}
                           {activeTab === "support" && <PlaceholderSection title="Suporte" />}
                         </motion.div>
                       </AnimatePresence>
@@ -395,7 +374,7 @@ const PlaceholderSection = ({ title, scope }: { title: string, scope?: "organiza
     </div>
     <h3 className="text-lg font-semibold text-foreground mb-2">{title}</h3>
     <p className="text-sm text-muted-foreground max-w-md mx-auto mb-6">
-      Este módulo está em desenvolvimento e será disponibilizado em atualizações futuras do Atlas.
+      Este módulo está em desenvolvimento e será disponibilizado em atualizações futuras do aplicativo.
     </p>
     {scope && (
       <Badge variant="outline" className="text-xs font-normal">
@@ -593,7 +572,7 @@ const AppearanceSection = () => {
 
   return (
     <div className="space-y-10" data-lenis-prevent>
-      <SettingsSection title="Tema da Interface" description="Personalize a aparência geral do Atlas no seu dispositivo.">
+      <SettingsSection title="Tema da Interface" description="Personalize a aparência geral do aplicativo no seu dispositivo.">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
           <div
             onClick={() => handleThemeChange("light", selectedColor)}
@@ -700,7 +679,7 @@ const NotificationsSection = () => (
       <SettingsGroup>
         <SettingsRow
           title="Notificações Push no Navegador"
-          description="Receba alertas em tempo real mesmo quando o Atlas estiver em segundo plano."
+          description="Receba alertas em tempo real mesmo quando o aplicativo estiver em segundo plano."
           control={<Switch defaultChecked />}
         />
         <SettingsRow

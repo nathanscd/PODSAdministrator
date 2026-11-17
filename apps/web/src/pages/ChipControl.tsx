@@ -134,15 +134,15 @@ export default function SimCardControl() {
           </div>
 
           <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl p-5 w-fit max-w-full backdrop-blur-[16px] text-[var(--text-primary)] shadow-sm">
-            <h2 className="text-sm font-black uppercase tracking-widest text-[var(--text-secondary)] mb-3">Total em Estoque</h2>
+            <h2 className="text-sm  tracking-widest text-[var(--text-secondary)] mb-3">RESTANTE</h2>
             <div className="flex flex-row gap-3">
               <div className="flex flex-col items-center px-5 py-3 border border-[var(--border-color)] rounded-xl bg-[var(--bg-app)]">
-                <span className="text-2xl font-black text-cyan-500">{nbIotCount}</span>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-secondary)]">NB-IoT</span>
+                <span className="text-2xl">{nbIotCount}</span>
+                <span className="text-[10px] tracking-widest text-[var(--text-secondary)]">NB-IoT</span>
               </div>
               <div className="flex flex-col items-center px-5 py-3 border border-[var(--border-color)] rounded-xl bg-[var(--bg-app)]">
-                <span className="text-2xl font-black text-fuchsia-500">{fourGCount}</span>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-secondary)]">4G</span>
+                <span className="text-2xl ">{fourGCount}</span>
+                <span className="text-[10px] tracking-widest text-[var(--text-secondary)]">4G</span>
               </div>
             </div>
           </div>
@@ -390,7 +390,7 @@ export default function SimCardControl() {
 
                       <div className="flex flex-col gap-4 mt-2">
                         <div>
-                          <p className="text-[10px] font-black uppercase tracking-[0.15em] text-[var(--text-secondary)] opacity-60 mb-1">Linha / ICCID</p>
+                          <p className="text-[10px] tracking-[0.15em] text-[var(--text-secondary)] opacity-60 mb-1">Linha / ICCID</p>
                           {isEditing ? (
                             <input
                               type="text"
@@ -399,7 +399,7 @@ export default function SimCardControl() {
                               className={`${editInputClass} font-mono tracking-wider`}
                             />
                           ) : (
-                            <p className="text-xl font-bold text-[var(--text-primary)] font-mono tracking-wider truncate">{chip.numero}</p>
+                            <p className="text-xl text-[var(--text-primary)] tracking-wider truncate">{chip.numero}</p>
                           )}
                         </div>
 
@@ -407,35 +407,35 @@ export default function SimCardControl() {
 
                         <div className="grid grid-cols-2 gap-4">
                           <div className="flex flex-col gap-1">
-                            <span className="text-[9px] font-black uppercase tracking-widest text-[var(--text-secondary)] flex items-center gap-1"><Box size={10} /> Projeto</span>
+                            <span className="text-[9px] uppercase tracking-widest text-[var(--text-secondary)] flex items-center gap-1"><Box size={10} /> Projeto</span>
                             {isEditing ? (
                               <input type="text" value={editData.projeto} onChange={(e) => setEditData({ ...editData, projeto: e.target.value })} className={editInputClass} />
                             ) : (
-                              <span className="text-xs font-bold text-[var(--text-primary)] truncate">{chip.projeto}</span>
+                              <span className="text-xs text-[var(--text-primary)] truncate">{chip.projeto}</span>
                             )}
                           </div>
                           <div className="flex flex-col gap-1">
-                            <span className="text-[9px] font-black uppercase tracking-widest text-[var(--text-secondary)] flex items-center gap-1"><Users size={10} /> Cliente</span>
+                            <span className="text-[9px] uppercase tracking-widest text-[var(--text-secondary)] flex items-center gap-1"><Users size={10} /> Cliente</span>
                             {isEditing ? (
                               <input type="text" value={editData.cliente} onChange={(e) => setEditData({ ...editData, cliente: e.target.value })} className={editInputClass} />
                             ) : (
-                              <span className="text-xs font-bold text-[var(--text-primary)] truncate">{chip.cliente}</span>
+                              <span className="text-xs text-[var(--text-primary)] truncate">{chip.cliente}</span>
                             )}
                           </div>
                           <div className="flex flex-col gap-1">
-                            <span className="text-[9px] font-black uppercase tracking-widest text-[var(--text-secondary)] flex items-center gap-1"><UserCog size={10} /> Responsável</span>
+                            <span className="text-[9px] uppercase tracking-widest text-[var(--text-secondary)] flex items-center gap-1"><UserCog size={10} /> Responsável</span>
                             {isEditing ? (
                               <input type="text" value={editData.responsavel} onChange={(e) => setEditData({ ...editData, responsavel: e.target.value })} className={editInputClass} />
                             ) : (
-                              <span className="text-xs font-bold text-[var(--text-primary)] truncate">{chip.responsavel || '—'}</span>
+                              <span className="text-xs text-[var(--text-primary)] truncate">{chip.responsavel || '—'}</span>
                             )}
                           </div>
                           <div className="flex flex-col gap-1">
-                            <span className="text-[9px] font-black uppercase tracking-widest text-[var(--text-secondary)] flex items-center gap-1"><Wrench size={10} /> Equipamento</span>
+                            <span className="text-[9px]  uppercase tracking-widest text-[var(--text-secondary)] flex items-center gap-1"><Wrench size={10} /> Equipamento</span>
                             {isEditing ? (
                               <input type="text" value={editData.equipamento} onChange={(e) => setEditData({ ...editData, equipamento: e.target.value })} className={editInputClass} />
                             ) : (
-                              <span className="text-xs font-bold text-[var(--text-primary)] truncate">{chip.equipamento || '—'}</span>
+                              <span className="text-xs  text-[var(--text-primary)] truncate">{chip.equipamento || '—'}</span>
                             )}
                           </div>
                         </div>

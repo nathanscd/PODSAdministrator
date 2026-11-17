@@ -75,12 +75,6 @@ export default function Comparacao() {
 
         <header className="mb-10 relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
-            <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-[var(--card-bg)] border border-[var(--border-color)] shadow-sm mb-6">
-              <FileSpreadsheet size={16} className="text-[var(--accent-color)]" />
-              <span className="text-xs font-black uppercase tracking-[0.2em] text-[var(--text-secondary)]">
-                Data Compare Tool
-              </span>
-            </div>
             <h1 className="text-4xl md:text-5xl font-black text-[var(--text-primary)] tracking-tight">
               Comparador de Dados
             </h1>

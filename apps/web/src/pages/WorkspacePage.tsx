@@ -237,20 +237,20 @@ export default function WorkspacePage() {
     <div className="main !p-0 overflow-hidden flex flex-col h-screen bg-[var(--bg-app)] relative" data-lenis-prevent>
       
       {/* PREMIUM HEADER */}
-      <nav className="h-16 px-8 flex items-center justify-between border-b border-white/5 backdrop-blur-3xl bg-[var(--bg-app)]/40 z-50 shrink-0">
+      <nav className="h-16 px-8 flex pb-5 items-center justify-between border-b border-white/5 backdrop-blur-3xl bg-[var(--bg-app)]/40 z-50 shrink-0">
         <div className="flex items-center w-full">
-          <button onClick={() => navigate("/paginas")} className="h-12 w-12 flex items-center justify-center text-[var(--text-primary)] bg-white/5 hover:bg-white/10 rounded-2xl transition-all border border-white/5 cursor-pointer">
+          <button onClick={() => navigate("/paginas")} className=" mr-5 flex items-center justify-center text-[var(--text-primary)] transition-all cursor-pointer">
             <ChevronLeft size={20} />
           </button>
           
           <div className="flex items-center justify-between flex-1">
             <div className="flex flex-col">
-                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-white/40">
-                   <span className="cursor-pointer text-[var(--accent-color)]/50 hover:text-[var(--accent-color)] transition-all duration-500 ease" onClick={() => navigate("/paginas")}>Workspace</span>
+                <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-white/40">
+                   <span className="cursor-pointer text-[var(--accent-color)]/50 hover:text-[var(--accent-color)] transition-all duration-500 ease" onClick={() => navigate("/paginas")}>Pages</span>
                    <span className="opacity-20 text-[var(--accent-color)]">/</span>
-                   <span className="text-[var(--accent-color)]">{page.type === 'board' ? 'Operational Board' : 'Intelligence Report'}</span>
+                   <span className="text-[var(--accent-color)]">{'documento'}</span>
                 </div>
-                <h2 className="text-sm font-black text-[var(--text-primary)] tracking-tight truncate max-w-[400px]">
+                <h2 className="text-sm text-[var(--text-primary)] tracking-tight truncate max-w-[400px]">
                     {localTitle || "Untitled Page"}
                 </h2>
             </div>
@@ -275,8 +275,8 @@ export default function WorkspacePage() {
               {auth.currentUser?.uid === page.ownerId && (
                 <button 
                   onClick={() => updatePage(pageId!, { isPublic: !page.isPublic })}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[9px] font-black tracking-[0.2em] border transition-all cursor-pointer uppercase ${
-                    page.isPublic ? "bg-green-500/10 border-green-500/20 text-green-400" : "bg-white/5 border-white/10 text-white/40 hover:text-white hover:bg-white/10"
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[9px] tracking-[0.2em]  transition-all cursor-pointer uppercase ${
+                    page.isPublic ? "bg-green-500/10 border-green-500/20 text-green-400" : "bg-white/0  text-white/40 hover:text-white hover:bg-white/10"
                   }`}
                 >
                   {page.isPublic ? <Globe size={12} /> : <Lock size={12} />}
@@ -285,13 +285,13 @@ export default function WorkspacePage() {
               )}
 
               <div className="flex items-center gap-2">
-                <button className="p-2.5 bg-white/5 hover:bg-white/10 rounded-xl text-white/60 hover:text-white transition-all border border-white/5 cursor-pointer">
+                <button className="p-2.5 hover:bg-white/10 rounded-xl text-white/60 hover:text-white transition-all cursor-pointer">
                     <Share2 size={16} />
                 </button>
-                <button className="p-2.5 bg-white/5 hover:bg-white/10 rounded-xl text-white/60 hover:text-white transition-all border border-white/5 cursor-pointer">
+                <button className="p-2.5 hover:bg-white/10 rounded-xl text-white/60 hover:text-white transition-all cursor-pointer">
                     <History size={16} />
                 </button>
-                <button className="p-2.5 bg-white/5 hover:bg-white/10 rounded-xl text-white/60 hover:text-white transition-all border border-white/5 cursor-pointer">
+                <button className="p-2.5 hover:bg-white/10 rounded-xl text-white/60 hover:text-white transition-all cursor-pointer">
                     <MoreVertical size={16} />
                 </button>
               </div>
@@ -311,7 +311,7 @@ export default function WorkspacePage() {
           
           <input 
             id="page-title-input" 
-            className="w-full text-5xl md:text-6xl font-black border-none outline-none bg-transparent p-0 leading-tight placeholder:opacity-10 tracking-tighter mb-12 focus:ring-0" 
+            className="w-full overflow-scroll text-3xl md:text-4xl border-none outline-none bg-transparent p-0 leading-tight placeholder:opacity-10 tracking-tighter mb-12 focus:ring-0" 
             value={localTitle} 
             onChange={handleTitleChange} 
             placeholder="NOME DO RELATÓRIO"

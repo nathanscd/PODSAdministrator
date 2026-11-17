@@ -22,8 +22,8 @@ export default function SidebarAuth({
           <GradientCanvas />
 
           <motion.img
-            src="/logo_w_o.png"
-            alt="Atlas"
+            src="/logo.png"
+            alt="PODSAdm"
             className="absolute w-65 h-65 pointer-events-none"
           />
         </div>

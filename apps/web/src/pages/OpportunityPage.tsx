@@ -109,20 +109,20 @@ export default function OpportunityPage() {
 
         {!isFullScreen && (
           <div className="flex gap-4 px-6 sm:px-10 lg:px-16 py-4 border-b border-border/40 bg-background shrink-0 overflow-x-auto custom-scrollbar">
-            <Card className="bg-card border-border/60 shadow-sm rounded-2xl min-w-max">
-              <CardContent className="p-3.5 flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-muted/50 flex items-center justify-center text-muted-foreground">
+            <Card className="bg-transparent shadow-sm rounded-2xl min-w-max">
+              <CardContent className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center text-muted-foreground">
                   <LayoutGrid size={16} />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Records</span>
+                  <span className="text-[10px] text-muted-foreground tracking-wider"p>Records</span>
                   <span className="text-sm font-bold tracking-tight">{metrics.totalCount}</span>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-card border-border/60 shadow-sm rounded-2xl min-w-max">
-              <CardContent className="p-3.5 flex items-center gap-3">
+            <Card className="bg-transparent shadow-sm rounded-2xl min-w-max">
+              <CardContent className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-500">
                   <CheckCircle2 size={16} />
                 </div>
@@ -133,8 +133,8 @@ export default function OpportunityPage() {
               </CardContent>
             </Card>
 
-            <Card className="bg-card border-border/60 shadow-sm rounded-2xl min-w-max">
-              <CardContent className="p-3.5 flex items-center gap-3">
+            <Card className="bg-transparent border-border/60 shadow-sm rounded-2xl min-w-max">
+              <CardContent className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500">
                   <Percent size={16} />
                 </div>
