@@ -1,0 +1,27 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function datatemProtectedCollection() {
+      return request.path.size() >= 1
+        && request.path[0] in [
+          'chipAssignments',
+          'chipAssignmentHistory',
+          'manualSimcards',
+          'datatemInventory',
+          'datatemIntegration',
+          'datatemSyncState'
+        ];
+    }
+
+    match /{document=**} {
+      allow read: if signedIn()
+        && (!datatemProtectedCollection() || request.path[0] != 'datatemIntegration');
+      allow write: if signedIn() && !datatemProtectedCollection();
+    }
+  }
+}

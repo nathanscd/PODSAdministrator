@@ -24,3 +24,11 @@ dist-ssr
 *.sw?
 
 *.env
+.env.*
+!.env.example
+__pycache__/
+*.py[cod]
+.venv/
+*firebase-adminsdk*.json
+
+podsadministrator-firebase-adminsdk-fbsvc-7cccb6de83.json

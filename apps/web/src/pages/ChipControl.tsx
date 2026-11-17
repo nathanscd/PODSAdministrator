@@ -1,453 +1,424 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Trash2, Signal, Cpu, Box, Hash, Users, Activity, RadioTower, Pencil, Check, X, Wrench, UserCog } from "lucide-react";
-import { collection, query, orderBy, onSnapshot, addDoc, deleteDoc, updateDoc, doc, serverTimestamp } from "firebase/firestore";
-import { db } from "../firebase";
-import { Chips } from "../types";
+import { useMemo, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  AlertTriangle,
+  Boxes,
+  CircleCheck,
+  Cpu,
+  Plus,
+  RadioTower,
+  RefreshCw,
+  Signal,
+  Wrench,
+} from "lucide-react";
+import { useAuth } from "../contexts/AuthContext";
+import { useOpportunities } from "../hooks/useOpportunities";
+import { useSimcardInventory } from "../hooks/useSimcardInventory";
+import { useSimcardOperations } from "../hooks/useSimcardOperations";
+import { AssignmentHistory } from "../components/SimCards/AssignmentHistory";
+import { AssignSimcardModal } from "../components/SimCards/AssignSimcardModal";
+import { ManualSimcardModal } from "../components/SimCards/ManualSimcardModal";
+import { SimCardCard } from "../components/SimCards/SimCardCard";
+import { SimCardFilters } from "../components/SimCards/SimCardFilters";
+import { SimcardDetailsModal } from "../components/SimCards/SimcardDetailsModal";
+import { SimCardLoading } from "../components/SimCards/SimCardLoading";
+import { SourceActionModal } from "../components/SimCards/SourceActionModal";
+import type {
+  AssignPayload,
+  AssignmentUpdatePayload,
+  InventoryItem,
+  ManualSimcardRequest,
+  ManualSimcardUpdate,
+  SimcardClassification,
+  SimcardSource,
+  TechnologyGroup,
+} from "../types/simcard";
+import { classifySimcard, displayValue, sourceOf, technologyGroupOf } from "../utils/simcard";
 
-export default function SimCardControl() {
-  const [chips, setChips] = useState<Chips[]>([]);
-  const [number, setNumber] = useState("");
-  const [carrier, setCarrier] = useState("Vivo");
-  const [tech, setTech] = useState("NB-IoT");
-  const [project, setProject] = useState("");
-  const [client, setClient] = useState("");
-  const [responsible, setResponsible] = useState("");
-  const [equipment, setEquipment] = useState("");
+const GROUP_ORDER: TechnologyGroup[] = ["4G", "NB-IoT", "Outros"];
 
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [editData, setEditData] = useState<Partial<Chips>>({});
-
-  useEffect(() => {
-    const q = query(collection(db, "chips"), orderBy("createdAt", "desc"));
-    const unsub = onSnapshot(q, (snapshot) => {
-      setChips(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Chips)));
-    });
-    return unsub;
-  }, []);
-
-  const handleAddChip = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!number || !project || !client) return;
-
-    try {
-      await addDoc(collection(db, "chips"), {
-        numero: number,
-        operadora: carrier,
-        tecnologia: tech,
-        projeto: project,
-        cliente: client,
-        responsavel: responsible,
-        equipamento: equipment,
-        createdAt: serverTimestamp()
-      });
-      setNumber("");
-      setProject("");
-      setClient("");
-      setResponsible("");
-      setEquipment("");
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const removeChip = async (id: string) => {
-    try {
-      await deleteDoc(doc(db, "chips", id));
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const startEditing = (chip: Chips) => {
-    setEditingId(chip.id);
-    setEditData({ ...chip });
-  };
-
-  const cancelEditing = () => {
-    setEditingId(null);
-    setEditData({});
-  };
-
-  const saveEditing = async (id: string) => {
-    try {
-      await updateDoc(doc(db, "chips", id), {
-        numero: editData.numero ?? "",
-        operadora: editData.operadora ?? "Vivo",
-        tecnologia: editData.tecnologia ?? "NB-IoT",
-        projeto: editData.projeto ?? "",
-        cliente: editData.cliente ?? "",
-        responsavel: editData.responsavel ?? "",
-        equipamento: editData.equipamento ?? "",
-      });
-      setEditingId(null);
-      setEditData({});
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const getCarrierColors = (carrierName: string) => {
-    switch (carrierName) {
-      case 'Vivo': return 'from-[#660099] to-[#8a2be2] shadow-[#8a2be2]/30';
-      case 'Claro': return 'from-[#e32636] to-[#ff4d4d] shadow-[#ff4d4d]/30';
-      case 'TIM': return 'from-[#0000FF] to-[#4169e1] shadow-[#4169e1]/30';
-      case 'Algar': return 'from-[#008638] to-[#00b34a] shadow-[#00b34a]/30';
-      default: return 'from-gray-600 to-gray-400 shadow-gray-500/30';
-    }
-  };
-
-  const getTechBadgeInfo = (techName: string) => {
-    return techName === 'NB-IoT'
-      ? { color: 'text-cyan-500 border-cyan-500/30 bg-cyan-500/10', icon: <Cpu size={12} /> }
-      : { color: 'text-fuchsia-500 border-fuchsia-500/30 bg-fuchsia-500/10', icon: <Signal size={12} /> };
-  };
-
-  const TOTAL_POR_TECNOLOGIA = 10;
-  const nbIotUsados = chips.filter(c => c.tecnologia === 'NB-IoT').length;
-  const fourGUsados = chips.filter(c => c.tecnologia === '4G').length;
-  const nbIotCount = Math.max(TOTAL_POR_TECNOLOGIA - nbIotUsados, 0);
-  const fourGCount = Math.max(TOTAL_POR_TECNOLOGIA - fourGUsados, 0);
-
-  const inputClass = "w-full bg-[var(--bg-app)] border-2 border-[var(--border-color)] rounded-2xl px-5 py-3.5 text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] transition-all shadow-sm";
-  const editInputClass = "w-full bg-[var(--bg-app)] border border-[var(--border-color)] rounded-lg px-2.5 py-1.5 text-sm text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] transition-all";
-
+function StatCard({
+  label,
+  value,
+  icon,
+  accent,
+}: {
+  label: string;
+  value: number;
+  icon: React.ReactNode;
+  accent: string;
+}) {
   return (
-    <div className='w-full max-w-7xl mx-auto p-6 md:p-10 flex flex-col gap-10 min-h-screen'>
+    <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--glass-bg)] backdrop-blur-xl p-4 flex items-center gap-4 min-w-[140px] shadow-[var(--shadow-subtle)]">
+      <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${accent}`}>{icon}</div>
+      <div>
+        <p className="text-2xl font-black text-[var(--text-primary)] m-0 leading-none">{value}</p>
+        <p className="text-[9px] font-black uppercase tracking-widest text-[var(--text-secondary)] mt-1 mb-0">{label}</p>
+      </div>
+    </div>
+  );
+}
 
-      <motion.header
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="flex flex-col gap-4"
-      >
-        <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-[var(--card-bg)] border border-[var(--border-color)] w-fit shadow-sm backdrop-blur-md">
-          <RadioTower size={16} className="text-[var(--accent-color)]" />
-          <span className="text-xs font-black uppercase tracking-[0.2em] text-[var(--text-secondary)]">Conectividade</span>
-        </div>
-        <div className="flex flex-col md:flex-row justify-between gap-6 mt-6">
+function GroupSection({
+  group,
+  items,
+  children,
+}: {
+  group: TechnologyGroup;
+  items: InventoryItem[];
+  children: React.ReactNode;
+}) {
+  const Icon = group === "4G" ? RadioTower : group === "NB-IoT" ? Cpu : Boxes;
+  const available = items.filter((item) => item.classification === "available").length;
+  const assigned = items.filter((item) => item.classification === "assigned").length;
+  return (
+    <motion.section
+      layout
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      className="rounded-[2.25rem] border border-[var(--border-color)] bg-[var(--card-bg)]/50 p-5 md:p-6"
+    >
+      <div className="flex flex-wrap items-center justify-between gap-4 mb-5">
+        <div className="flex items-center gap-3">
+          <div className="w-11 h-11 rounded-2xl bg-[var(--accent-color)]/10 text-[var(--accent-color)] flex items-center justify-center">
+            <Icon size={20} />
+          </div>
           <div>
-            <h1 className="text-4xl md:text-5xl font-black text-[var(--text-primary)] tracking-tight mb-3">Gestão de Chips M2M</h1>
-            <p className="text-lg text-[var(--text-secondary)] opacity-80 max-w-2xl leading-relaxed m-0">
-              Controle e monitore seus cartões SIM, definindo tecnologias de rede, operadoras, responsáveis e equipamentos.
+            <h2 className="text-lg font-black tracking-tight text-[var(--text-primary)] m-0">{group}</h2>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-secondary)] mt-1 mb-0">
+              {items.length} {items.length === 1 ? "chip" : "chips"} · {available} disponíveis · {assigned} atribuídos
             </p>
           </div>
+        </div>
+        <span className="rounded-full border border-[var(--border-color)] bg-[var(--bg-app)] px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)]">
+          {group === "NB-IoT" ? "Baixa potência" : group === "4G" ? "Banda larga móvel" : "Sem classificação"}
+        </span>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">{children}</div>
+    </motion.section>
+  );
+}
 
-          <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl p-5 w-fit max-w-full backdrop-blur-[16px] text-[var(--text-primary)] shadow-sm">
-            <h2 className="text-sm  tracking-widest text-[var(--text-secondary)] mb-3">RESTANTE</h2>
-            <div className="flex flex-row gap-3">
-              <div className="flex flex-col items-center px-5 py-3 border border-[var(--border-color)] rounded-xl bg-[var(--bg-app)]">
-                <span className="text-2xl">{nbIotCount}</span>
-                <span className="text-[10px] tracking-widest text-[var(--text-secondary)]">NB-IoT</span>
+export default function SimCardControl() {
+  const { user, loading: authLoading } = useAuth();
+  const { opportunities } = useOpportunities();
+  const enabled = !authLoading && Boolean(user);
+
+  const inventory = useSimcardInventory(enabled);
+  const operations = useSimcardOperations(enabled);
+
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState<SimcardClassification | "all">("all");
+  const [operator, setOperator] = useState("all");
+  const [source, setSource] = useState<SimcardSource | "all">("all");
+  const [technologyGroup, setTechnologyGroup] = useState<TechnologyGroup | "all">("all");
+  const [sourceModalOpen, setSourceModalOpen] = useState(false);
+  const [manualModalOpen, setManualModalOpen] = useState(false);
+  const [assignId, setAssignId] = useState<string | null>(null);
+  const [detailsId, setDetailsId] = useState<string | null>(null);
+
+  const items = useMemo<InventoryItem[]>(() => {
+    const bootstrapAssignments = inventory.data?.assignments || {};
+    const mergedAssignments = { ...bootstrapAssignments, ...operations.assignments };
+    const simcards = [...(inventory.data?.simcards || []), ...(inventory.data?.manualSimcards || [])];
+    return simcards.map((simcard) => {
+      const assignment = mergedAssignments[simcard.id] || null;
+      const connection =
+        sourceOf(simcard) === "datatem"
+          ? inventory.data?.connections.find(
+              (candidate) =>
+                (candidate.simcardId && candidate.simcardId === simcard.id) ||
+                (candidate.iccid && candidate.iccid === simcard.iccid) ||
+                (candidate.phoneNumber && candidate.phoneNumber === simcard.phoneNumber),
+            ) || null
+          : null;
+      return {
+        simcard,
+        assignment,
+        connection,
+        classification: classifySimcard(simcard, assignment),
+        legacyMetadata: null,
+      };
+    });
+  }, [inventory.data, operations.assignments]);
+
+  const operators = useMemo(
+    () => Array.from(new Set(items.map((item) => displayValue(item.simcard.operatorName, "")))).filter(Boolean).sort(),
+    [items],
+  );
+
+  const filteredItems = useMemo(() => {
+    const term = search.trim().toLowerCase();
+    return items.filter((item) => {
+      const project = item.assignment?.opportunityName || item.assignment?.projectName || "";
+      const matchesSearch =
+        !term ||
+        [
+          item.simcard.id,
+          item.simcard.iccid,
+          item.simcard.phoneNumber,
+          item.simcard.operatorName,
+          project,
+          item.assignment?.clientName,
+        ]
+          .map((value) => displayValue(value, "").toLowerCase())
+          .some((value) => value.includes(term));
+      const matchesStatus = status === "all" || item.classification === status;
+      const matchesOperator = operator === "all" || displayValue(item.simcard.operatorName) === operator;
+      const matchesSource = source === "all" || sourceOf(item.simcard) === source;
+      const matchesGroup = technologyGroup === "all" || technologyGroupOf(item.simcard) === technologyGroup;
+      return matchesSearch && matchesStatus && matchesOperator && matchesSource && matchesGroup;
+    });
+  }, [items, search, status, operator, source, technologyGroup]);
+
+  const groupedItems = useMemo(() => {
+    const groups: Record<TechnologyGroup, InventoryItem[]> = { "4G": [], "NB-IoT": [], Outros: [] };
+    filteredItems.forEach((item) => groups[technologyGroupOf(item.simcard)].push(item));
+    return groups;
+  }, [filteredItems]);
+
+  const totals = useMemo(
+    () => ({
+      total: items.length,
+      available: items.filter((item) => item.classification === "available").length,
+      assigned: items.filter((item) => item.classification === "assigned").length,
+      inactive: items.filter((item) => item.classification === "inactive").length,
+      manual: items.filter((item) => sourceOf(item.simcard) === "manual").length,
+    }),
+    [items],
+  );
+
+  const assignItem = assignId ? items.find((item) => item.simcard.id === assignId) || null : null;
+  const detailsItem = detailsId ? items.find((item) => item.simcard.id === detailsId) || null : null;
+  const warnings = inventory.data?.warnings || [];
+
+  const handleAssign = async (payload: AssignPayload) => {
+    if (!assignItem) return false;
+    return operations.assign(assignItem.simcard.id, payload);
+  };
+
+  const handleUpdate = async (payload: AssignmentUpdatePayload) => {
+    if (!detailsItem) return false;
+    return operations.updateMetadata(detailsItem.simcard.id, payload);
+  };
+
+  const handleUpdateManual = async (payload: ManualSimcardUpdate) => {
+    if (!detailsItem) return false;
+    const success = await operations.updateManual(detailsItem.simcard.id, payload);
+    if (success) inventory.reload();
+    return success;
+  };
+
+  const handleDeleteManual = async () => {
+    if (!detailsItem) return;
+    const success = await operations.deleteManual(detailsItem.simcard.id);
+    if (success) {
+      inventory.reload();
+      setDetailsId(null);
+    }
+  };
+
+  const handleRelease = async (simcardId: string) => {
+    const success = await operations.release(simcardId);
+    if (success && detailsId === simcardId) setDetailsId(null);
+  };
+
+  const handleCreateManual = async (payload: ManualSimcardRequest) => {
+    const success = await operations.createManual(payload);
+    if (success) inventory.reload();
+    return success;
+  };
+
+  return (
+    <div className="w-full max-w-7xl mx-auto p-6 md:p-10 flex flex-col gap-8 min-h-screen">
+      <motion.header initial={{ opacity: 0, y: -18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}>
+        <div className="relative overflow-hidden rounded-[2rem] border border-[var(--border-color)] bg-[var(--glass-bg)] p-6 backdrop-blur-2xl shadow-[var(--shadow-card)] md:p-8">
+          <div className="absolute -right-24 -top-24 w-72 h-72 rounded-full bg-[var(--accent-color)]/10 blur-3xl" />
+          <div className="absolute -bottom-32 left-1/3 w-72 h-72 rounded-full bg-cyan-500/10 blur-3xl" />
+          <div className="relative">
+            <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-[var(--card-bg)] border border-[var(--border-color)] w-fit shadow-sm backdrop-blur-md">
+              <RadioTower size={16} className="text-[var(--accent-color)]" />
+              <span className="text-xs font-black uppercase tracking-[0.2em] text-[var(--text-secondary)]">Conectividade</span>
+            </div>
+            <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mt-6">
+              <div>
+                <h1 className="text-4xl md:text-5xl font-black text-[var(--text-primary)] tracking-tight mb-3">
+                  Gestão de Chips M2M
+                </h1>
+                <p className="text-base md:text-lg text-[var(--text-secondary)] opacity-80 max-w-2xl leading-relaxed m-0">
+                  Inventário DATATEM e SIMs manuais em um só lugar, agrupados por tecnologia e com atribuição auditável.
+                </p>
+                {inventory.lastUpdated && (
+                  <p className="text-[10px] text-[var(--text-secondary)] mt-3 mb-0 flex items-center gap-1.5">
+                    <RefreshCw size={10} /> Última consulta:{" "}
+                    {new Intl.DateTimeFormat("pt-BR", { hour: "2-digit", minute: "2-digit", second: "2-digit" }).format(inventory.lastUpdated)}
+                    {inventory.data?.stale ? " · exibindo última sincronização válida" : ""}
+                  </p>
+                )}
               </div>
-              <div className="flex flex-col items-center px-5 py-3 border border-[var(--border-color)] rounded-xl bg-[var(--bg-app)]">
-                <span className="text-2xl ">{fourGCount}</span>
-                <span className="text-[10px] tracking-widest text-[var(--text-secondary)]">4G</span>
+              <div className="flex flex-wrap gap-2 md:gap-3">
+                <button
+                  type="button"
+                  onClick={() => setManualModalOpen(true)}
+                  className="h-11 px-5 rounded-xl border border-[var(--border-color)] bg-[var(--card-bg)] text-[var(--text-primary)] text-xs font-bold flex items-center gap-2 hover:border-amber-500/40 hover:text-amber-600 transition-all"
+                >
+                  <Wrench size={14} /> SIM manual
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSourceModalOpen(true)}
+                  className="h-11 px-5 rounded-xl bg-[var(--accent-color)] text-white text-xs font-bold flex items-center gap-2 shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-elevation)] transition-all"
+                >
+                  <Plus size={15} /> Nova atribuição
+                </button>
               </div>
+            </div>
+            <div className="flex flex-wrap gap-3 mt-7">
+              <StatCard label="Total" value={totals.total} icon={<Boxes size={18} />} accent="bg-[var(--accent-color)]/10 text-[var(--accent-color)]" />
+              <StatCard label="Disponíveis" value={totals.available} icon={<CircleCheck size={18} />} accent="bg-emerald-500/10 text-emerald-500" />
+              <StatCard label="Atribuídos" value={totals.assigned} icon={<Signal size={18} />} accent="bg-cyan-500/10 text-cyan-500" />
+              <StatCard label="Manuais" value={totals.manual} icon={<Wrench size={18} />} accent="bg-amber-500/10 text-amber-500" />
+              <StatCard label="Inativos" value={totals.inactive} icon={<AlertTriangle size={18} />} accent="bg-rose-500/10 text-rose-500" />
             </div>
           </div>
         </div>
       </motion.header>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-        className='bg-gradient-to-br from-[var(--card-bg)] to-transparent border border-[var(--border-color)] rounded-[2rem] p-6 md:p-8 backdrop-blur-2xl shadow-2xl relative overflow-hidden'
-      >
-        <div className="absolute top-0 left-0 w-72 h-72 bg-[var(--accent-color)] rounded-full blur-[120px] opacity-10 pointer-events-none" />
+      {warnings.length > 0 && (
+        <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 px-5 py-4 text-xs text-amber-600 dark:text-amber-400 flex flex-col gap-1.5">
+          {warnings.slice(0, 3).map((warning, index) => (
+            <p key={`${warning}-${index}`} className="m-0 flex items-center gap-2"><AlertTriangle size={13} /> {warning}</p>
+          ))}
+        </div>
+      )}
 
-        <form onSubmit={handleAddChip} className="flex flex-col gap-5 relative z-10">
-          <div className="flex flex-col md:flex-row gap-5">
-            <div className="flex-[2] w-full flex flex-col gap-2.5">
-              <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-secondary)] ml-1">Linha / ICCID</label>
-              <div className="relative group">
-                <input
-                  type="text"
-                  value={number}
-                  onChange={(e) => setNumber(e.target.value)}
-                  placeholder="Ex: 8955..."
-                  className={`${inputClass} font-mono tracking-wider group-hover:border-[var(--text-secondary)]/30`}
-                />
-                <Hash className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] opacity-40 pointer-events-none transition-opacity group-focus-within:opacity-100 group-focus-within:text-[var(--accent-color)]" size={18} />
-              </div>
-            </div>
+      {!enabled ? (
+        <div className="rounded-[2rem] border border-[var(--border-color)] bg-[var(--card-bg)] p-10 text-center">
+          <p className="text-sm font-bold text-[var(--text-primary)] m-0">
+            {authLoading ? "Carregando sessão..." : "Entre na conta para consultar o inventário de chips."}
+          </p>
+        </div>
+      ) : inventory.loading && !inventory.data ? (
+        <SimCardLoading />
+      ) : inventory.error && !inventory.data ? (
+        <div className="rounded-[2rem] border border-rose-500/30 bg-rose-500/5 p-10 text-center flex flex-col items-center gap-4">
+          <AlertTriangle size={28} className="text-rose-500" />
+          <p className="text-sm font-bold text-[var(--text-primary)] m-0">{inventory.error}</p>
+          <button
+            type="button"
+            onClick={inventory.retry}
+            className="h-10 px-5 rounded-xl bg-[var(--accent-color)] text-white text-xs font-bold flex items-center gap-2"
+          >
+            <RefreshCw size={14} /> Tentar novamente
+          </button>
+        </div>
+      ) : (
+        <>
+          <SimCardFilters
+            search={search}
+            onSearchChange={setSearch}
+            status={status}
+            onStatusChange={setStatus}
+            operator={operator}
+            onOperatorChange={setOperator}
+            source={source}
+            onSourceChange={setSource}
+            technologyGroup={technologyGroup}
+            onTechnologyGroupChange={setTechnologyGroup}
+            operators={operators}
+            onRefresh={inventory.refresh}
+            refreshing={inventory.loading}
+            resultCount={filteredItems.length}
+          />
 
-            <div className="flex-1 w-full flex flex-col gap-2.5">
-              <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-secondary)] ml-1">Operadora</label>
-              <select
-                value={carrier}
-                onChange={(e) => setCarrier(e.target.value)}
-                className={`${inputClass} cursor-pointer appearance-none font-bold hover:border-[var(--text-secondary)]/30`}
-              >
-                <option value="Vivo">Vivo</option>
-                <option value="Claro">Claro</option>
-                <option value="TIM">TIM</option>
-                <option value="Algar">Algar</option>
-              </select>
-            </div>
-
-            <div className="flex-1 w-full flex flex-col gap-2.5">
-              <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-secondary)] ml-1">Tecnologia</label>
-              <select
-                value={tech}
-                onChange={(e) => setTech(e.target.value)}
-                className={`${inputClass} cursor-pointer appearance-none font-bold hover:border-[var(--text-secondary)]/30`}
-              >
-                <option value="NB-IoT">NB-IoT</option>
-                <option value="4G">4G LTE</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="flex flex-col md:flex-row gap-5">
-            <div className="flex-1 w-full flex flex-col gap-2.5">
-              <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-secondary)] ml-1">Projeto</label>
-              <div className="relative group">
-                <input
-                  type="text"
-                  value={project}
-                  onChange={(e) => setProject(e.target.value)}
-                  placeholder="Ex: Medidores Inteligentes"
-                  className={`${inputClass} group-hover:border-[var(--text-secondary)]/30`}
-                />
-                <Box className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] opacity-40 pointer-events-none transition-opacity group-focus-within:opacity-100 group-focus-within:text-[var(--accent-color)]" size={18} />
-              </div>
-            </div>
-
-            <div className="flex-1 w-full flex flex-col gap-2.5">
-              <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-secondary)] ml-1">Cliente</label>
-              <div className="relative group">
-                <input
-                  type="text"
-                  value={client}
-                  onChange={(e) => setClient(e.target.value)}
-                  placeholder="Nome do cliente"
-                  className={`${inputClass} group-hover:border-[var(--text-secondary)]/30`}
-                />
-                <Users className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] opacity-40 pointer-events-none transition-opacity group-focus-within:opacity-100 group-focus-within:text-[var(--accent-color)]" size={18} />
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col md:flex-row gap-5 items-end">
-            <div className="flex-1 w-full flex flex-col gap-2.5">
-              <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-secondary)] ml-1">Responsável</label>
-              <div className="relative group">
-                <input
-                  type="text"
-                  value={responsible}
-                  onChange={(e) => setResponsible(e.target.value)}
-                  placeholder="Quem é responsável pelo chip"
-                  className={`${inputClass} group-hover:border-[var(--text-secondary)]/30`}
-                />
-                <UserCog className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] opacity-40 pointer-events-none transition-opacity group-focus-within:opacity-100 group-focus-within:text-[var(--accent-color)]" size={18} />
-              </div>
-            </div>
-
-            <div className="flex-1 w-full flex flex-col gap-2.5">
-              <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-secondary)] ml-1">Equipamento</label>
-              <div className="relative group">
-                <input
-                  type="text"
-                  value={equipment}
-                  onChange={(e) => setEquipment(e.target.value)}
-                  placeholder="Onde o chip está instalado"
-                  className={`${inputClass} group-hover:border-[var(--text-secondary)]/30`}
-                />
-                <Wrench className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] opacity-40 pointer-events-none transition-opacity group-focus-within:opacity-100 group-focus-within:text-[var(--accent-color)]" size={18} />
-              </div>
-            </div>
-
-            <motion.button
-              type="submit"
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
-              className="w-full md:w-auto bg-[var(--accent-color)] text-white px-10 py-3.5 rounded-2xl font-bold flex items-center justify-center gap-2 shadow-[0_8px_20px_rgba(255,106,0,0.3)] hover:shadow-[0_12px_25px_rgba(255,106,0,0.4)] transition-all h-[54px]"
-            >
-              <Plus size={20} strokeWidth={3} />
-              <span>Adicionar Chip</span>
-            </motion.button>
-          </div>
-        </form>
-      </motion.div>
-
-      <div className='w-full'>
-        <AnimatePresence mode="popLayout">
-          {chips.length === 0 ? (
+          {filteredItems.length === 0 ? (
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
+              initial={{ opacity: 0, scale: 0.97 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="flex flex-col items-center justify-center py-24 px-4 border-2 border-dashed border-[var(--border-color)] rounded-[2rem] bg-[var(--card-bg)] backdrop-blur-sm"
+              className="rounded-[2rem] border-2 border-dashed border-[var(--border-color)] bg-[var(--card-bg)] py-20 text-center"
             >
-              <Activity size={56} strokeWidth={1} className="text-[var(--text-secondary)] opacity-20 mb-5" />
-              <p className="text-[var(--text-primary)] font-black text-xl mb-2 tracking-tight">Inventário vazio</p>
-              <p className="text-[var(--text-secondary)] font-medium opacity-70">Adicione seu primeiro chip M2M utilizando o painel acima.</p>
+              <Boxes size={48} strokeWidth={1} className="text-[var(--text-secondary)] opacity-25 mx-auto mb-4" />
+              <p className="text-lg font-black text-[var(--text-primary)] m-0">Nenhum chip encontrado</p>
+              <p className="text-xs text-[var(--text-secondary)] mt-2 mb-0">
+                Ajuste os filtros, sincronize o inventário ou cadastre um SIM manual.
+              </p>
             </motion.div>
           ) : (
-            <motion.div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {chips.map((chip, index) => {
-                const techStyle = getTechBadgeInfo(chip.tecnologia);
-                const isEditing = editingId === chip.id;
-
-                return (
-                  <motion.div
-                    key={chip.id}
-                    layout
-                    initial={{ opacity: 0, y: 30, scale: 0.9 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.8 }}
-                    transition={{ duration: 0.4, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
-                    className="relative group perspective-1000"
-                  >
-                    <div className={`absolute inset-0 bg-gradient-to-br from-[var(--border-color)] to-transparent rounded-[2rem] blur-xl transition-opacity duration-500 ${isEditing ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`} />
-
-                    <motion.div
-                      whileHover={isEditing ? {} : { rotateY: -5, rotateX: 5, z: 20 }}
-                      className={`bg-[var(--card-bg)] border rounded-[2rem] p-6 flex flex-col gap-5 backdrop-blur-xl shadow-lg transition-all duration-300 relative z-10 h-full transform-style-3d ${isEditing ? 'border-[var(--accent-color)] shadow-2xl' : 'border-[var(--border-color)] hover:shadow-2xl'}`}
-                    >
-                      <div className="flex items-start justify-between">
-                        <div
-                          className={`w-16 h-24 rounded-xl flex items-center justify-center bg-gradient-to-br ${getCarrierColors(chip.operadora)} shadow-lg transform group-hover:scale-105 transition-transform duration-500 relative overflow-hidden shrink-0`}
-                          style={{ clipPath: 'polygon(25px 0, 100% 0, 100% 100%, 0 100%, 0 25px)' }}
-                        >
-                          <div className="absolute inset-0 bg-white/10 mix-blend-overlay" />
-                          <div className="w-10 h-12 bg-gradient-to-b from-[#e6c27a] to-[#c59b40] rounded-sm shadow-inner flex flex-wrap p-[2px] gap-[2px] relative z-10 border border-[#8b6b23]">
-                            {[...Array(6)].map((_, i) => (
-                              <div key={i} className="w-[calc(50%-1px)] h-[calc(33.33%-1px)] border border-[#a68028]/60 bg-gradient-to-br from-[#f2d493] to-[#d4aa50]" />
-                            ))}
-                          </div>
-                          <span className="absolute bottom-2 left-2 text-[8px] font-black text-white/70 uppercase tracking-widest">{isEditing ? editData.operadora : chip.operadora}</span>
-                        </div>
-
-                        <div className="flex flex-col items-end gap-2">
-                          {isEditing ? (
-                            <div className="flex gap-2">
-                              <button
-                                onClick={() => saveEditing(chip.id)}
-                                className="w-14 h-12 flex items-center justify-center bg-emerald-500/10 border border-emerald-500/30 text-emerald-500 hover:bg-emerald-500/20 rounded-xl transition-all duration-300 shadow-sm"
-                                title="Salvar"
-                              >
-                                <Check size={18} />
-                              </button>
-                              <button
-                                onClick={cancelEditing}
-                                className="w-14 h-12 flex items-center justify-center bg-[var(--bg-app)] border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-red-500 hover:bg-red-500/10 hover:border-red-500/30 rounded-xl transition-all duration-300 shadow-sm"
-                                title="Cancelar"
-                              >
-                                <X size={18} />
-                              </button>
-                            </div>
-                          ) : (
-                            <div className="flex gap-2 opacity-50 group-hover:opacity-100 transition-opacity duration-300">
-                              <button
-                                onClick={() => startEditing(chip)}
-                                className="w-14 h-12 flex items-center justify-center bg-[var(--bg-app)] border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--accent-color)] hover:bg-[var(--accent-color)]/10 hover:border-[var(--accent-color)]/30 rounded-xl transition-all duration-300 shadow-sm"
-                                title="Editar Chip"
-                              >
-                                <Pencil size={18} />
-                              </button>
-                              <button
-                                onClick={() => removeChip(chip.id)}
-                                className="w-14 h-12 flex items-center justify-center bg-[var(--bg-app)] border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-red-500 hover:bg-red-500/10 hover:border-red-500/30 rounded-xl transition-all duration-300 shadow-sm"
-                                title="Remover Chip"
-                              >
-                                <Trash2 size={18} />
-                              </button>
-                            </div>
-                          )}
-
-                          {isEditing ? (
-                            <div className="flex gap-1.5">
-                              <select
-                                value={editData.operadora}
-                                onChange={(e) => setEditData({ ...editData, operadora: e.target.value })}
-                                className={`${editInputClass} text-[10px] font-bold`}
-                              >
-                                <option value="Vivo">Vivo</option>
-                                <option value="Claro">Claro</option>
-                                <option value="TIM">TIM</option>
-                                <option value="Algar">Algar</option>
-                              </select>
-                              <select
-                                value={editData.tecnologia}
-                                onChange={(e) => setEditData({ ...editData, tecnologia: e.target.value })}
-                                className={`${editInputClass} text-[10px] font-bold`}
-                              >
-                                <option value="NB-IoT">NB-IoT</option>
-                                <option value="4G">4G LTE</option>
-                              </select>
-                            </div>
-                          ) : (
-                            <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border backdrop-blur-md ${techStyle.color}`}>
-                              {techStyle.icon}
-                              <span className="text-[10px] font-black uppercase tracking-widest">{chip.tecnologia}</span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="flex flex-col gap-4 mt-2">
-                        <div>
-                          <p className="text-[10px] tracking-[0.15em] text-[var(--text-secondary)] opacity-60 mb-1">Linha / ICCID</p>
-                          {isEditing ? (
-                            <input
-                              type="text"
-                              value={editData.numero}
-                              onChange={(e) => setEditData({ ...editData, numero: e.target.value })}
-                              className={`${editInputClass} font-mono tracking-wider`}
-                            />
-                          ) : (
-                            <p className="text-xl text-[var(--text-primary)] tracking-wider truncate">{chip.numero}</p>
-                          )}
-                        </div>
-
-                        <div className="w-full h-[1px] bg-[var(--border-color)] opacity-50" />
-
-                        <div className="grid grid-cols-2 gap-4">
-                          <div className="flex flex-col gap-1">
-                            <span className="text-[9px] uppercase tracking-widest text-[var(--text-secondary)] flex items-center gap-1"><Box size={10} /> Projeto</span>
-                            {isEditing ? (
-                              <input type="text" value={editData.projeto} onChange={(e) => setEditData({ ...editData, projeto: e.target.value })} className={editInputClass} />
-                            ) : (
-                              <span className="text-xs text-[var(--text-primary)] truncate">{chip.projeto}</span>
-                            )}
-                          </div>
-                          <div className="flex flex-col gap-1">
-                            <span className="text-[9px] uppercase tracking-widest text-[var(--text-secondary)] flex items-center gap-1"><Users size={10} /> Cliente</span>
-                            {isEditing ? (
-                              <input type="text" value={editData.cliente} onChange={(e) => setEditData({ ...editData, cliente: e.target.value })} className={editInputClass} />
-                            ) : (
-                              <span className="text-xs text-[var(--text-primary)] truncate">{chip.cliente}</span>
-                            )}
-                          </div>
-                          <div className="flex flex-col gap-1">
-                            <span className="text-[9px] uppercase tracking-widest text-[var(--text-secondary)] flex items-center gap-1"><UserCog size={10} /> Responsável</span>
-                            {isEditing ? (
-                              <input type="text" value={editData.responsavel} onChange={(e) => setEditData({ ...editData, responsavel: e.target.value })} className={editInputClass} />
-                            ) : (
-                              <span className="text-xs text-[var(--text-primary)] truncate">{chip.responsavel || '—'}</span>
-                            )}
-                          </div>
-                          <div className="flex flex-col gap-1">
-                            <span className="text-[9px]  uppercase tracking-widest text-[var(--text-secondary)] flex items-center gap-1"><Wrench size={10} /> Equipamento</span>
-                            {isEditing ? (
-                              <input type="text" value={editData.equipamento} onChange={(e) => setEditData({ ...editData, equipamento: e.target.value })} className={editInputClass} />
-                            ) : (
-                              <span className="text-xs  text-[var(--text-primary)] truncate">{chip.equipamento || '—'}</span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </motion.div>
-                  </motion.div>
-                );
-              })}
-            </motion.div>
+            <div className="flex flex-col gap-6">
+              {GROUP_ORDER.map((group) =>
+                groupedItems[group].length > 0 ? (
+                  <GroupSection key={group} group={group} items={groupedItems[group]}>
+                    <AnimatePresence mode="popLayout">
+                      {groupedItems[group].map((item) => (
+                        <SimCardCard
+                          key={item.simcard.id}
+                          item={item}
+                          busy={operations.busyIds.includes(item.simcard.id)}
+                          onAssign={() => setAssignId(item.simcard.id)}
+                          onRelease={() => void handleRelease(item.simcard.id)}
+                          onDetails={() => setDetailsId(item.simcard.id)}
+                        />
+                      ))}
+                    </AnimatePresence>
+                  </GroupSection>
+                ) : null,
+              )}
+            </div>
           )}
-        </AnimatePresence>
-      </div>
+
+          <AssignmentHistory history={operations.history} error={operations.historyError} />
+        </>
+      )}
+
+      <AnimatePresence>
+        {sourceModalOpen && (
+          <SourceActionModal
+            items={items}
+            onClose={() => setSourceModalOpen(false)}
+            onDatatem={(item) => {
+              setSourceModalOpen(false);
+              setAssignId(item.simcard.id);
+            }}
+            onManual={() => {
+              setSourceModalOpen(false);
+              setManualModalOpen(true);
+            }}
+          />
+        )}
+        {assignItem && (
+          <AssignSimcardModal
+            key={assignItem.simcard.id}
+            item={assignItem}
+            opportunities={opportunities}
+            busy={operations.busyIds.includes(assignItem.simcard.id)}
+            onClose={() => setAssignId(null)}
+            onAssign={handleAssign}
+          />
+        )}
+        {manualModalOpen && (
+          <ManualSimcardModal
+            opportunities={opportunities}
+            busy={operations.busyIds.includes("manual-new")}
+            onClose={() => setManualModalOpen(false)}
+            onCreate={handleCreateManual}
+          />
+        )}
+        {detailsItem && (
+          <SimcardDetailsModal
+            key={detailsItem.simcard.id}
+            item={detailsItem}
+            history={operations.history}
+            connectionsAvailable={inventory.data?.connectionsAvailable ?? false}
+            busy={operations.busyIds.includes(detailsItem.simcard.id)}
+            onClose={() => setDetailsId(null)}
+            onUpdate={handleUpdate}
+            onUpdateManual={handleUpdateManual}
+            onRelease={() => handleRelease(detailsItem.simcard.id)}
+            onDelete={() => handleDeleteManual()}
+          />
+        )}
+      </AnimatePresence>
     </div>
-  )
+  );
 }

@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: podsadministrator-connectivity-api
+    runtime: python
+    plan: free
+    region: oregon
+    rootDir: apis/connectivity
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn fastapi_app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/datatem/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12"
+      - key: CORS_ALLOWED_ORIGINS
+        value: http://localhost:5173
+      - key: FIREBASE_PROJECT_ID
+        value: podsadministrator
+      - key: DATATEM_BASE_URL
+        value: https://app-gateway.brcaptura.com.br
+      - key: DATATEM_REFRESH_GRANT_TYPE
+        value: refresh_token
+      - key: DATATEM_USERNAME
+        sync: false
+      - key: DATATEM_PASSWORD
+        sync: false
+      - key: DATATEM_CLIENT_ID
+        sync: false
+      - key: DATATEM_CLIENT_SECRET
+        sync: false
+      - key: FIREBASE_SERVICE_ACCOUNT_JSON
+        sync: false

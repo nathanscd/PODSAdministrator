@@ -11,6 +11,15 @@
     "web:dev": "npm run dev --workspace=apps/web",
     "web:build": "npm run build --workspace=apps/web",
     "web:lint": "npm run lint --workspace=apps/web",
+    "api:connectivity:install": "python -m pip install -r apis/connectivity/requirements.txt",
+    "api:connectivity:dev": "python -m uvicorn fastapi_app.main:app --app-dir apis/connectivity --reload --port 8000",
+    "api:connectivity:test": "python -m pytest -q apis/connectivity/tests",
+    "api:research:install": "npm --prefix apis/research-etl install",
+    "api:research:dev": "npm --prefix apis/research-etl run dev",
+    "api:research:start": "npm --prefix apis/research-etl start",
+    "api:reporting:install": "npm --prefix apis/reporting-functions install",
+    "api:reporting:serve": "firebase emulators:start --only functions",
+    "api:reporting:deploy": "firebase deploy --only functions",
     "firebase:emulators": "firebase emulators:start"
   },
   "devDependencies": {
