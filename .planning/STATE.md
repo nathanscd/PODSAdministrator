@@ -1,19 +1,16 @@
 ---
-gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-current_phase: 10
-current_phase_name: Serverless Cloud Functions & PDF Reporting
+gsd_state_version: "1.0"
+milestone: v2.0
+milestone_name: Integração Nativa Microsoft SharePoint
 status: planning
-stopped_at: Completed Phase 9 (Widget System & Editable Page Instances). Ready to plan/execute Phase 10.
-last_updated: "2026-07-28T15:50:00.000Z"
-last_activity: 2026-07-28
-last_activity_desc: Phase 9 Widget System & Editable Page Instances successfully deployed and verified.
+last_updated: "2026-11-17T20:27:14.903Z"
+last_activity: 2026-11-17
 progress:
-  total_phases: 12
-  completed_phases: 9
-  total_plans: 9
-  completed_plans: 9
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
@@ -27,12 +24,10 @@ See: .planning/PROJECT.md (updated 2026-06-01)
 
 ## Current Position
 
-Phase: 10 of 12 (Serverless Cloud Functions & PDF Reporting)
-Plan: 0 of 1 in current phase
-Status: Ready to plan
-Last activity: 2026-07-28 — Phase 9 Widget System & Editable Page Instances successfully deployed and verified.
-
-Progress: [▓▓▓░░░░░░░] 25%
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-11-17 — Milestone v2.0 started
 
 ## Performance Metrics
 
