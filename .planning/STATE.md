@@ -3,10 +3,10 @@ gsd_state_version: "1.0"
 milestone: v2.0
 milestone_name: Integração Nativa Microsoft SharePoint
 status: planning
-last_updated: "2026-11-17T20:27:14.903Z"
+last_updated: "2026-11-17T20:35:00.000Z"
 last_activity: 2026-11-17
 progress:
-  total_phases: 0
+  total_phases: 6
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -17,17 +17,19 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-06-01)
+See: .planning/PROJECT.md (updated 2026-11-17)
 
-**Core value:** Decouple UI pages from Cloud Firestore SDK transactions by introducing a robust Repository Pattern, dynamic localization caching, and serverless Cloud Functions, running entirely within Firebase.
-**Current focus:** Atlas 1.0 Commercial SaaS Architecture & Frontend Transformation
+**Core value:** Tornar o SharePoint o repositório oficial de documentos do Atlas, com autoria delegada preservada e nenhuma perda de alterações durante indisponibilidade.
+**Current focus:** Phase 13 — Fundação de Segurança e Contratos (milestone v2.0)
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 13 of 18 (1 de 6 no milestone v2.0) — Fundação de Segurança e Contratos
 Plan: —
-Status: Defining requirements
-Last activity: 2026-11-17 — Milestone v2.0 started
+Status: Ready to plan
+Last activity: 2026-11-17 — Roadmap v2.0 criado (Phases 13–18, 55/55 requisitos mapeados)
+
+Progress: [░░░░░░░░░░] 0%
 
 ## Performance Metrics
 
@@ -41,7 +43,7 @@ Last activity: 2026-11-17 — Milestone v2.0 started
 
 - Trend: Stable
 
-*Updated after each plan completion*
+*Updated after each plan completion. Métricas do milestone v1.0 preservadas; v2.0 ainda sem planos executados.*
 
 ## Accumulated Context
 
@@ -51,13 +53,11 @@ Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
 - [Phase 1]: Reject VPS/PostgreSQL migrations. Retain Firebase infrastructure to maintain zero-cost tier thresholds.
-- [Phase 1]: Establish a strict Repository Pattern and Firestore Converters to intercept client reads/writes.
-- [Phase 1]: Implement dynamic Firestore translations with Zustand local persistent storage cache.
-- [Phase 1]: Offload PDF generations to a Puppeteer Node.js environment in Cloud Functions.
 - [Phase 2]: Monorepo Workspaces setup establishing apps/web, shared, and firebase workspaces.
-- [Phase 2]: Monolithic domain views refactored into isolated feature directories inside apps/web/src/features/.
 - [Phase 3]: Enforced runtime and compile-time type safety via Zod validation schemas and typed Firestore Converters.
-- [Phase 3]: Decoupled core data formats from backend-specific drivers by normalizing timestamps to JS Date objects.
+- [v2.0]: Backend em Cloud Functions Python Gen2 no projeto Firebase existente — viabiliza MSAL Python e triggers Firestore.
+- [v2.0]: R2 como staging temporário de todos os binários; remoção somente após confirmação do SharePoint.
+- [v2.0]: Cache MSAL cifrado com AES-256-GCM, chaves no Secret Manager; permissões exclusivamente delegadas (sem app-only).
 
 ### Pending Todos
 
@@ -65,11 +65,15 @@ None yet.
 
 ### Blockers/Concerns
 
-None yet.
+- [v2.0] Nenhuma credencial Microsoft real disponível — fases 14, 16 e 18 exigem `--research-phase` para app registration/consent, limites R2/Graph e versão do firebase-tools.
+- [v2.0] Working tree sujo com mudanças prévias ao milestone — não tocar em source; orquestrador commita apenas os 3 arquivos de planejamento.
+- [v2.0] `firestore.rules` com wildcard `/{document=**}` e `signedIn()` — corrigir para allow-list com default deny antes de qualquer credencial (Phase 13).
+- [v2.0] Duas fontes de identidade no frontend (`AuthProvider` legado + `AtlasAuthProvider`) — consolidar num `TenantUser` tipado antes da UI de documentos (Phase 15).
 
 ### Roadmap Evolution
 
 - Phase 4 edited: Completely reorganized roadmap and project state for Atlas 1.0 commercial SaaS transformation (TailwindCSS, shadcn/ui, widget system, multi-tenancy, editable pages)
+- v2.0: Roadmap substituído para 6 fases contínuas (13–18), derivadas dos 55 requisitos v1 — segurança → OAuth → leitura → R2/fila → status/conflitos → testes/deploy. Fases 10–12 do v1.0 arquivadas.
 
 ## Deferred Items
 
@@ -77,10 +81,11 @@ Items acknowledged and carried forward from previous milestone close:
 
 | Category | Item | Status | Deferred At |
 |----------|------|--------|-------------|
-| *(none)* | | | |
+| v1.0 | Fases 10–12 (PDF Puppeteer, Emulator/Security Rules, Deploy SaaS) | Arquivadas | 2026-11-17 |
+| v2 | EXPL-08..10, SYNC-18, STAT-08 e pendências v1.0 (FUNC-01, TEST-08, DEPL-01) | Deferred | 2026-11-17 |
 
 ## Session Continuity
 
-Last session: 2026-06-01 10:43
-Stopped at: Revised GSD planning configurations and drafted clean Firebase-First migration deliverables 1 to 12.
+Last session: 2026-11-17 20:35
+Stopped at: Roadmap v2.0 criado (ROADMAP.md, STATE.md, REQUIREMENTS.md atualizados) — pronto para `/gsd-plan-phase 13`
 Resume file: None

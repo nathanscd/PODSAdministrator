@@ -116,22 +116,71 @@ Diferidos para depois da validação do milestone v2.0.
 
 ## Traceability
 
-A preencher pelo roadmap — cada requisito `v1` deve ser mapeado para exatamente uma fase.
+Cada requisito `v1` mapeado para exatamente uma fase do roadmap v2.0 (Phases 13–18).
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SEC-01 … SEC-09 | TBD | Pending |
-| CONN-01 … CONN-08 | TBD | Pending |
-| EXPL-01 … EXPL-07 | TBD | Pending |
-| SYNC-01 … SYNC-17 | TBD | Pending |
-| STAT-01 … STAT-07 | TBD | Pending |
-| TEST-01 … TEST-07 | TBD | Pending |
+| SEC-01 | Phase 13 | Pending |
+| SEC-02 | Phase 13 | Pending |
+| SEC-03 | Phase 13 | Pending |
+| SEC-04 | Phase 13 | Pending |
+| SEC-05 | Phase 13 | Pending |
+| SEC-06 | Phase 13 | Pending |
+| SEC-07 | Phase 13 | Pending |
+| SEC-08 | Phase 13 | Pending |
+| SEC-09 | Phase 13 | Pending |
+| CONN-01 | Phase 14 | Pending |
+| CONN-02 | Phase 14 | Pending |
+| CONN-03 | Phase 14 | Pending |
+| CONN-04 | Phase 14 | Pending |
+| CONN-05 | Phase 14 | Pending |
+| CONN-06 | Phase 14 | Pending |
+| CONN-07 | Phase 14 | Pending |
+| CONN-08 | Phase 14 | Pending |
+| EXPL-01 | Phase 15 | Pending |
+| EXPL-02 | Phase 15 | Pending |
+| EXPL-03 | Phase 15 | Pending |
+| EXPL-04 | Phase 15 | Pending |
+| EXPL-05 | Phase 15 | Pending |
+| EXPL-07 | Phase 15 | Pending |
+| EXPL-06 | Phase 16 | Pending |
+| SYNC-01 | Phase 16 | Pending |
+| SYNC-02 | Phase 16 | Pending |
+| SYNC-03 | Phase 16 | Pending |
+| SYNC-04 | Phase 16 | Pending |
+| SYNC-05 | Phase 16 | Pending |
+| SYNC-06 | Phase 16 | Pending |
+| SYNC-07 | Phase 16 | Pending |
+| SYNC-08 | Phase 16 | Pending |
+| SYNC-09 | Phase 16 | Pending |
+| SYNC-10 | Phase 16 | Pending |
+| SYNC-11 | Phase 16 | Pending |
+| SYNC-12 | Phase 16 | Pending |
+| SYNC-13 | Phase 16 | Pending |
+| SYNC-14 | Phase 16 | Pending |
+| SYNC-15 | Phase 16 | Pending |
+| SYNC-16 | Phase 16 | Pending |
+| SYNC-17 | Phase 16 | Pending |
+| STAT-01 | Phase 17 | Pending |
+| STAT-02 | Phase 17 | Pending |
+| STAT-03 | Phase 17 | Pending |
+| STAT-04 | Phase 17 | Pending |
+| STAT-05 | Phase 17 | Pending |
+| STAT-06 | Phase 17 | Pending |
+| STAT-07 | Phase 17 | Pending |
+| TEST-01 | Phase 18 | Pending |
+| TEST-02 | Phase 18 | Pending |
+| TEST-03 | Phase 18 | Pending |
+| TEST-04 | Phase 18 | Pending |
+| TEST-05 | Phase 18 | Pending |
+| TEST-06 | Phase 18 | Pending |
+| TEST-07 | Phase 18 | Pending |
 
 **Coverage:**
 - v1 requirements: 55 total
-- Mapped to phases: 0
-- Unmapped: 55 ⚠️ (preenchido durante a criação do roadmap)
+- Mapped to phases: 55 ✓
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-11-17*
-*Last updated: 2026-11-17 after milestone v2.0 scoping*
+*Last updated: 2026-11-17 after v2.0 roadmap creation (traceability 55/55)*
