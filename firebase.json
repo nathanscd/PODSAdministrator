@@ -3,12 +3,29 @@
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
   },
-  "functions": {
-    "source": "apis/reporting-functions",
-    "predeploy": [
-      "npm --prefix \"$RESOURCE_DIR\" run lint"
-    ]
-  },
+  "functions": [
+    {
+      "source": "apis/reporting-functions",
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run lint"
+      ]
+    },
+    {
+      "source": "apis/sharepoint-functions",
+      "runtime": "python312",
+      "codebase": "sharepoint",
+      "predeploy": [
+        "python -m pytest -q apis/sharepoint-functions/tests"
+      ],
+      "ignore": [
+        "**/__pycache__/**",
+        "**/.venv/**",
+        "**/tests/**",
+        ".pytest_cache",
+        "*.pyc"
+      ]
+    }
+  ],
   "hosting": {
     "public": "apps/web/dist",
     "ignore": [
