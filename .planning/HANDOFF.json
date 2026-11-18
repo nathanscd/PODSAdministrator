@@ -1,0 +1,42 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-11-18T19:43:58.635Z",
+  "phase": "14",
+  "phase_name": "OAuth e Ciclo de Vida da Conexão",
+  "phase_dir": "C:/Users/5567/Documents/PODSAdministrator/.planning/phases/14-oauth-e-ciclo-de-vida-da-conex-o",
+  "plan": 0,
+  "task": 0,
+  "total_tasks": 0,
+  "status": "paused",
+  "completed_tasks": [
+    {"id": 1, "name": "Advance state to Phase 14 with Phase 13 UAT blocker", "status": "done", "commit": "650d86a"},
+    {"id": 2, "name": "Capture Phase 14 CONTEXT.md and DISCUSSION-LOG.md", "status": "done", "commit": "c908f48"},
+    {"id": 3, "name": "Record context session in STATE.md", "status": "done", "commit": "6762942"}
+  ],
+  "remaining_tasks": [
+    {"id": 4, "name": "Research Azure app registration, OAuth callback, consent and revocation", "status": "not_started"},
+    {"id": 5, "name": "Create executable Phase 14 PLAN.md files for CONN-01..CONN-08", "status": "not_started"},
+    {"id": 6, "name": "Implement OAuth start/callback/status/disconnect and SettingsModal integration card", "status": "not_started"},
+    {"id": 7, "name": "Run automated tests, build, audits and phase verification", "status": "not_started"}
+  ],
+  "blockers": [
+    {"description": "Phase 13 human UAT is deferred by explicit user decision; 5 checks remain in 13-UAT.md", "type": "human_action", "workaround": "Continue Phase 14 code work; resume with /gsd-verify-work 13 later"},
+    {"description": "No real Microsoft credentials or tenant app registration exist in this milestone", "type": "external", "workaround": "Use official docs research, .env.example references, MSAL/Graph mocks and fail-closed config"},
+    {"description": "Phase 14 RESEARCH.md does not exist", "type": "technical", "workaround": "Run plan-phase 14 with research enabled before planner"}
+  ],
+  "async_jobs": [],
+  "human_actions_pending": [
+    {"action": "Resume Phase 13 manual UAT with emulator/deployed environment", "context": "User explicitly deferred manual tests for now", "blocking": false},
+    {"action": "Provide real Azure app registration values at deployment time", "context": "Milestone explicitly uses no real credentials; names only belong in repo", "blocking": false}
+  ],
+  "decisions": [
+    {"decision": "Backend-only OAuth Authorization Code + PKCE; frontend never receives secrets or tokens", "rationale": "Credential isolation and delegated identity are hard project constraints", "phase": "14"},
+    {"decision": "Persist OAuth state/nonce/PKCE transaction in Firestore with expiry and atomic single use", "rationale": "Required for replay/tamper defense and UID/tenant binding", "phase": "14"},
+    {"decision": "Use AES-256-GCM token cache from Phase 13 with Secret Manager key versions", "rationale": "Reuses audited envelope and key rotation contract", "phase": "14"},
+    {"decision": "Card lives in SettingsModal Integrações tab; status comes only from backend enum", "rationale": "Reuses existing UI and prevents fabricated status", "phase": "14"},
+    {"decision": "Deferred UAT does not block Phase 14 code but remains recorded as milestone dependency", "rationale": "User asked to continue general SharePoint integration without manual tests now", "phase": "14"}
+  ],
+  "uncommitted_files": [],
+  "next_action": "Invoke /gsd-resume-work, then continue auto-advanced plan-phase 14 --auto; research must run before planner.",
+  "context_notes": "CONTEXT.md and DISCUSSION-LOG.md were committed. workflow.auto_advance=true and auto_chain_active=false. The pause was an explicit context checkpoint before deep multi-agent planning/research, not a user request to stop. Phase 13 is verified human_needed and must not be marked Complete automatically."
+}
