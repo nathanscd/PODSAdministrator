@@ -6,22 +6,153 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-    function datatemProtectedCollection() {
-      return request.path.size() >= 1
-        && request.path[0] in [
-          'chipAssignments',
-          'chipAssignmentHistory',
-          'manualSimcards',
-          'datatemInventory',
-          'datatemIntegration',
-          'datatemSyncState'
-        ];
+    match /app_versions/{docId} {
+      allow read, write: if signedIn();
     }
 
-    match /{document=**} {
-      allow read: if signedIn()
-        && (!datatemProtectedCollection() || request.path[0] != 'datatemIntegration');
-      allow write: if signedIn() && !datatemProtectedCollection();
+    match /assets/{docId} {
+      allow read, write: if signedIn();
+    }
+
+    match /chipAssignments/{docId} {
+      allow read: if signedIn();
+      allow write: if false;
+    }
+
+    match /chipAssignmentHistory/{docId} {
+      allow read: if signedIn();
+      allow write: if false;
+    }
+
+    match /chips/{docId} {
+      allow read, write: if signedIn();
+    }
+
+    match /companies/{docId} {
+      allow read, write: if signedIn();
+    }
+
+    match /daily_goals/{docId} {
+      allow read, write: if signedIn();
+    }
+
+    match /datatemIntegration/{docId} {
+      allow read, write: if false;
+    }
+
+    match /datatemInventory/{docId} {
+      allow read: if signedIn();
+      allow write: if false;
+    }
+
+    match /datatemSyncState/{docId} {
+      allow read: if signedIn();
+      allow write: if false;
+    }
+
+    match /departments/{docId} {
+      allow read, write: if signedIn();
+    }
+
+    match /manualSimcards/{docId} {
+      allow read: if signedIn();
+      allow write: if false;
+    }
+
+    match /monthly_reports/{docId} {
+      allow read, write: if signedIn();
+    }
+
+    match /notifications/{docId} {
+      allow read, write: if signedIn();
+    }
+
+    match /opportunities/{docId} {
+      allow read, write: if signedIn();
+    }
+
+    match /pageCustomizations/{docId} {
+      allow read, write: if signedIn();
+    }
+
+    match /pages/{docId} {
+      allow read, write: if signedIn();
+    }
+
+    match /personalEvents/{docId} {
+      allow read, write: if signedIn();
+    }
+
+    match /quickTasks/{docId} {
+      allow read, write: if signedIn();
+    }
+
+    match /reservations/{docId} {
+      allow read, write: if signedIn();
+    }
+
+    match /samples/{docId} {
+      allow read, write: if signedIn();
+    }
+
+    match /settings/{docId} {
+      allow read, write: if signedIn();
+    }
+
+    match /sharepointAuditLog/{docId} {
+      allow read, write: if false;
+    }
+
+    match /sharepointOAuthTransactions/{docId} {
+      allow read, write: if false;
+    }
+
+    match /sharepointQueue/{docId} {
+      allow read, write: if false;
+    }
+
+    match /sharepointRateLimits/{docId} {
+      allow read, write: if false;
+    }
+
+    match /sharepointSettings/{docId} {
+      allow read, write: if false;
+    }
+
+    match /sharepointTokens/{docId} {
+      allow read, write: if false;
+    }
+
+    match /system_logs/{docId} {
+      allow read, write: if signedIn();
+    }
+
+    match /system_updates/{docId} {
+      allow read, write: if signedIn();
+    }
+
+    match /taskTrackers/{docId} {
+      allow read, write: if signedIn();
+    }
+
+    match /teams/{docId} {
+      allow read, write: if signedIn();
+    }
+
+    match /testbooks/{docId} {
+      allow read, write: if signedIn();
+
+      match /modules/{moduleId} {
+        allow read, write: if signedIn();
+      }
+    }
+
+    match /users/{docId} {
+      allow read, write: if signedIn();
+    }
+
+    match /workspaces/{docId} {
+      allow read, write: if signedIn();
     }
   }
 }
