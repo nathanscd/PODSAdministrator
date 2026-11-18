@@ -164,7 +164,7 @@ export default function SettingsPage() {
                   {[
                     { label: 'Two-Factor Authentication', status: 'Disabled', icon: <Shield size={16}/> },
                     { label: 'Active Sessions', status: '3 Devices', icon: <Cpu size={16}/> },
-                    { label: 'Data Encryption', status: 'Enabled (AES-256)', icon: <Lock size={16}/> }
+                    { label: 'Data Encryption', status: '—', icon: <Lock size={16}/> }
                   ].map((item, idx) => (
                     <div key={idx} className="flex items-center justify-between p-6 bg-[var(--bg-app)]/50 rounded-2xl border border-[var(--border-color)] group cursor-not-allowed">
                       <div className="flex items-center gap-4">
@@ -243,7 +243,7 @@ export default function SettingsPage() {
                 <div className="p-4 rounded-xl bg-black/40 border border-white/5 font-mono text-[9px] text-green-500/70 space-y-1">
                   <p> SYSTEM_READY</p>
                   <p> KERNEL_ACTIVE: 0x823F</p>
-                  <p> ENCRYPTION: SECURE</p>
+                  <p> ENCRYPTION: —</p>
                   <p className="animate-pulse"> WAITING_FOR_INPUT_</p>
                 </div>
               </section>
