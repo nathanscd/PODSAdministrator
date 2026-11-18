@@ -13,7 +13,7 @@ import config
 import logging_utils
 import responses
 import validation
-from responses import ApiError, ErrorKind
+from responses import ErrorKind
 
 AUTHENTICATED_ENDPOINTS = ("sharepoint_me", "sharepoint_upload_intent")
 
@@ -89,7 +89,6 @@ def sharepoint_me(request: Any) -> Any:
         status=status,
         outcome="success",
         uid_hash=logging_utils.hash_identifier(ctx.uid),
-        filename_hash=None,
     )
     return responses.to_https_response((status, body, headers))
 
