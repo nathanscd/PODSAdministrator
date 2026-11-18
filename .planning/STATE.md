@@ -5,11 +5,11 @@ milestone_name: )
 current_phase: 13
 current_phase_name: Fundação de Segurança e Contratos
 status: executing
-stopped_at: Phase 13 UI-SPEC approved
-last_updated: "2026-11-18T15:15:43.011Z"
-last_activity: 2026-11-17
-last_activity_desc: Roadmap v2.0 criado (Phases 13–18, 55/55 requisitos mapeados)
-state_head: c1b3cfffd73b8808b5e6de22037f3dae2379570c
+stopped_at: Completed 13-01-PLAN.md
+last_updated: "2026-11-18T16:26:36.683Z"
+last_activity: 2026-11-18
+last_activity_desc: Phase 13 execution started
+state_head: 848c3b143384722c34b66ca498b20c9a9cda0af8
 progress:
   total_phases: 6
   completed_phases: 0
@@ -25,14 +25,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-11-17)
 
 **Core value:** Tornar o SharePoint o repositório oficial de documentos do Atlas, com autoria delegada preservada e nenhuma perda de alterações durante indisponibilidade.
-**Current focus:** Phase 13 — Fundação de Segurança e Contratos (milestone v2.0)
+**Current focus:** Phase 13 — Fundação de Segurança e Contratos
 
 ## Current Position
 
-Phase: 13 (Fundação de Segurança e Contratos) — READY TO EXECUTE
-Plan: —
+Phase: 13 (Fundação de Segurança e Contratos) — EXECUTING
+Plan: 2 of 8
 Status: Ready to execute
-Last activity: 2026-11-17 — Roadmap v2.0 criado (Phases 13–18, 55/55 requisitos mapeados)
+Last activity: 2026-11-18 — Phase 13 execution started
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -49,6 +49,11 @@ Progress: [░░░░░░░░░░] 0%
 - Trend: Stable
 
 *Updated after each plan completion. Métricas do milestone v1.0 preservadas; v2.0 ainda sem planos executados.*
+**Per-Plan Metrics:**
+
+| Plan | Duration | Tasks | Files |
+|------|----------|-------|-------|
+| Phase 13 P01 | 12 min | 3 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -63,6 +68,7 @@ Recent decisions affecting current work:
 - [v2.0]: Backend em Cloud Functions Python Gen2 no projeto Firebase existente — viabiliza MSAL Python e triggers Firestore.
 - [v2.0]: R2 como staging temporário de todos os binários; remoção somente após confirmação do SharePoint.
 - [v2.0]: Cache MSAL cifrado com AES-256-GCM, chaves no Secret Manager; permissões exclusivamente delegadas (sem app-only).
+- [Phase 13]: Secret values are resolved only on demand from injected Secret Manager env names; settings and errors carry names only — SEC-03 fail-closed requirement: no default, generated, hardcoded or logged key material
 
 ### Pending Todos
 
@@ -91,6 +97,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-11-18T12:52:39.679Z
-Stopped at: Phase 13 UI-SPEC approved
-Resume file: .planning/phases/13-funda-o-de-seguran-a-e-contratos/13-UI-SPEC.md
+Last session: 2026-11-18T16:26:36.655Z
+Stopped at: Completed 13-01-PLAN.md
+Resume file: None
