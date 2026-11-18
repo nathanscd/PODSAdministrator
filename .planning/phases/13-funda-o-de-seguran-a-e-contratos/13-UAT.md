@@ -3,22 +3,24 @@ status: testing
 phase: 13-funda-o-de-seguran-a-e-contratos
 source: 13-01-SUMMARY.md, 13-02-SUMMARY.md, 13-03-SUMMARY.md, 13-04-SUMMARY.md, 13-05-SUMMARY.md, 13-06-SUMMARY.md, 13-07-SUMMARY.md, 13-08-SUMMARY.md
 started: 2026-11-18T19:11:04Z
-updated: 2026-11-18T19:11:04Z
+updated: 2026-11-18T19:26:16Z
 ---
 
 ## Current Test
 
-number: 1
-name: Firestore emulator rule enforcement
+number: 2
+name: Real Firestore transactional rate-limit contention
 expected: |
-  Unauthenticated reads/writes return 403; signed-in reads on allowed collections return 200 or 404; SharePoint credential collections remain denied.
+  Only the configured number of requests is allowed; the last slot is consumed exactly once; excess requests are denied with sanitized `rate_limited`.
 awaiting: user response
 
 ## Tests
 
 ### 1. Firestore emulator rule enforcement
 expected: Unauthenticated reads/writes return 403; signed-in reads on allowed collections return 200 or 404; SharePoint credential collections remain denied.
-result: pending
+result: issue
+reported: "Issue"
+severity: major
 
 ### 2. Real Firestore transactional rate-limit contention
 expected: Only the configured number of requests is allowed; the last slot is consumed exactly once; excess requests are denied with sanitized `rate_limited`.
@@ -40,9 +42,19 @@ result: pending
 
 total: 5
 passed: 0
-issues: 0
-pending: 5
+issues: 1
+pending: 4
 skipped: 0
 blocked: 0
 
 ## Gaps
+
+- truth: "Unauthenticated reads/writes return 403; signed-in reads on allowed collections return 200 or 404; SharePoint credential collections remain denied."
+  status: failed
+  reason: "User reported: Issue"
+  severity: major
+  test: 1
+  root_cause: ""
+  artifacts: []
+  missing: []
+  debug_session: ""
