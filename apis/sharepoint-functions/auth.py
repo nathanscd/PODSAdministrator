@@ -109,7 +109,12 @@ def resolve_auth_context(
     profile_reader: Callable[[str], Mapping[str, Any]] | None = None,
 ) -> AuthContext:
     verify = require_firebase_user if verifier is None else verifier
-    claims = verify(id_token)
+    try:
+        claims = verify(id_token)
+    except AuthError:
+        raise
+    except Exception:
+        raise AuthError(ErrorKind.UNAUTHORIZED) from None
     if not isinstance(claims, Mapping):
         raise AuthError(ErrorKind.UNAUTHORIZED)
 
