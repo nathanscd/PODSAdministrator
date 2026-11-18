@@ -50,7 +50,7 @@ Plans:
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
-- [ ] 13-05-PLAN.md — `AuthContext`/`resolve_auth_context` + `SharePointStore` isolado por tenant (SEC-01, SEC-06)
+- [x] 13-05-PLAN.md — `AuthContext`/`resolve_auth_context` + `SharePointStore` isolado por tenant (SEC-01, SEC-06)
 - [ ] 13-06-PLAN.md — Logging redigido por allow-list + validação de upload e rate limiting Firestore (SEC-07, SEC-08)
 
 **Wave 4** *(blocked on Wave 3 completion)*

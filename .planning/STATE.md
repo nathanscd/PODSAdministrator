@@ -1,4 +1,24 @@
-﻿# Project State
+---
+gsd_state_version: "1.0"
+milestone: v2.0
+milestone_name: )
+current_phase: 13
+current_phase_name: Fundação de Segurança e Contratos
+status: executing
+stopped_at: Completed 13-05-PLAN.md
+last_updated: "2026-11-18T17:35:47.039Z"
+last_activity: 2026-11-18
+last_activity_desc: Phase 13 plan 05 (SEC-01 auth context and SEC-06 tenant-isolated SharePoint store) completed
+state_head: ee76f99b4afaa94b6b434c8e000abaa77a144c33
+progress:
+  total_phases: 6
+  completed_phases: 0
+  total_plans: 8
+  completed_plans: 5
+  percent: 62
+---
+
+# Project State
 
 ## Project Reference
 
@@ -10,25 +30,25 @@ See: .planning/PROJECT.md (updated 2026-11-17)
 ## Current Position
 
 Phase: 13 (Fundação de Segurança e Contratos) — EXECUTING
-Plan: 5 of 8
-Status: In progress
-Last activity: 2026-11-18 — Phase 13 plan 04 (SEC-02 Firestore default-deny rules and SharePoint indexes) completed
+Plan: 6 of 8
+Status: Ready to execute
+Last activity: 2026-11-18 — Phase 13 plan 05 (SEC-01 auth context and SEC-06 tenant-isolated SharePoint store) completed
 
-Progress: [█████░░░░░] 50%
+Progress: [██████░░░░] 62%
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 4
-- Average duration: 8 min
-- Total execution time: 0.52 hours
+- Total plans completed: 5
+- Average duration: 7 min
+- Total execution time: 0.6 hours
 
 **Recent Trend:**
 
 - Trend: Stable
 
-*Updated after each plan completion. Métricas do milestone v1.0 preservadas; v2.0 ainda sem planos executados.*
+*Updated after each plan completion. Métricas do milestone v1.0 preservadas; v2.0 com 5 planos executados.*
 **Per-Plan Metrics:**
 
 | Plan | Duration | Tasks | Files |
@@ -37,6 +57,7 @@ Progress: [█████░░░░░] 50%
 | Phase 13 P02 | 6min | 2 tasks | 2 files |
 | Phase 13 P03 | 2min | 2 tasks | 2 files |
 | Phase 13 P04 | 11 min | 3 tasks | 3 files |
+| Phase 13 P05 | 5min | 3 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -55,6 +76,9 @@ Recent decisions affecting current work:
 - [Phase 13]: AES-256-GCM envelopes persist keyVersion; decryption dispatches on the stored version and never uses a module-level active key — Key rotation must not require migrating stored rows
 - [Phase 13]: responses.py is the single response boundary — immutable no-store headers and a closed fixed error vocabulary; no exception text, traceback, secret or free-form message reaches the browser (SEC-05)
 - [Phase 13]: Firestore rules are explicit and deny-by-default (no catch-all); live client collections keep prior semantics, datatem collections remain read-only to clients, and SharePoint/datatemIntegration are client-deny-all with fixed collection names for later plans (SEC-02)
+- [Phase 13]: Identity resolves per invocation from a verified Firebase ID token; no module-level token, claim set, AuthContext or profile document is cached (SEC-01)
+- [Phase 13]: Tenant comes only from the verified `companyId` claim or a server-side `users/{uid}.companyId` read; request data is never an authority and cross-tenant access is NotFoundError (404-equivalent) (SEC-06)
+- [Phase 13]: AuthError.kind reuses the closed responses.ErrorKind vocabulary so endpoint plans need no exception-to-status translation table (SEC-01)
 
 ### Pending Todos
 
@@ -82,6 +106,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-11-18T17:11:40Z
-Stopped at: Completed 13-04-PLAN.md
+Last session: 2026-11-18T17:35:47Z
+Stopped at: Completed 13-05-PLAN.md
 Resume file: None
