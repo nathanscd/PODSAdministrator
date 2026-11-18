@@ -5,16 +5,16 @@ milestone_name: )
 current_phase: 13
 current_phase_name: Fundação de Segurança e Contratos
 status: executing
-stopped_at: Completed 13-01-PLAN.md
-last_updated: "2026-11-18T16:26:36.683Z"
+stopped_at: Completed 13-02-PLAN.md
+last_updated: "2026-11-18T16:42:48.131Z"
 last_activity: 2026-11-18
 last_activity_desc: Phase 13 execution started
-state_head: 848c3b143384722c34b66ca498b20c9a9cda0af8
+state_head: 046499c73535f525974ebd6e0a0a8dad222c41db
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 8
-  completed_plans: 0
+  completed_plans: 2
   percent: 0
 ---
 
@@ -30,7 +30,7 @@ See: .planning/PROJECT.md (updated 2026-11-17)
 ## Current Position
 
 Phase: 13 (Fundação de Segurança e Contratos) — EXECUTING
-Plan: 2 of 8
+Plan: 3 of 8
 Status: Ready to execute
 Last activity: 2026-11-18 — Phase 13 execution started
 
@@ -54,6 +54,7 @@ Progress: [░░░░░░░░░░] 0%
 | Plan | Duration | Tasks | Files |
 |------|----------|-------|-------|
 | Phase 13 P01 | 12 min | 3 tasks | 7 files |
+| Phase 13 P02 | 6min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -69,6 +70,7 @@ Recent decisions affecting current work:
 - [v2.0]: R2 como staging temporário de todos os binários; remoção somente após confirmação do SharePoint.
 - [v2.0]: Cache MSAL cifrado com AES-256-GCM, chaves no Secret Manager; permissões exclusivamente delegadas (sem app-only).
 - [Phase 13]: Secret values are resolved only on demand from injected Secret Manager env names; settings and errors carry names only — SEC-03 fail-closed requirement: no default, generated, hardcoded or logged key material
+- [Phase 13]: AES-256-GCM envelopes persist keyVersion; decryption dispatches on the stored version and never uses a module-level active key — Key rotation must not require migrating stored rows
 
 ### Pending Todos
 
@@ -97,6 +99,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-11-18T16:26:36.655Z
-Stopped at: Completed 13-01-PLAN.md
+Last session: 2026-11-18T16:42:37.628Z
+Stopped at: Completed 13-02-PLAN.md
 Resume file: None
