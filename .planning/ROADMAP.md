@@ -86,7 +86,12 @@ Plans:
   4. Usuário vê a identidade da conta conectada, um dos estados `disabled`/`disconnected`/`connected`/`syncing`/`problems` e a data/hora da última sincronização bem-sucedida.
   5. Usuário desconecta a conta (estado muda para `disconnected`, documentos já sincronizados permanecem) e, com refresh token revogado/expirado, é orientado a reconectar sem substituição automática da identidade do criador.
 
-**Plans**: TBD
+**Plans**: 5 plans
+- [ ] 14-01-PLAN.md — Tracer do card Microsoft SharePoint e status real via endpoint autenticado
+- [ ] 14-02-PLAN.md — Package legitimacy gate blocking-human para `msal==1.39.0`
+- [ ] 14-03-PLAN.md — Configuração, cliente MSAL e cliente Graph isolados e testados com mocks
+- [ ] 14-04-PLAN.md — OAuth start/callback com transação atômica, validação completa e cache cifrado
+- [ ] 14-05-PLAN.md — Status `problems`, desconexão segura e UX final do card
 **UI hint**: yes
 **Riscos / Research**: Requer **`--research-phase`** para a config exata do app registration Azure — `redirect_uri` (`form_post`, exatamente igual ao registrado), scopes mínimos (`Files.ReadWrite`, `Sites.Read.All`, `offline_access`), comportamento de consent do tenant e revogação programática. Nenhuma credencial Microsoft real disponível neste milestone.
 
