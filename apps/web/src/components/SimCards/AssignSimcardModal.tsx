@@ -3,6 +3,15 @@ import { motion } from "framer-motion";
 import { ArrowRight, Box, Building2, Save, X } from "lucide-react";
 import type { Opportunity } from "../../types";
 import type { AssignPayload, InventoryItem } from "../../types/simcard";
+import { Button } from "../ui/button";
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from "@/components/ui/combobox";
 
 interface AssignSimcardModalProps {
   item: InventoryItem;
@@ -109,25 +118,60 @@ export function AssignSimcardModal({ item, opportunities, busy, onClose, onAssig
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {destinationType === "opportunity" ? (
-            <div className="md:col-span-2">
-              <label className={labelClass}>Oportunidade</label>
-              <select value={opportunityId} onChange={(event) => setOpportunityId(event.target.value)} className={inputClass}>
-                <option value="">Selecione uma oportunidade</option>
-                {opportunities.map((opportunity) => (
-                  <option key={opportunity.id} value={opportunity.id}>
-                    {opportunity.description || "Sem descrição"}
-                    {opportunity.utility ? ` · ${opportunity.utility}` : ""}
-                  </option>
-                ))}
-              </select>
-            </div>
-          ) : (
-            <div className="md:col-span-2">
-              <label className={labelClass}>Projeto *</label>
-              <input value={projectName} onChange={(event) => setProjectName(event.target.value)} className={inputClass} placeholder="Ex.: Medidores inteligentes" />
-            </div>
-          )}
+       {destinationType === "opportunity" ? (
+        <div className="md:col-span-2">
+          <label className={labelClass}>Oportunidade</label>
+
+              <Combobox
+                  items={opportunities}
+                  value={selectedOpportunity}
+                  onValueChange={(opportunity) => {
+                    setOpportunityId(opportunity?.id ?? "");
+                    setError(null);
+                  }}
+                  itemToStringLabel={(opportunity) =>
+                    opportunity.description || "Sem descrição"
+                  }
+                >
+                  <ComboboxInput
+                    className=""
+                    placeholder="Buscar oportunidade..."
+                  />
+
+                  <ComboboxContent>
+                    <ComboboxEmpty>
+                      Nenhuma oportunidade encontrada.
+                    </ComboboxEmpty>
+
+                    <ComboboxList data-lenis-prevent>
+                      {(opportunity) => (
+                        <ComboboxItem key={opportunity.id} value={opportunity}>
+                          <span className="truncate">
+                            {opportunity.description || "Sem descrição"}
+                          </span>
+
+                          {opportunity.utility && (
+                            <span className="ml-auto shrink-0 text-xs text-[var(--text-secondary)]">
+                              {opportunity.utility}
+                            </span>
+                          )}
+                        </ComboboxItem>
+                      )}
+                    </ComboboxList>
+                  </ComboboxContent>
+                </Combobox>
+              </div>
+            ) : (
+        <div className="md:col-span-2">
+          <label className={labelClass}>Projeto *</label>
+          <input
+            value={projectName}
+            onChange={(event) => setProjectName(event.target.value)}
+            className={inputClass}
+            placeholder="Ex.: Medidores inteligentes"
+          />
+        </div>
+      )}
 
           <div>
             <label className={labelClass}>Cliente</label>
@@ -150,23 +194,23 @@ export function AssignSimcardModal({ item, opportunities, busy, onClose, onAssig
         {error && <p className="text-xs text-rose-500 mt-4 mb-0">{error}</p>}
 
         <div className="flex items-center justify-end gap-3 mt-7">
-          <button
-            type="button"
+          <Button
+            variant="secondary"
             onClick={onClose}
             disabled={busy}
-            className="h-11 px-5 rounded-xl border border-[var(--border-color)] text-[var(--text-secondary)] text-xs font-bold hover:text-[var(--text-primary)] transition-all disabled:opacity-50"
+            className=""
           >
             Cancelar
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="greenlight"
             onClick={() => void submit()}
             disabled={!canSubmit || busy}
-            className="h-11 px-5 rounded-xl bg-[var(--accent-color)] text-white text-xs font-bold flex items-center gap-2 disabled:opacity-50 transition-all"
+            className=""
           >
             {busy ? <Save size={14} className="animate-pulse" /> : <ArrowRight size={14} />}
             Confirmar atribuição
-          </button>
+          </Button>
         </div>
       </motion.div>
     </motion.div>

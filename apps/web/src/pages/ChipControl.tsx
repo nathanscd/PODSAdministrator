@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
 import {
   AlertTriangle,
   Boxes,
@@ -49,11 +50,11 @@ function StatCard({
   accent: string;
 }) {
   return (
-    <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--glass-bg)] backdrop-blur-xl p-4 flex items-center gap-4 min-w-[140px] shadow-[var(--shadow-subtle)]">
+    <div className="rounded-xl border border-[var(--border-color)] bg-[var(--glass-bg)] backdrop-blur-xl p-3 px-4 flex items-center gap-4 min-w-[140px] shadow-[var(--shadow-subtle)]">
       <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${accent}`}>{icon}</div>
       <div>
-        <p className="text-2xl font-black text-[var(--text-primary)] m-0 leading-none">{value}</p>
-        <p className="text-[9px] font-black uppercase tracking-widest text-[var(--text-secondary)] mt-1 mb-0">{label}</p>
+        <p className="text-2xl text-[var(--text-primary)] m-0 leading-none">{value}</p>
+        <p className="text-[9px] uppercase tracking-widest text-[var(--text-secondary)] mt-1 mb-0">{label}</p>
       </div>
     </div>
   );
@@ -237,16 +238,12 @@ export default function SimCardControl() {
           <div className="absolute -right-24 -top-24 w-72 h-72 rounded-full bg-[var(--accent-color)]/10 blur-3xl" />
           <div className="absolute -bottom-32 left-1/3 w-72 h-72 rounded-full bg-cyan-500/10 blur-3xl" />
           <div className="relative">
-            <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-[var(--card-bg)] border border-[var(--border-color)] w-fit shadow-sm backdrop-blur-md">
-              <RadioTower size={16} className="text-[var(--accent-color)]" />
-              <span className="text-xs font-black uppercase tracking-[0.2em] text-[var(--text-secondary)]">Conectividade</span>
-            </div>
             <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mt-6">
               <div>
-                <h1 className="text-4xl md:text-5xl font-black text-[var(--text-primary)] tracking-tight mb-3">
+                <h1 className="text-4xl md:text-5xl text-[var(--text-primary)] tracking-tight mb-3">
                   Gestão de Chips M2M
                 </h1>
-                <p className="text-base md:text-lg text-[var(--text-secondary)] opacity-80 max-w-2xl leading-relaxed m-0">
+                <p className="text-base md:text-md text-[var(--text-secondary)] opacity-80 max-w-2xl leading-relaxed m-0">
                   Inventário DATATEM e SIMs manuais em um só lugar, agrupados por tecnologia e com atribuição auditável.
                 </p>
                 {inventory.lastUpdated && (
@@ -258,20 +255,13 @@ export default function SimCardControl() {
                 )}
               </div>
               <div className="flex flex-wrap gap-2 md:gap-3">
-                <button
-                  type="button"
-                  onClick={() => setManualModalOpen(true)}
-                  className="h-11 px-5 rounded-xl border border-[var(--border-color)] bg-[var(--card-bg)] text-[var(--text-primary)] text-xs font-bold flex items-center gap-2 hover:border-amber-500/40 hover:text-amber-600 transition-all"
-                >
-                  <Wrench size={14} /> SIM manual
-                </button>
-                <button
+                <Button
                   type="button"
                   onClick={() => setSourceModalOpen(true)}
-                  className="h-11 px-5 rounded-xl bg-[var(--accent-color)] text-white text-xs font-bold flex items-center gap-2 shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-elevation)] transition-all"
+                  className=""
                 >
                   <Plus size={15} /> Nova atribuição
-                </button>
+                </Button>
               </div>
             </div>
             <div className="flex flex-wrap gap-3 mt-7">
@@ -305,13 +295,13 @@ export default function SimCardControl() {
         <div className="rounded-[2rem] border border-rose-500/30 bg-rose-500/5 p-10 text-center flex flex-col items-center gap-4">
           <AlertTriangle size={28} className="text-rose-500" />
           <p className="text-sm font-bold text-[var(--text-primary)] m-0">{inventory.error}</p>
-          <button
+          <Button
             type="button"
             onClick={inventory.retry}
-            className="h-10 px-5 rounded-xl bg-[var(--accent-color)] text-white text-xs font-bold flex items-center gap-2"
+            className=""
           >
             <RefreshCw size={14} /> Tentar novamente
-          </button>
+          </Button>
         </div>
       ) : (
         <>
@@ -399,6 +389,7 @@ export default function SimCardControl() {
         {manualModalOpen && (
           <ManualSimcardModal
             opportunities={opportunities}
+            operators={operators}
             busy={operations.busyIds.includes("manual-new")}
             onClose={() => setManualModalOpen(false)}
             onCreate={handleCreateManual}

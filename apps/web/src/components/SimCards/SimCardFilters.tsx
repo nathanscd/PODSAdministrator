@@ -1,5 +1,19 @@
 import { Filter, RefreshCw, Search, X } from "lucide-react";
 import type { SimcardClassification, SimcardSource, TechnologyGroup } from "../../types/simcard";
+import { Button } from "@/components/ui/button";
+import { ButtonGroup } from "@/components/ui/button-group";
+
+
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
 
 interface SimCardFiltersProps {
   search: string;
@@ -52,24 +66,39 @@ function Segment<T extends string>({
   onChange: (value: T) => void;
 }) {
   return (
-    <div className="flex items-center gap-1 rounded-xl border border-[var(--border-color)] bg-[var(--bg-app)] p-1">
-      {options.map((option) => (
-        <button
-          key={option.value}
-          type="button"
-          onClick={() => onChange(option.value)}
-          className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all ${
-            value === option.value
-              ? "bg-[var(--accent-color)] text-white shadow-sm"
-              : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-          }`}
-        >
-          {option.label}
-        </button>
-      ))}
-    </div>
+    <ButtonGroup
+      aria-label="Selecionar opção"
+      className="w-fit rounded-xl border border-[var(--border-color)] bg-[var(--bg-app)] p-1 shadow-sm"
+    >
+      {options.map((option) => {
+        const isActive = value === option.value;
+
+        return (
+          <Button
+            key={option.value}
+            type="button"
+            variant="secondary"
+            size="sm"
+            aria-pressed={isActive}
+            onClick={() => onChange(option.value)}
+            className={`text-xs py-1
+             
+              ${
+                isActive
+                  ? "bg-[var(--border-color)]/10"
+                  : "bg-[var(--border-color)]/50"
+              }
+            `}
+          >
+            {option.label}
+          </Button>
+        );
+      })}
+    </ButtonGroup>
   );
 }
+
+export { Segment };
 
 export function SimCardFilters({
   search,
@@ -98,6 +127,18 @@ export function SimCardFilters({
     onTechnologyGroupChange("all");
   };
 
+  const selectedStatus =
+  STATUS_OPTIONS.find((option) => option.value === status) ?? null;
+  
+  const operatorOptions = [
+    { value: "all", label: "Todas operadoras" },
+    ...operators.map((name) => ({
+      value: name,
+      label: name,
+    })),
+  ];
+
+
   return (
     <div className="rounded-[1.75rem] border border-[var(--border-color)] bg-[var(--glass-bg)] backdrop-blur-2xl p-4 shadow-[var(--shadow-card)] flex flex-col gap-4">
       <div className="flex flex-col lg:flex-row gap-3 lg:items-center">
@@ -113,47 +154,93 @@ export function SimCardFilters({
 
         <div className="grid grid-cols-2 lg:flex gap-3 lg:w-auto">
           <div className="min-w-[150px]">
-            <select value={status} onChange={(event) => onStatusChange(event.target.value as SimcardClassification | "all")} className={selectClass}>
-              {STATUS_OPTIONS.map((option) => (
-                <option key={option.value} value={option.value}>{option.label}</option>
-              ))}
-            </select>
+            <Select
+              items={STATUS_OPTIONS}
+              value={status}
+              onValueChange={(value) => {
+                if (value !== null) {
+                  onStatusChange(
+                    value as SimcardClassification | "all"
+                  );
+                }
+              }}
+            >
+              <SelectTrigger className="">
+                <SelectValue placeholder="Selecione um status" />
+              </SelectTrigger>
+
+              <SelectContent>
+                <SelectGroup>
+                  {STATUS_OPTIONS.map((option) => (
+                    <SelectItem
+                      key={option.value}
+                      value={option.value}
+                    >
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
+
           <div className="min-w-[130px]">
-            <select value={operator} onChange={(event) => onOperatorChange(event.target.value)} className={selectClass}>
-              <option value="all">Todas operadoras</option>
-              {operators.map((name) => <option key={name} value={name}>{name}</option>)}
-            </select>
+           <Select
+              items={operatorOptions}
+              value={operator}
+              onValueChange={(value) => {
+                if (value !== null) {
+                  onOperatorChange(value);
+                }
+              }}
+            >
+              <SelectTrigger className="">
+                <SelectValue placeholder="Selecione uma operadora" />
+              </SelectTrigger>
+
+              <SelectContent>
+                <SelectGroup>
+                  {operatorOptions.map((option) => (
+                    <SelectItem
+                      key={option.value}
+                      value={option.value}
+                    >
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
           {hasFilters && (
-            <button
-              type="button"
+            <Button
+              variant="destructive"
               onClick={clear}
-              className="h-10 px-3 rounded-xl border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all flex items-center gap-1.5 text-xs font-bold"
+              className=""
               title="Limpar filtros"
             >
               <X size={14} /> Limpar
-            </button>
+            </Button>
           )}
-          <button
+          <Button
             type="button"
             onClick={onRefresh}
             disabled={refreshing}
-            className="h-10 px-3 rounded-xl bg-[var(--accent-color)] text-white text-xs font-bold flex items-center gap-1.5 disabled:opacity-50 transition-all"
+            className=""
           >
             <RefreshCw size={14} className={refreshing ? "animate-spin" : ""} />
             Sincronizar
-          </button>
+          </Button>
         </div>
       </div>
 
       <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-3 border-t border-[var(--border-color)] pt-3">
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-center gap-2">
-            <span className="text-[9px] font-black uppercase tracking-[0.16em] text-[var(--text-secondary)]">Origem</span>
+            <span className="text-[9px] uppercase tracking-[0.16em] text-[var(--text-secondary)]">Origem</span>
             <Segment options={SOURCE_OPTIONS} value={source} onChange={onSourceChange} />
           </div>
           <div className="flex items-center gap-2">

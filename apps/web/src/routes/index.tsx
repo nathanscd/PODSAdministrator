@@ -32,9 +32,10 @@ const ETLResearch = lazy(() => import("../pages/ETLResearch"));
 const SettingsPage = lazy(() => import("../pages/SettingsPage"));
 const Testbooks = lazy(() => import("../pages/Testbooks"));
 const TestbookEditor = lazy(() => import("../pages/TestbookEditor"));
-const PantheonTestbook = lazy(() => import("../pages/Testbooks/PantheonTestbook"));
-const Streetlight = lazy(() => import("../pages/Testbooks/Streelight"));
-const Zeus = lazy(() => import("../pages/Testbooks/Zeus"));
+const PantheonTestbook = lazy(() => import("../pages/testbooks/PantheonTestbook"));
+const Streetlight = lazy(() => import("../pages/testbooks/Streelight"));
+const Zeus = lazy(() => import("../pages/testbooks/Zeus"));
+const HybridNIC = lazy(() => import("../pages/testbooks/HybridNIC"));
 const SESampleControl = lazy(() => import("../pages/SalesEngineering/SESampleControl"));
 
 function AppRoutes() {
@@ -48,9 +49,10 @@ function AppRoutes() {
         <Route path="/se-sample-control" element={<SESampleControl />} />
         <Route path="/testbooks" element={<Testbooks />} />
         <Route path="/testbook/:testbookId" element={<TestbookEditor />} />
-        <Route path="/pantheon-ng" element={<PantheonTestbook />} />
-        <Route path="/streetlight" element={<Streetlight />} />
-        <Route path="/zeus" element={<Zeus />} />
+        <Route path="/testbook/pantheon-ng" element={<PantheonTestbook />} />
+        <Route path="/testbook/streetlight" element={<Streetlight />} />
+        <Route path="/testbook/zeus" element={<Zeus />} />
+        <Route path="/testbook/HybridNIC" element={<HybridNIC />} />
 
         <Route element={<PrivateRoute />}>
           <Route element={<Layout />}>

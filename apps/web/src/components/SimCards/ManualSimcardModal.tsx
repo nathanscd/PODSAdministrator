@@ -3,9 +3,33 @@ import { motion } from "framer-motion";
 import { AlertTriangle, ArrowRight, Save, Wrench, X } from "lucide-react";
 import type { Opportunity } from "../../types";
 import type { AssignPayload, ManualSimcardRequest } from "../../types/simcard";
+import { ButtonGroup } from "@/components/ui/button-group";
+import type {
+  SimcardClassification,
+  SimcardSource,
+  TechnologyGroup,
+} from "../../types/simcard";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from "@/components/ui/combobox";
 
 interface ManualSimcardModalProps {
   opportunities: Opportunity[];
+  operators: string[];
   busy: boolean;
   onClose: () => void;
   onCreate: (payload: ManualSimcardRequest) => Promise<boolean>;
@@ -13,15 +37,25 @@ interface ManualSimcardModalProps {
 
 const inputClass =
   "w-full bg-[var(--bg-app)] border border-[var(--border-color)] rounded-xl px-3.5 py-2.5 text-sm text-[var(--text-primary)] outline-none focus:border-[var(--accent-color)] transition-all";
-const labelClass = "text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)] block mb-1.5";
 
-export function ManualSimcardModal({ opportunities, busy, onClose, onCreate }: ManualSimcardModalProps) {
+const labelClass =
+  "text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)] block mb-1.5";
+
+export function ManualSimcardModal({
+  opportunities,
+  operators,
+  busy,
+  onClose,
+  onCreate,
+}: ManualSimcardModalProps) {
   const [iccid, setIccid] = useState("");
   const [technology, setTechnology] = useState<"4G" | "NB-IoT">("4G");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [operatorName, setOperatorName] = useState("");
   const [notes, setNotes] = useState("");
-  const [destinationType, setDestinationType] = useState<"opportunity" | "manual_project">("manual_project");
+  const [destinationType, setDestinationType] = useState<
+    "opportunity" | "manual_project"
+  >("manual_project");
   const [opportunityId, setOpportunityId] = useState("");
   const [projectName, setProjectName] = useState("");
   const [clientName, setClientName] = useState("");
@@ -29,26 +63,36 @@ export function ManualSimcardModal({ opportunities, busy, onClose, onCreate }: M
   const [error, setError] = useState<string | null>(null);
 
   const selectedOpportunity = useMemo(
-    () => opportunities.find((opportunity) => opportunity.id === opportunityId) || null,
+    () =>
+      opportunities.find((opportunity) => opportunity.id === opportunityId) ||
+      null,
     [opportunities, opportunityId],
   );
 
   const canSubmit =
     iccid.replace(/\s/g, "").length > 0 &&
-    (destinationType === "opportunity" ? Boolean(opportunityId) : Boolean(projectName.trim()));
+    (destinationType === "opportunity"
+      ? Boolean(opportunityId)
+      : Boolean(projectName.trim()));
 
   const submit = async () => {
     if (!canSubmit || busy) return;
+
     const destination: AssignPayload = {
       destinationType,
       opportunityId: destinationType === "opportunity" ? opportunityId : null,
-      opportunityName: destinationType === "opportunity" ? selectedOpportunity?.description || null : null,
-      projectName: destinationType === "manual_project" ? projectName.trim() : null,
+      opportunityName:
+        destinationType === "opportunity"
+          ? selectedOpportunity?.description || null
+          : null,
+      projectName:
+        destinationType === "manual_project" ? projectName.trim() : null,
       clientName: clientName.trim() || null,
       equipment: equipment.trim() || null,
       technology,
       notes: notes.trim() || null,
     };
+
     const payload: ManualSimcardRequest = {
       simcard: {
         iccid: iccid.replace(/\s/g, ""),
@@ -59,10 +103,16 @@ export function ManualSimcardModal({ opportunities, busy, onClose, onCreate }: M
       },
       destination,
     };
+
     setError(null);
+
     const success = await onCreate(payload);
+
     if (success) onClose();
-    else setError("Não foi possível cadastrar e atribuir o SIM manual. Confira os dados e tente novamente.");
+    else
+      setError(
+        "Não foi possível cadastrar e atribuir o SIM manual. Confira os dados e tente novamente.",
+      );
   };
 
   return (
@@ -71,6 +121,7 @@ export function ManualSimcardModal({ opportunities, busy, onClose, onCreate }: M
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-md p-4"
+      data-lenis-prevent
       onMouseDown={(event) => {
         if (event.target === event.currentTarget && !busy) onClose();
       }}
@@ -84,15 +135,15 @@ export function ManualSimcardModal({ opportunities, busy, onClose, onCreate }: M
       >
         <div className="flex items-start justify-between gap-4 mb-6">
           <div>
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 text-amber-600 dark:text-amber-400">
-              <Wrench size={13} />
-              <span className="text-[9px] font-black uppercase tracking-[0.18em]">Manual · não DATATEM</span>
-            </div>
-            <h2 className="text-2xl font-black tracking-tight text-[var(--text-primary)] m-0">Cadastrar SIM manual</h2>
+            <h2 className="text-2xl tracking-tight text-[var(--text-primary)] m-0">
+              Cadastrar SIM manual
+            </h2>
             <p className="text-xs text-[var(--text-secondary)] mt-2 mb-0">
-              O chip será criado fora do inventário DATATEM e entrará no mesmo fluxo de atribuição e auditoria.
+              O chip será criado fora do inventário DATATEM e entrará no mesmo
+              fluxo de atribuição e auditoria.
             </p>
           </div>
+
           <button
             type="button"
             onClick={onClose}
@@ -106,8 +157,9 @@ export function ManualSimcardModal({ opportunities, busy, onClose, onCreate }: M
         <div className="rounded-2xl border border-amber-500/25 bg-amber-500/5 px-4 py-3 flex items-start gap-2.5 mb-6">
           <AlertTriangle size={15} className="text-amber-500 mt-0.5 shrink-0" />
           <p className="text-[11px] leading-relaxed text-amber-700 dark:text-amber-300 m-0">
-            Este SIM não será consultado na DATATEM e não terá dados de conectividade oficiais. A origem ficará visível no
-            card, nos detalhes e no histórico.
+            Este SIM não será consultado na DATATEM e não terá dados de
+            conectividade oficiais. A origem ficará visível no card, nos
+            detalhes e no histórico.
           </p>
         </div>
 
@@ -115,41 +167,99 @@ export function ManualSimcardModal({ opportunities, busy, onClose, onCreate }: M
           <h3 className="text-[10px] font-black uppercase tracking-[0.18em] text-[var(--text-secondary)] m-0 mb-4">
             Identificação do SIM
           </h3>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className={labelClass}>ICCID *</label>
-              <input value={iccid} onChange={(event) => setIccid(event.target.value)} className={inputClass} placeholder="8955..." />
+              <input
+                value={iccid}
+                onChange={(event) => setIccid(event.target.value)}
+                className={inputClass}
+                placeholder="8955..."
+              />
             </div>
+
             <div>
               <label className={labelClass}>Tecnologia *</label>
-              <div className="grid grid-cols-2 gap-2 rounded-xl border border-[var(--border-color)] bg-[var(--card-bg)] p-1">
-                {(["4G", "NB-IoT"] as const).map((option) => (
-                  <button
-                    key={option}
-                    type="button"
-                    onClick={() => setTechnology(option)}
-                    className={`h-9 rounded-lg text-xs font-black transition-all ${
-                      technology === option
-                        ? "bg-[var(--accent-color)] text-white shadow-sm"
-                        : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-                    }`}
-                  >
-                    {option}
-                  </button>
-                ))}
-              </div>
+              <ButtonGroup
+                aria-label="Tecnologia de conectividade"
+                className=""
+              >
+                {(["4G", "NB-IoT"] as const).map((option) => {
+                  const isActive = technology === option;
+
+                  return (
+                    <Button
+                      key={option}
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      aria-pressed={isActive}
+                      onClick={() => setTechnology(option)}
+                      className={`
+                        ${
+                          isActive
+                            ? "bg-[var(--accent-color)] text-white shadow-sm hover:bg-[var(--accent-color)]/90 hover:text-white"
+                            : "text-[var(--text-secondary)] bg-[var(--accent-color)]/20 hover:bg-[var(--accent-color)]/8 hover:text-[var(--text-primary)]"
+                        }
+                      `}
+                    >
+                      {option}
+                    </Button>
+                  );
+                })}
+              </ButtonGroup>
             </div>
+
             <div>
               <label className={labelClass}>Linha</label>
-              <input value={phoneNumber} onChange={(event) => setPhoneNumber(event.target.value)} className={inputClass} placeholder="Opcional" />
+              <input
+                value={phoneNumber}
+                onChange={(event) => setPhoneNumber(event.target.value)}
+                className={inputClass}
+                placeholder="Opcional"
+              />
             </div>
+
             <div>
               <label className={labelClass}>Operadora</label>
-              <input value={operatorName} onChange={(event) => setOperatorName(event.target.value)} className={inputClass} placeholder="Opcional" />
+
+              <Select
+                items={operators.map((operator) => ({
+                  label: operator,
+                  value: operator,
+                }))}
+                value={operatorName || null}
+                onValueChange={(value) => {
+                  setOperatorName(value ?? "");
+                }}
+              >
+                <SelectTrigger
+                  className={` h-10 flex items-center justify-between`}
+                >
+                  <SelectValue placeholder="Selecione uma operadora (opcional)" />
+                </SelectTrigger>
+
+                <SelectContent>
+                  <SelectGroup>
+                    {operators.map((operator) => (
+                      <SelectItem key={operator} value={operator}>
+                        {operator}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
+
             <div className="md:col-span-2">
               <label className={labelClass}>Observações</label>
-              <input value={notes} onChange={(event) => setNotes(event.target.value)} className={inputClass} placeholder="Local, finalidade ou observação interna" />
+              <input
+                value={notes}
+                onChange={(event) => setNotes(event.target.value)}
+                className={inputClass}
+                placeholder="Local, finalidade ou observação interna"
+              />
             </div>
           </div>
         </section>
@@ -158,6 +268,7 @@ export function ManualSimcardModal({ opportunities, busy, onClose, onCreate }: M
           <h3 className="text-[10px] font-black uppercase tracking-[0.18em] text-[var(--text-secondary)] m-0 mb-4">
             Atribuição imediata
           </h3>
+
           <div className="grid grid-cols-2 gap-3 mb-4">
             <button
               type="button"
@@ -168,9 +279,14 @@ export function ManualSimcardModal({ opportunities, busy, onClose, onCreate }: M
                   : "border-[var(--border-color)] bg-[var(--card-bg)]"
               }`}
             >
-              <span className="block text-xs font-black text-[var(--text-primary)]">Projeto manual</span>
-              <span className="block text-[10px] text-[var(--text-secondary)] mt-0.5">Uso interno ou avulso</span>
+              <span className="block text-xs font-black text-[var(--text-primary)]">
+                Projeto manual
+              </span>
+              <span className="block text-[10px] text-[var(--text-secondary)] mt-0.5">
+                Uso interno ou avulso
+              </span>
             </button>
+
             <button
               type="button"
               onClick={() => setDestinationType("opportunity")}
@@ -180,37 +296,94 @@ export function ManualSimcardModal({ opportunities, busy, onClose, onCreate }: M
                   : "border-[var(--border-color)] bg-[var(--card-bg)]"
               }`}
             >
-              <span className="block text-xs font-black text-[var(--text-primary)]">Oportunidade</span>
-              <span className="block text-[10px] text-[var(--text-secondary)] mt-0.5">Vincular à carteira real</span>
+              <span className="block text-xs font-black text-[var(--text-primary)]">
+                Oportunidade
+              </span>
+              <span className="block text-[10px] text-[var(--text-secondary)] mt-0.5">
+                Vincular à carteira real
+              </span>
             </button>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+          <div
+            className="grid grid-cols-1 md:grid-cols-2 gap-4"
+            data-lenis-prevent
+          >
             {destinationType === "opportunity" ? (
               <div className="md:col-span-2">
                 <label className={labelClass}>Oportunidade *</label>
-                <select value={opportunityId} onChange={(event) => setOpportunityId(event.target.value)} className={inputClass}>
-                  <option value="">Selecione uma oportunidade</option>
-                  {opportunities.map((opportunity) => (
-                    <option key={opportunity.id} value={opportunity.id}>
-                      {opportunity.description || "Sem descrição"}
-                    </option>
-                  ))}
-                </select>
+
+                <Combobox
+                  items={opportunities}
+                  value={selectedOpportunity}
+                  onValueChange={(opportunity) => {
+                    setOpportunityId(opportunity?.id ?? "");
+                    setError(null);
+                  }}
+                  itemToStringLabel={(opportunity) =>
+                    opportunity.description || "Sem descrição"
+                  }
+                >
+                  <ComboboxInput
+                    className=""
+                    placeholder="Buscar oportunidade..."
+                  />
+
+                  <ComboboxContent>
+                    <ComboboxEmpty>
+                      Nenhuma oportunidade encontrada.
+                    </ComboboxEmpty>
+
+                    <ComboboxList data-lenis-prevent>
+                      {(opportunity) => (
+                        <ComboboxItem key={opportunity.id} value={opportunity}>
+                          <span className="truncate">
+                            {opportunity.description || "Sem descrição"}
+                          </span>
+
+                          {opportunity.utility && (
+                            <span className="ml-auto shrink-0 text-xs text-[var(--text-secondary)]">
+                              {opportunity.utility}
+                            </span>
+                          )}
+                        </ComboboxItem>
+                      )}
+                    </ComboboxList>
+                  </ComboboxContent>
+                </Combobox>
               </div>
             ) : (
               <div className="md:col-span-2">
                 <label className={labelClass}>Projeto *</label>
-                <input value={projectName} onChange={(event) => setProjectName(event.target.value)} className={inputClass} placeholder="Ex.: Medidores inteligentes" />
+
+                <input
+                  value={projectName}
+                  onChange={(event) => setProjectName(event.target.value)}
+                  className={inputClass}
+                  placeholder="Ex.: Medidores inteligentes"
+                />
               </div>
             )}
-            <div>
-              <label className={labelClass}>Cliente</label>
-              <input value={clientName} onChange={(event) => setClientName(event.target.value)} className={inputClass} placeholder="Nome do cliente" />
-            </div>
-            <div>
-              <label className={labelClass}>Equipamento</label>
-              <input value={equipment} onChange={(event) => setEquipment(event.target.value)} className={inputClass} placeholder="Onde o chip será instalado" />
-            </div>
+          </div>
+
+          <div>
+            <label className={labelClass}>Cliente</label>
+            <input
+              value={clientName}
+              onChange={(event) => setClientName(event.target.value)}
+              className={inputClass}
+              placeholder="Nome do cliente"
+            />
+          </div>
+
+          <div>
+            <label className={labelClass}>Equipamento</label>
+            <input
+              value={equipment}
+              onChange={(event) => setEquipment(event.target.value)}
+              className={inputClass}
+              placeholder="Onde o chip será instalado"
+            />
           </div>
         </section>
 
@@ -225,13 +398,18 @@ export function ManualSimcardModal({ opportunities, busy, onClose, onCreate }: M
           >
             Cancelar
           </button>
+
           <button
             type="button"
             onClick={() => void submit()}
             disabled={!canSubmit || busy}
             className="h-11 px-5 rounded-xl bg-[var(--accent-color)] text-white text-xs font-bold flex items-center gap-2 disabled:opacity-50 transition-all"
           >
-            {busy ? <Save size={14} className="animate-pulse" /> : <ArrowRight size={14} />}
+            {busy ? (
+              <Save size={14} className="animate-pulse" />
+            ) : (
+              <ArrowRight size={14} />
+            )}
             Cadastrar e atribuir
           </button>
         </div>

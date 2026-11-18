@@ -9,6 +9,7 @@ import type {
   TechnologyGroup,
 } from "../../types/simcard";
 import { displayValue, formatDateTime, sourceLabel, sourceOf, technologyGroupOf } from "../../utils/simcard";
+import { Button } from "@/components/ui/button";
 
 interface SimcardDetailsModalProps {
   item: InventoryItem;
@@ -122,7 +123,7 @@ export function SimcardDetailsModal({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-md p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-md p-4" data-lenis-prevent
       onMouseDown={(event) => {
         if (event.target === event.currentTarget && !busy) onClose();
       }}
@@ -136,7 +137,7 @@ export function SimcardDetailsModal({
       >
         <div className="flex items-start justify-between gap-4 mb-6">
           <div>
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-[var(--border-color)] bg-[var(--bg-app)] px-3 py-1.5">
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-[var(--border-color)] bg-[var(--bg-app)] px-3 py-1.5" >
               {isManual ? <Wrench size={13} className="text-amber-500" /> : <RadioTower size={13} className="text-cyan-500" />}
               <span className="text-[9px] font-black uppercase tracking-[0.18em] text-[var(--text-secondary)]">
                 {sourceLabel(source)}
@@ -310,14 +311,14 @@ export function SimcardDetailsModal({
             </button>
           )}
           {isAssigned && (
-            <button
-              type="button"
+            <Button
+              variant="destructive"
               onClick={() => void onRelease()}
               disabled={busy}
-              className="h-11 px-5 rounded-xl border border-[var(--border-color)] text-[var(--text-secondary)] text-xs font-bold flex items-center gap-2 hover:text-rose-500 hover:border-rose-500/30 disabled:opacity-50 transition-all"
+              className=""
             >
               <Unlink size={14} /> Liberar chip
-            </button>
+            </Button>
           )}
         </div>
       </motion.div>

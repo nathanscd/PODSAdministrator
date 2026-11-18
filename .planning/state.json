@@ -6,7 +6,7 @@
     {
       "number": "13",
       "name": "Fundação de Segurança e Contratos",
-      "status": "pending"
+      "status": "complete"
     },
     {
       "number": "14",
@@ -37,7 +37,7 @@
   "next": {
     "command": "/gsd:progress --next",
     "label": "Advance to the next step",
-    "reason": "Phase 13 of 6 · 0% · executing"
+    "reason": "Phase 14 of 6 · 0% · executing"
   },
-  "updated_at": "2026-11-18T15:15:43.087Z"
+  "updated_at": "2026-11-18T19:35:28.191Z"
 }

@@ -24,5 +24,9 @@
   },
   "devDependencies": {
     "vite-tsconfig-paths": "^6.1.1"
+  },
+  "dependencies": {
+    "@base-ui/react": "^1.9.0",
+    "cn": "^0.5.2"
   }
 }

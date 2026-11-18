@@ -234,10 +234,10 @@ export default function WorkspacePage() {
   );
 
   return (
-    <div className="main !p-0 overflow-hidden flex flex-col h-screen bg-[var(--bg-app)] relative" data-lenis-prevent>
+    <div className="main overflow-hidden flex flex-col h-screen bg-[var(--bg-app)] relative" data-lenis-prevent>
       
       {/* PREMIUM HEADER */}
-      <nav className="h-16 px-8 flex pb-5 items-center justify-between border-b border-white/5 backdrop-blur-3xl bg-[var(--bg-app)]/40 z-50 shrink-0">
+      <nav className="h-16 px-8 flex pb-5 items-center sticky justify-between border-b border-white/5 backdrop-blur-3xl bg-[var(--bg-app)]/40 z-50 shrink-0">
         <div className="flex items-center w-full">
           <button onClick={() => navigate("/paginas")} className=" mr-5 flex items-center justify-center text-[var(--text-primary)] transition-all cursor-pointer">
             <ChevronLeft size={20} />
@@ -299,19 +299,19 @@ export default function WorkspacePage() {
           </div>
         </div>
       </nav>
+        {page.type === 'document' && (
+            <Toolbar editor={editor} setPageTheme={(t) => updatePage(pageId!, { theme: t })} pageTheme={page.theme || 'light'} />
+        )}
 
       {/* Editor Content Area */}
       <div className={`flex-1 overflow-y-auto custom-scrollbar transition-colors duration-500 relative ${getThemeStyles(page.theme)}`}>
         
-        {page.type === 'document' && (
-            <Toolbar editor={editor} setPageTheme={(t) => updatePage(pageId!, { theme: t })} pageTheme={page.theme || 'light'} />
-        )}
 
         <div className="max-w-[1000px] mx-auto py-20 px-8 md:px-16 min-h-full">
           
           <input 
             id="page-title-input" 
-            className="w-full overflow-scroll text-3xl md:text-4xl border-none outline-none bg-transparent p-0 leading-tight placeholder:opacity-10 tracking-tighter mb-12 focus:ring-0" 
+            className="w-full text-3xl md:text-4xl border-none outline-none bg-transparent p-0 leading-tight placeholder:opacity-10 tracking-tighter mb-12 focus:ring-0" 
             value={localTitle} 
             onChange={handleTitleChange} 
             placeholder="NOME DO RELATÓRIO"
