@@ -5,11 +5,11 @@ milestone_name: )
 current_phase: 14
 current_phase_name: OAuth e Ciclo de Vida da Conexão
 status: executing
-stopped_at: Phase 14 context gathered
-last_updated: "2026-11-18T19:42:56.026Z"
+stopped_at: Phase 14 UI-SPEC approved
+last_updated: "2026-11-18T20:00:44.849Z"
 last_activity: 2026-11-18
 last_activity_desc: Phase 14 execution started
-state_head: c908f48f34c500b9f68431937f05503712f88eac
+state_head: 0e5fd6735a3c031fc3cd11c673c4441e9a99a85c
 progress:
   total_phases: 6
   completed_phases: 0
@@ -116,6 +116,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-11-18T19:42:55.956Z
-Stopped at: Phase 14 context gathered
-Resume file: .planning/phases/14-oauth-e-ciclo-de-vida-da-conex-o/14-CONTEXT.md
+Last session: 2026-11-18T20:00:44.778Z
+Stopped at: Phase 14 UI-SPEC approved
+Resume file: .planning/phases/14-oauth-e-ciclo-de-vida-da-conex-o/14-UI-SPEC.md
