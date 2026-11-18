@@ -12,7 +12,7 @@ A ordem de construção segue o backbone da pesquisa (`research/SUMMARY.md`): fu
 
 ## Phases
 
-- [ ] **Phase 13: Fundação de Segurança e Contratos** — Backend Python Gen2, default-deny no Firestore, segredos no Secret Manager, AES-256-GCM, `no-store`, isolamento UID/tenant, rate limiting e contratos de dados.
+- [x] **Phase 13: Fundação de Segurança e Contratos** — Backend Python Gen2, default-deny no Firestore, segredos no Secret Manager, AES-256-GCM, `no-store`, isolamento UID/tenant, rate limiting e contratos de dados.
 - [ ] **Phase 14: OAuth e Ciclo de Vida da Conexão** — Autorização com state/PKCE/nonce persistidos, callback validado, cache MSAL cifrado e card de conexão com cinco estados em Configurações.
 - [ ] **Phase 15: Abstração e Leitura Delegada** — `DocumentStorageService`, leitura Graph de sites/bibliotecas/pastas, busca, propriedades e download em streaming com permissões delegadas.
 - [ ] **Phase 16: Staging R2 e Fila Durável de Sincronização** — Upload em streaming para R2, máquina de estados, lease transacional, retry/backoff, idempotência, worker delegado, quota, limpeza e lista unificada.
@@ -36,7 +36,7 @@ A ordem de construção segue o backbone da pesquisa (`research/SUMMARY.md`): fu
   4. Uploads com tipo, tamanho, MIME, nome ou caminho inválidos, ou acima do limite de requisições, são recusados com mensagem compreensível.
   5. Exclusivamente Firestore e R2 persistem dados — nenhum token ou documento aparece em `localStorage`, `sessionStorage`, IndexedDB, Cache API, service worker ou arquivo temporário.
 
-**Plans**: 7/8 plans executed
+**Plans**: 8/8 plans executed
 Plans:
 **Wave 1**
 
@@ -59,7 +59,7 @@ Plans:
 
 **Wave 5** *(blocked on Wave 4 completion)*
 
-- [ ] 13-08-PLAN.md — Correção honesta do `SettingsPage` + guarda estática de não-persistência (SEC-09)
+- [x] 13-08-PLAN.md — Correção honesta do `SettingsPage` + guarda estática de não-persistência (SEC-09)
 
 **Cross-cutting constraints:**
 
@@ -204,7 +204,7 @@ Mapeamento de todos os **55 requisitos v1** — cada um em exatamente uma fase:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 13. Fundação de Segurança e Contratos | 7/8 | In Progress |  |
+| 13. Fundação de Segurança e Contratos | 8/8 | Complete | 2026-11-18 |
 | 14. OAuth e Ciclo de Vida da Conexão | 0/TBD | Not started | - |
 | 15. Abstração e Leitura Delegada | 0/TBD | Not started | - |
 | 16. Staging R2 e Fila Durável de Sincronização | 0/TBD | Not started | - |

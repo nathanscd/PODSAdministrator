@@ -17,7 +17,7 @@ Requisitos do milestone v2.0. Cada um será mapeado para exatamente uma fase do 
 - [x] **SEC-06**: Isolamento por Firebase UID e tenant em toda consulta, bloqueando acesso cruzado por IDOR.
 - [x] **SEC-07**: Logs e auditoria sem tokens, segredos ou conteúdo de arquivo — apenas IDs, status e timestamps.
 - [x] **SEC-08**: Rate limiting e validação de tipo, tamanho, MIME, nome e caminho de arquivos nos endpoints sensíveis.
-- [ ] **SEC-09**: Nenhum mecanismo de persistência além de Firestore e R2 — sem localStorage, sessionStorage, IndexedDB, Cache API, service worker, Redis, SQLite, arquivos JSON locais ou `tempfile`.
+- [x] **SEC-09**: Nenhum mecanismo de persistência além de Firestore e R2 — sem localStorage, sessionStorage, IndexedDB, Cache API, service worker, Redis, SQLite, arquivos JSON locais ou `tempfile`.
 
 ### Conexão (CONN)
 
@@ -128,7 +128,7 @@ Cada requisito `v1` mapeado para exatamente uma fase do roadmap v2.0 (Phases 13�
 | SEC-06 | Phase 13 | Complete |
 | SEC-07 | Phase 13 | Complete |
 | SEC-08 | Phase 13 | Complete |
-| SEC-09 | Phase 13 | Pending |
+| SEC-09 | Phase 13 | Complete |
 | CONN-01 | Phase 14 | Pending |
 | CONN-02 | Phase 14 | Pending |
 | CONN-03 | Phase 14 | Pending |
@@ -184,4 +184,4 @@ Cada requisito `v1` mapeado para exatamente uma fase do roadmap v2.0 (Phases 13�
 
 ---
 *Requirements defined: 2026-11-17*
-*Last updated: 2026-11-17 after v2.0 roadmap creation (traceability 55/55)*
+*Last updated: 2026-11-18 after Phase 13 plan 08 (SEC-01 through SEC-09 complete; traceability 55/55)*
