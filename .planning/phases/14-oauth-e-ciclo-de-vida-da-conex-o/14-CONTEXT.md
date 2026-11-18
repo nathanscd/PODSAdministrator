@@ -58,7 +58,7 @@ Nenhuma área ficou sem decisão. Em modo auto, todas as áreas de cinza identif
 
 ### Phase 13 foundation
 - `.planning/phases/13-funda-o-de-seguran-a-e-contratos/13-RESEARCH.md` — decisões de segurança/backend já validadas.
-- `.planning/phases/13-funda-o-de-seguran-a-e-contratos/13-VERIFICATION.md` — fatos verificados e itunes que exigem UAT humano.
+- `.planning/phases/13-funda-o-de-seguran-a-e-contratos/13-VERIFICATION.md` — fatos verificados e itens que exigem UAT humano.
 - `.planning/phases/13-funda-o-de-seguran-a-e-contratos/13-SECURITY.md` — ameaças mitigadas e riscos aceitos.
 - `.planning/phases/13-funda-o-de-seguran-a-e-contratos/13-UAT.md` — UAT humano da Phase 13 adiado.
 - `.planning/phases/13-funda-o-de-seguran-a-e-contratos/13-08-SUMMARY.md` — contrato honesto da UI e guarda de não persistência.
@@ -106,7 +106,7 @@ Nenhuma área ficou sem decisão. Em modo auto, todas as áreas de cinza identif
 - Nenhum handler exportado sem autenticação, exceto o callback OAuth, que é público por protocolo e precisa de exceção explícita no guard AST com testes.
 - Nenhum segredo em `config.py`, logs, URL, estado do navegador ou arquivo temporário.
 - Toda resposta privada usa o vocabulário fechado de `ErrorKind` e headers `no-store`.
--前端 consome CSS variables de `globals.css` e componentes shadcn/ui existentes.
+- O frontend consome CSS variables de `globals.css` e componentes shadcn/ui existentes.
 - Testes Python usam `backend\.venv\Scripts\python.exe` com `PYTHONDONTWRITEBYTECODE=1` e `-p no:cacheprovider`.
 
 ### Integration Points
