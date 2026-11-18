@@ -36,7 +36,7 @@ A ordem de construção segue o backbone da pesquisa (`research/SUMMARY.md`): fu
   4. Uploads com tipo, tamanho, MIME, nome ou caminho inválidos, ou acima do limite de requisições, são recusados com mensagem compreensível.
   5. Exclusivamente Firestore e R2 persistem dados — nenhum token ou documento aparece em `localStorage`, `sessionStorage`, IndexedDB, Cache API, service worker ou arquivo temporário.
 
-**Plans**: 3/8 plans executed
+**Plans**: 4/8 plans executed
 Plans:
 **Wave 1**
 
@@ -46,7 +46,7 @@ Plans:
 
 - [x] 13-02-PLAN.md — Envelope AES-256-GCM com `keyVersion`, nonce de 12 bytes e AAD por tenant (SEC-04)
 - [x] 13-03-PLAN.md — Contrato de resposta `no-store` imutável e erros sanitizados (SEC-05)
-- [ ] 13-04-PLAN.md — `firestore.rules` default-deny com coleções explícitas + índices SharePoint (SEC-02)
+- [x] 13-04-PLAN.md — `firestore.rules` default-deny com coleções explícitas + índices SharePoint (SEC-02)
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
@@ -204,7 +204,7 @@ Mapeamento de todos os **55 requisitos v1** — cada um em exatamente uma fase:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 13. Fundação de Segurança e Contratos | 3/8 | In Progress |  |
+| 13. Fundação de Segurança e Contratos | 4/8 | In Progress |  |
 | 14. OAuth e Ciclo de Vida da Conexão | 0/TBD | Not started | - |
 | 15. Abstração e Leitura Delegada | 0/TBD | Not started | - |
 | 16. Staging R2 e Fila Durável de Sincronização | 0/TBD | Not started | - |

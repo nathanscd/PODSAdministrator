@@ -1,24 +1,4 @@
----
-gsd_state_version: "1.0"
-milestone: v2.0
-milestone_name: )
-current_phase: 13
-current_phase_name: Fundação de Segurança e Contratos
-status: executing
-stopped_at: Completed 13-03-PLAN.md
-last_updated: "2026-11-18T16:51:31.000Z"
-last_activity: 2026-11-18
-last_activity_desc: Phase 13 plan 03 response contract executed
-state_head: 046499c73535f525974ebd6e0a0a8dad222c41db
-progress:
-  total_phases: 6
-  completed_phases: 0
-  total_plans: 8
-  completed_plans: 3
-  percent: 0
----
-
-# Project State
+﻿# Project State
 
 ## Project Reference
 
@@ -30,19 +10,19 @@ See: .planning/PROJECT.md (updated 2026-11-17)
 ## Current Position
 
 Phase: 13 (Fundação de Segurança e Contratos) — EXECUTING
-Plan: 4 of 8
-Status: Ready to execute
-Last activity: 2026-11-18 — Phase 13 plan 03 (SEC-05 response contract) completed
+Plan: 5 of 8
+Status: In progress
+Last activity: 2026-11-18 — Phase 13 plan 04 (SEC-02 Firestore default-deny rules and SharePoint indexes) completed
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [█████░░░░░] 50%
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 3
-- Average duration: 7 min
-- Total execution time: 0.33 hours
+- Total plans completed: 4
+- Average duration: 8 min
+- Total execution time: 0.52 hours
 
 **Recent Trend:**
 
@@ -56,6 +36,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 13 P01 | 12 min | 3 tasks | 7 files |
 | Phase 13 P02 | 6min | 2 tasks | 2 files |
 | Phase 13 P03 | 2min | 2 tasks | 2 files |
+| Phase 13 P04 | 11 min | 3 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -73,6 +54,7 @@ Recent decisions affecting current work:
 - [Phase 13]: Secret values are resolved only on demand from injected Secret Manager env names; settings and errors carry names only — SEC-03 fail-closed requirement: no default, generated, hardcoded or logged key material
 - [Phase 13]: AES-256-GCM envelopes persist keyVersion; decryption dispatches on the stored version and never uses a module-level active key — Key rotation must not require migrating stored rows
 - [Phase 13]: responses.py is the single response boundary — immutable no-store headers and a closed fixed error vocabulary; no exception text, traceback, secret or free-form message reaches the browser (SEC-05)
+- [Phase 13]: Firestore rules are explicit and deny-by-default (no catch-all); live client collections keep prior semantics, datatem collections remain read-only to clients, and SharePoint/datatemIntegration are client-deny-all with fixed collection names for later plans (SEC-02)
 
 ### Pending Todos
 
@@ -82,7 +64,6 @@ None yet.
 
 - [v2.0] Nenhuma credencial Microsoft real disponível — fases 14, 16 e 18 exigem `--research-phase` para app registration/consent, limites R2/Graph e versão do firebase-tools.
 - [v2.0] Working tree sujo com mudanças prévias ao milestone — não tocar em source; orquestrador commita apenas os 3 arquivos de planejamento.
-- [v2.0] `firestore.rules` com wildcard `/{document=**}` e `signedIn()` — corrigir para allow-list com default deny antes de qualquer credencial (Phase 13).
 - [v2.0] Duas fontes de identidade no frontend (`AuthProvider` legado + `AtlasAuthProvider`) — consolidar num `TenantUser` tipado antes da UI de documentos (Phase 15).
 
 ### Roadmap Evolution
@@ -101,6 +82,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-11-18T16:51:31.000Z
-Stopped at: Completed 13-03-PLAN.md
+Last session: 2026-11-18T17:11:40Z
+Stopped at: Completed 13-04-PLAN.md
 Resume file: None
