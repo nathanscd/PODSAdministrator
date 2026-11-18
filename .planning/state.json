@@ -1,73 +1,43 @@
 {
   "contract": "1.0.0",
   "flavor": "core",
-  "milestone": "v2.0",
+  "milestone": "v2.0 — )",
   "phases": [
     {
-      "number": "1",
-      "name": "Project Audit",
-      "status": "complete"
-    },
-    {
-      "number": "2",
-      "name": "Base Setup",
-      "status": "complete"
-    },
-    {
-      "number": "3",
-      "name": "Database Converters",
-      "status": "complete"
-    },
-    {
-      "number": "4",
-      "name": "Auth & Multi-Tenancy Shell",
-      "status": "complete"
-    },
-    {
-      "number": "5",
-      "name": "Dynamic Sidebar",
-      "status": "complete"
-    },
-    {
-      "number": "6",
-      "name": "Domain Types & Repositories",
-      "status": "complete"
-    },
-    {
-      "number": "7",
-      "name": "Design System Migration",
-      "status": "complete"
-    },
-    {
-      "number": "8",
-      "name": "UI Modularization",
-      "status": "complete"
-    },
-    {
-      "number": "9",
-      "name": "Widget System & Editable Pages",
-      "status": "complete"
-    },
-    {
-      "number": "10",
-      "name": "Cloud Functions & PDF Reporting",
+      "number": "13",
+      "name": "Fundação de Segurança e Contratos",
       "status": "pending"
     },
     {
-      "number": "11",
-      "name": "Emulators & Security Rules",
+      "number": "14",
+      "name": "OAuth e Ciclo de Vida da Conexão",
       "status": "pending"
     },
     {
-      "number": "12",
-      "name": "Atlas 1.0 SaaS Deployment",
+      "number": "15",
+      "name": "Abstração e Leitura Delegada",
+      "status": "pending"
+    },
+    {
+      "number": "16",
+      "name": "Staging R2 e Fila Durável de Sincronização",
+      "status": "pending"
+    },
+    {
+      "number": "17",
+      "name": "Status Honesto, Conflitos e Auditoria",
+      "status": "pending"
+    },
+    {
+      "number": "18",
+      "name": "Testes, Mocks, Documentação e Deploy",
       "status": "pending"
     }
   ],
   "next": {
-    "command": "/gsd:discuss-phase",
-    "label": "Discuss the first phase",
-    "reason": "Project initialized — plan your first phase"
+    "command": "/gsd:progress --next",
+    "label": "Advance to the next step",
+    "reason": "Phase 13 of 6 · 0% · executing"
   },
-  "updated_at": "2026-11-17T20:27:14.908Z"
+  "updated_at": "2026-11-18T15:15:43.087Z"
 }
