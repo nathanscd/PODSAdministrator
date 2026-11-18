@@ -36,7 +36,7 @@ A ordem de construção segue o backbone da pesquisa (`research/SUMMARY.md`): fu
   4. Uploads com tipo, tamanho, MIME, nome ou caminho inválidos, ou acima do limite de requisições, são recusados com mensagem compreensível.
   5. Exclusivamente Firestore e R2 persistem dados — nenhum token ou documento aparece em `localStorage`, `sessionStorage`, IndexedDB, Cache API, service worker ou arquivo temporário.
 
-**Plans**: 4/8 plans executed
+**Plans**: 6/8 plans executed
 Plans:
 **Wave 1**
 
@@ -51,7 +51,7 @@ Plans:
 **Wave 3** *(blocked on Wave 2 completion)*
 
 - [x] 13-05-PLAN.md — `AuthContext`/`resolve_auth_context` + `SharePointStore` isolado por tenant (SEC-01, SEC-06)
-- [ ] 13-06-PLAN.md — Logging redigido por allow-list + validação de upload e rate limiting Firestore (SEC-07, SEC-08)
+- [x] 13-06-PLAN.md — Logging redigido por allow-list + validação de upload e rate limiting Firestore (SEC-07, SEC-08)
 
 **Wave 4** *(blocked on Wave 3 completion)*
 

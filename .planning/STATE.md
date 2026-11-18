@@ -5,17 +5,17 @@ milestone_name: )
 current_phase: 13
 current_phase_name: Fundação de Segurança e Contratos
 status: executing
-stopped_at: Completed 13-05-PLAN.md
-last_updated: "2026-11-18T17:35:47.039Z"
+stopped_at: Completed 13-06-PLAN.md
+last_updated: "2026-11-18T17:45:12.000Z"
 last_activity: 2026-11-18
-last_activity_desc: Phase 13 plan 05 (SEC-01 auth context and SEC-06 tenant-isolated SharePoint store) completed
-state_head: ee76f99b4afaa94b6b434c8e000abaa77a144c33
+last_activity_desc: Phase 13 plan 06 (SEC-07 allow-list logging and SEC-08 upload validation/rate limiting) completed
+state_head: d0a02a9bb1f517f23bd21ac724def151400cd907
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 8
-  completed_plans: 5
-  percent: 62
+  completed_plans: 6
+  percent: 75
 ---
 
 # Project State
@@ -30,19 +30,19 @@ See: .planning/PROJECT.md (updated 2026-11-17)
 ## Current Position
 
 Phase: 13 (Fundação de Segurança e Contratos) — EXECUTING
-Plan: 6 of 8
+Plan: 7 of 8
 Status: Ready to execute
-Last activity: 2026-11-18 — Phase 13 plan 05 (SEC-01 auth context and SEC-06 tenant-isolated SharePoint store) completed
+Last activity: 2026-11-18 — Phase 13 plan 06 (SEC-07 allow-list logging and SEC-08 upload validation/rate limiting) completed
 
-Progress: [██████░░░░] 62%
+Progress: [███████░░░] 75%
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 5
+- Total plans completed: 6
 - Average duration: 7 min
-- Total execution time: 0.6 hours
+- Total execution time: 0.7 hours
 
 **Recent Trend:**
 
@@ -58,6 +58,7 @@ Progress: [██████░░░░] 62%
 | Phase 13 P03 | 2min | 2 tasks | 2 files |
 | Phase 13 P04 | 11 min | 3 tasks | 3 files |
 | Phase 13 P05 | 5min | 3 tasks | 5 files |
+| Phase 13 P06 | 4min | 3 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -79,6 +80,9 @@ Recent decisions affecting current work:
 - [Phase 13]: Identity resolves per invocation from a verified Firebase ID token; no module-level token, claim set, AuthContext or profile document is cached (SEC-01)
 - [Phase 13]: Tenant comes only from the verified `companyId` claim or a server-side `users/{uid}.companyId` read; request data is never an authority and cross-tenant access is NotFoundError (404-equivalent) (SEC-06)
 - [Phase 13]: AuthError.kind reuses the closed responses.ErrorKind vocabulary so endpoint plans need no exception-to-status translation table (SEC-01)
+- [Phase 13]: Log events are built only from a 15-key scalar allow-list; bytes, nested values, oversized strings and exception text are dropped before serialization — no repr/print/basicConfig (SEC-07)
+- [Phase 13]: Upload policy uses a closed 8-type MIME allow-list, extension agreement and exact integer size comparisons; only the normalized filename may reach Graph (SEC-08)
+- [Phase 13]: Production rate limiting is a Firestore transaction in sharepointRateLimits keyed by sha256(uid|endpoint|windowIndex); backend errors fail closed as RateLimitUnavailable and in-memory state exists only in tests (SEC-08)
 
 ### Pending Todos
 
@@ -106,6 +110,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-11-18T17:35:47Z
-Stopped at: Completed 13-05-PLAN.md
+Last session: 2026-11-18T17:45:12Z
+Stopped at: Completed 13-06-PLAN.md
 Resume file: None
