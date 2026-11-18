@@ -5,17 +5,17 @@ milestone_name: )
 current_phase: 13
 current_phase_name: Fundação de Segurança e Contratos
 status: executing
-stopped_at: Completed 13-06-PLAN.md
-last_updated: "2026-11-18T17:45:12.000Z"
+stopped_at: Completed 13-07-PLAN.md
+last_updated: "2026-11-18T18:10:51.000Z"
 last_activity: 2026-11-18
-last_activity_desc: Phase 13 plan 06 (SEC-07 allow-list logging and SEC-08 upload validation/rate limiting) completed
-state_head: ffb9190a1f326d054f54db5768a702890fff02d8
+last_activity_desc: Phase 13 plan 07 (SEC-01 authenticated endpoints and two-codebase firebase.json) completed
+state_head: 96fa93518cf6433c8eaf66d497abb5ed11dbece3
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 8
-  completed_plans: 6
-  percent: 75
+  completed_plans: 7
+  percent: 87
 ---
 
 # Project State
@@ -30,19 +30,19 @@ See: .planning/PROJECT.md (updated 2026-11-17)
 ## Current Position
 
 Phase: 13 (Fundação de Segurança e Contratos) — EXECUTING
-Plan: 7 of 8
+Plan: 8 of 8
 Status: Ready to execute
-Last activity: 2026-11-18 — Phase 13 plan 06 (SEC-07 allow-list logging and SEC-08 upload validation/rate limiting) completed
+Last activity: 2026-11-18 — Phase 13 plan 07 (SEC-01 authenticated endpoints and two-codebase firebase.json) completed
 
-Progress: [███████░░░] 75%
+Progress: [████████░] 87%
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 6
+- Total plans completed: 7
 - Average duration: 7 min
-- Total execution time: 0.7 hours
+- Total execution time: 0.8 hours
 
 **Recent Trend:**
 
@@ -59,6 +59,7 @@ Progress: [███████░░░] 75%
 | Phase 13 P04 | 11 min | 3 tasks | 3 files |
 | Phase 13 P05 | 5min | 3 tasks | 5 files |
 | Phase 13 P06 | 4min | 3 tasks | 4 files |
+| Phase 13 P07 | 12min | 3 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -83,6 +84,8 @@ Recent decisions affecting current work:
 - [Phase 13]: Log events are built only from a 15-key scalar allow-list; bytes, nested values, oversized strings and exception text are dropped before serialization — no repr/print/basicConfig (SEC-07)
 - [Phase 13]: Upload policy uses a closed 8-type MIME allow-list, extension agreement and exact integer size comparisons; only the normalized filename may reach Graph (SEC-08)
 - [Phase 13]: Production rate limiting is a Firestore transaction in sharepointRateLimits keyed by sha256(uid|endpoint|windowIndex); backend errors fail closed as RateLimitUnavailable and in-memory state exists only in tests (SEC-08)
+- [Phase 13]: Every exported HTTPS handler passes through the single _authenticated decorator before any tenant, validation, limiter or Firestore work; an AST guard fails on any future on_request handler lacking the decorator (SEC-01)
+- [Phase 13]: firebase.json declares exactly two independent codebases; the reporting Node source/predeploy and the hosting block are preserved byte-for-byte while the Python 3.12 sharepoint codebase excludes tests and venv artifacts (SEC-01)
 
 ### Pending Todos
 
@@ -110,6 +113,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-11-18T17:45:12Z
-Stopped at: Completed 13-06-PLAN.md
+Last session: 2026-11-18T18:10:51Z
+Stopped at: Completed 13-07-PLAN.md
 Resume file: None

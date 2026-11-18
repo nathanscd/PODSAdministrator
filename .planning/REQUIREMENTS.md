@@ -9,7 +9,7 @@ Requisitos do milestone v2.0. Cada um será mapeado para exatamente uma fase do 
 
 ### Segurança & Fundação (SEC)
 
-- [ ] **SEC-01**: Backend em Cloud Functions Python Gen2 implantado no projeto Firebase, com verificação do Firebase ID Token em todo endpoint autenticado.
+- [x] **SEC-01**: Backend em Cloud Functions Python Gen2 implantado no projeto Firebase, com verificação do Firebase ID Token em todo endpoint autenticado.
 - [x] **SEC-02**: Regras Firestore com `default deny` e allow-list explícita, impedindo que o SDK cliente leia coleções privadas de credenciais.
 - [x] **SEC-03**: Client Secret Microsoft e chave mestra de criptografia obtidos do Google Cloud Secret Manager, nunca versionados ou enviados ao frontend.
 - [x] **SEC-04**: Cache serializado do MSAL armazenado no Firestore com AES-256-GCM, IV único, tag de autenticação e `keyVersion`.
@@ -120,7 +120,7 @@ Cada requisito `v1` mapeado para exatamente uma fase do roadmap v2.0 (Phases 13�
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SEC-01 | Phase 13 | Pending |
+| SEC-01 | Phase 13 | Complete |
 | SEC-02 | Phase 13 | Complete |
 | SEC-03 | Phase 13 | Complete |
 | SEC-04 | Phase 13 | Complete |
