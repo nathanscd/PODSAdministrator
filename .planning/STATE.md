@@ -2,20 +2,20 @@
 gsd_state_version: "1.0"
 milestone: v2.0
 milestone_name: )
-current_phase: 13
-current_phase_name: Fundação de Segurança e Contratos
+current_phase: 14
+current_phase_name: OAuth e Ciclo de Vida da Conexão
 status: executing
 stopped_at: Completed 13-08-PLAN.md
-last_updated: "2026-11-18T18:25:09.000Z"
+last_updated: "2026-11-18T19:35:39.364Z"
 last_activity: 2026-11-18
-last_activity_desc: Phase 13 plan 08 (SEC-09 honest encryption UI and static no-persistence guard) completed; Phase 13 at 8/8 plans
-state_head: 96fa93518cf6433c8eaf66d497abb5ed11dbece3
+last_activity_desc: Phase 14 execution started
+state_head: 3616d15aff2318cb97e0216318846c61110ec238
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 8
   completed_plans: 8
-  percent: 100
+  percent: 0
 ---
 
 # Project State
@@ -25,16 +25,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-11-17)
 
 **Core value:** Tornar o SharePoint o repositório oficial de documentos do Atlas, com autoria delegada preservada e nenhuma perda de alterações durante indisponibilidade.
-**Current focus:** Phase 13 — Fundação de Segurança e Contratos
+**Current focus:** Phase 14 — OAuth e Ciclo de Vida da Conexão
 
 ## Current Position
 
-Phase: 13 (Fundação de Segurança e Contratos) — COMPLETE
-Plan: 8 of 8
-Status: Phase complete, ready for verification
-Last activity: 2026-11-18 — Phase 13 plan 08 (SEC-09 honest encryption UI and static no-persistence guard) completed
+Phase: 14 (OAuth e Ciclo de Vida da Conexão) — EXECUTING
+Plan: 1 of ?
+Status: Executing Phase 14
+Last activity: 2026-11-18 — Phase 14 execution started
 
-Progress: [█████████] 100%
+Progress: [░░░░░░░░░░] 0%
 
 ## Performance Metrics
 
@@ -98,6 +98,7 @@ None yet.
 - [v2.0] Nenhuma credencial Microsoft real disponível — fases 14, 16 e 18 exigem `--research-phase` para app registration/consent, limites R2/Graph e versão do firebase-tools.
 - [v2.0] Working tree sujo com mudanças prévias ao milestone — não tocar em source; orquestrador commita apenas os 3 arquivos de planejamento.
 - [v2.0] Duas fontes de identidade no frontend (`AuthProvider` legado + `AtlasAuthProvider`) — consolidar num `TenantUser` tipado antes da UI de documentos (Phase 15).
+- Phase 13 UAT humano adiado por decisão do usuário; verificação human_needed com 5 itens em 13-UAT.md
 
 ### Roadmap Evolution
 
