@@ -6,6 +6,7 @@ from threading import Lock
 
 import pytest
 
+import config
 import crypto
 
 TENANT = "company-a"
@@ -84,7 +85,7 @@ def test_firestore_shaped_dict_round_trip(key_v1):
     assert crypto.decrypt_blob(restored, TENANT, PURPOSE) == plaintext
 
 
-def test_unknown_key_version_and_unsupported_algorithm(key_v1):
+def test_unknown_key_version_and_unsupported_algorithm(key_v1, monkeypatch):
     blob = crypto.encrypt_blob("tok", TENANT, PURPOSE)
     envelope = blob.to_dict()
     envelope["keyVersion"] = 99
@@ -95,6 +96,19 @@ def test_unknown_key_version_and_unsupported_algorithm(key_v1):
     envelope["algorithm"] = "AES-256-CBC"
     with pytest.raises(crypto.CryptoError):
         crypto.decrypt_blob(envelope, TENANT, PURPOSE)
+
+    key_v2 = base64.b64encode(bytes(range(32, 64))).decode("ascii")
+    monkeypatch.setenv("SHAREPOINT_TOKEN_CRYPTO_KEY_V2", key_v2)
+    old_row = crypto.encrypt_blob("old-row", TENANT, PURPOSE, key_version=1)
+    rotated_row = crypto.encrypt_blob("v2-row", TENANT, PURPOSE, key_version=2)
+    assert old_row.keyVersion == 1
+    assert rotated_row.keyVersion == 2
+    monkeypatch.setenv("SHAREPOINT_ACTIVE_CRYPTO_KEY_VERSION", "2")
+    config.reset_settings_for_tests()
+    current = crypto.encrypt_blob("current-row", TENANT, PURPOSE)
+    assert current.keyVersion == 2
+    assert crypto.decrypt_blob(old_row, TENANT, PURPOSE) == "old-row"
+    assert crypto.decrypt_blob(rotated_row, TENANT, PURPOSE) == "v2-row"
 
 
 def test_build_aad_validation_and_tenant_binding(key_v1):
